@@ -85,3 +85,4 @@ GitHub 저장소 → Settings → Secrets and variables → Actions에서 다음
 - Vercel 문서: https://vercel.com/docs
 - Vite 배포 가이드: https://vercel.com/docs/frameworks/vite
 
+

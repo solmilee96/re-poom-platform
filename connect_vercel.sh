@@ -20,3 +20,4 @@ echo "✅ 배포 완료!"
 echo ""
 echo "💡 다음부터는 GitHub에 push하면 자동으로 배포됩니다!"
 
+
