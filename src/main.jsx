@@ -1,10 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import BabyGoodsPlatform from './BabyGoodsPlatform.jsx'
+import MamangPocket from './MamangPocket.jsx'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BabyGoodsPlatform />
+    <MamangPocket />
   </React.StrictMode>,
 )
