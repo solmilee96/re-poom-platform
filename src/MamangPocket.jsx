@@ -1775,8 +1775,19 @@ export default function MamangPocket() {
         {filteredPosts.map((post) => (
           <div 
             key={post.id} 
-            onClick={() => setSelectedPost(post)}
-            style={{ backgroundColor: COLORS.card, borderRadius: '18px', padding: '16px', marginTop: '10px', boxShadow: '0 3px 6px rgba(0,0,0,0.03)', cursor: 'pointer' }}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log('게시글 클릭:', post);
+              setSelectedPost(post);
+            }}
+            onTouchStart={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log('게시글 터치:', post);
+              setSelectedPost(post);
+            }}
+            style={{ backgroundColor: COLORS.card, borderRadius: '18px', padding: '16px', marginTop: '10px', boxShadow: '0 3px 6px rgba(0,0,0,0.03)', cursor: 'pointer', position: 'relative', zIndex: 1 }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px', flexWrap: 'wrap' }}>
               <span style={{ fontSize: '11px', color: COLORS.subText }}>{post.category}</span>
