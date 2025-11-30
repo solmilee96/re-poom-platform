@@ -1927,6 +1927,177 @@ export default function MamangPocket() {
     </div>
   );
 
+  // 게시글 상세 페이지
+  const renderPostDetail = () => {
+    if (!selectedPost) return null;
+
+    return (
+      <div style={{ paddingBottom: '100px' }}>
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+          <button
+            onClick={() => setSelectedPost(null)}
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '20px',
+              backgroundColor: COLORS.card,
+              border: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+            }}
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={COLORS.text} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+          </button>
+          <button
+            onClick={() => alert('공유하기')}
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '20px',
+              backgroundColor: COLORS.card,
+              border: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+            }}
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={COLORS.text} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="18" cy="5" r="3"></circle>
+              <circle cx="6" cy="12" r="3"></circle>
+              <circle cx="18" cy="19" r="3"></circle>
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+            </svg>
+          </button>
+        </div>
+
+        {/* Post Content */}
+        <div style={{ backgroundColor: COLORS.card, borderRadius: '20px', padding: '18px', marginBottom: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px', flexWrap: 'wrap' }}>
+            <span style={{ fontSize: '11px', color: COLORS.subText }}>{selectedPost.category}</span>
+            <span style={{ fontSize: '11px', fontWeight: '500', color: COLORS.primary, backgroundColor: COLORS.peach, padding: '2px 8px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '2px' }}>
+              <MapPin size={10} />
+              {selectedPost.region}
+            </span>
+            <span style={{ fontSize: '11px', color: COLORS.subText }}>·</span>
+            <span style={{ fontSize: '11px', color: COLORS.subText }}>{selectedPost.time}</span>
+          </div>
+          <h1 style={{ fontSize: '22px', fontWeight: '700', color: COLORS.text, marginBottom: '8px' }}>{selectedPost.title}</h1>
+          <div style={{ fontSize: '14px', color: COLORS.text, lineHeight: '24px', marginBottom: '16px' }}>
+            {selectedPost.category === '중고팁' && '유모차 직거래 시에는 프레임의 흔들림, 바퀴 마모도, 브레이크 작동 여부, 안전벨트 상태를 꼭 확인하세요. 특히 안전벨트는 아기 안전과 직결되므로 꼼꼼히 살펴보는 것이 중요합니다.'}
+            {selectedPost.category === '대여후기' && '바운서 2개월 대여해본 솔직 후기 남겨요 🍼\n\n아기가 바운서를 잘 탈지 몰라서 2개월 대여해봤는데, 정말 만족스러웠어요! 특히 식사 준비할 때나 잠시 집안일 할 때 유용했습니다. 대여 서비스도 깔끔하고 좋았어요.'}
+            {selectedPost.category === '7-12개월' && '이유식 식기 추천 부탁드려요!\n\n우리 아기가 이제 8개월인데 이유식을 시작하려고 해요. 어떤 식기를 사용하시는지 추천해주시면 감사하겠습니다!\n\n고려사항:\n- 안전한 재질 (BPA free)\n- 세척이 쉬운 제품\n- 가격대는 중간 정도\n\n혹시 중고로 구매해도 괜찮을까요? 아니면 신품을 사는 게 나을까요?'}
+            {selectedPost.category === '동네정보' && '잠실 롯데월드몰 수유실 정보 공유해요\n\n롯데월드몰 3층에 있는 수유실이 정말 잘 되어 있어요. 기저귀 갈이대, 수유 공간, 정수기, 전자레인지까지 완비되어 있어서 편하게 이용했습니다. 아기랑 외출할 때 참고하세요!'}
+            {selectedPost.category !== '중고팁' && selectedPost.category !== '대여후기' && selectedPost.category !== '7-12개월' && selectedPost.category !== '동네정보' && '게시글 내용이 여기에 표시됩니다.'}
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <span style={{ fontSize: '12px', color: COLORS.text, fontWeight: '500' }}>{selectedPost.author}</span>
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+              <span style={{ fontSize: '12px', color: COLORS.text, fontWeight: '500', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <Heart size={16} color={COLORS.text} fill={COLORS.text} />
+                <span style={{ fontSize: '14px', color: COLORS.text, fontWeight: '500' }}>{selectedPost.meta.split('좋아요 ')[1]?.split(' ')[0] || '0'}</span>
+              </span>
+              <span style={{ fontSize: '12px', color: COLORS.text, fontWeight: '500', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <MessageCircle size={16} color={COLORS.text} />
+                <span style={{ fontSize: '14px', color: COLORS.text, fontWeight: '500' }}>{selectedPost.meta.split('댓글 ')[1]?.split(' ')[0] || '0'}</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Comments Section */}
+        <div style={{ backgroundColor: COLORS.card, borderRadius: '20px', padding: '18px', marginBottom: '16px' }}>
+          <h2 style={{ fontSize: '18px', fontWeight: '600', color: COLORS.text, marginBottom: '16px' }}>댓글 {selectedPost.meta.split('댓글 ')[1]?.split(' ')[0] || '0'}</h2>
+          {/* Sample Comments */}
+          {[
+            { id: 1, author: '육아맘1', text: '좋은 정보 감사합니다!', time: '1시간 전' },
+            { id: 2, author: '초보맘', text: '저도 궁금했는데 덕분에 해결됐어요!', time: '30분 전' }
+          ].map((comment) => (
+            <div key={comment.id} style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '16px' }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '16px', backgroundColor: COLORS.mint, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px', flexShrink: 0 }}>👶</div>
+              <div style={{ marginLeft: '12px', flex: 1 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <span style={{ fontSize: '13px', fontWeight: '600', color: COLORS.text }}>{comment.author}</span>
+                  <span style={{ fontSize: '11px', color: COLORS.subText }}>{comment.time}</span>
+                </div>
+                <div style={{ fontSize: '14px', color: COLORS.text, lineHeight: '20px' }}>
+                  {comment.text}
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {/* Comment Input */}
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginTop: '20px' }}>
+            <div style={{ width: '32px', height: '32px', borderRadius: '16px', backgroundColor: COLORS.peach, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px' }}>👶</div>
+            <input
+              type="text"
+              placeholder="댓글을 입력하세요..."
+              style={{
+                flex: 1,
+                padding: '12px 16px',
+                borderRadius: '20px',
+                border: `1px solid ${COLORS.border}`,
+                fontSize: '14px',
+                backgroundColor: COLORS.bg,
+                color: COLORS.text,
+                outline: 'none',
+              }}
+            />
+            <button
+              onClick={() => alert('댓글 작성')}
+              style={{
+                backgroundColor: COLORS.primary,
+                border: 'none',
+                borderRadius: '20px',
+                padding: '10px 16px',
+                fontSize: '14px',
+                fontWeight: '600',
+                color: '#FFF',
+                cursor: 'pointer',
+              }}
+            >
+              등록
+            </button>
+          </div>
+        </div>
+
+        {/* Related Posts */}
+        <h2 style={{ fontSize: '18px', fontWeight: '600', color: COLORS.text, marginBottom: '12px' }}>관련 게시글</h2>
+        {posts.slice(0, 2).map((post) => (
+          <div
+            key={post.id}
+            onClick={() => setSelectedPost(post)}
+            style={{ backgroundColor: COLORS.card, borderRadius: '18px', padding: '16px', marginTop: '10px', boxShadow: '0 3px 6px rgba(0,0,0,0.03)', cursor: 'pointer' }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px', flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '11px', color: COLORS.subText }}>{post.category}</span>
+              <span style={{ fontSize: '11px', fontWeight: '500', color: COLORS.primary, backgroundColor: COLORS.peach, padding: '2px 8px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '2px' }}>
+                <MapPin size={10} />
+                {post.region}
+              </span>
+              <span style={{ fontSize: '11px', color: COLORS.subText }}>·</span>
+              <span style={{ fontSize: '11px', color: COLORS.subText }}>{post.time}</span>
+            </div>
+            <div style={{ fontSize: '15px', fontWeight: '600', color: COLORS.text, marginBottom: '8px' }}>{post.title}</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '12px', color: COLORS.text, fontWeight: '500' }}>{post.author}</span>
+              <span style={{ fontSize: '12px', color: COLORS.subText }}>{post.meta}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div style={{ minHeight: '100vh', backgroundColor: COLORS.bg, position: 'relative' }}>
       {showUploadForm ? (
@@ -1936,7 +2107,9 @@ export default function MamangPocket() {
       ) : (
         <>
           <div style={{ padding: '20px' }}>
-            {selectedProduct ? (
+            {selectedPost ? (
+              renderPostDetail()
+            ) : selectedProduct ? (
               renderProductDetail()
             ) : showAllProducts ? (
               renderAllProducts()
@@ -1954,7 +2127,7 @@ export default function MamangPocket() {
           </div>
 
           {/* 하단 네비게이션 - 상세 페이지에서는 숨김 */}
-          {!selectedCategory && !selectedProduct && !showAllProducts && (
+          {!selectedCategory && !selectedProduct && !showAllProducts && !selectedPost && (
             <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, display: 'flex', justifyContent: 'space-around', backgroundColor: COLORS.card, borderTop: `1px solid ${COLORS.border}`, padding: '12px 0', boxShadow: '0 -2px 10px rgba(0,0,0,0.05)', zIndex: 100 }}>
               {[
                 { key: 'home', icon: Home, label: '홈' },
