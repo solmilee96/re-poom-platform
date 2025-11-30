@@ -47,3 +47,8 @@ chmod +x .git/hooks/post-commit
   (하지만 이 경우 자동 푸시되지 않습니다)
 
 
+
+
+
+
+

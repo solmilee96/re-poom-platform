@@ -1813,198 +1813,6 @@ export default function MamangPocket() {
     );
   };
 
-  // 게시글 상세 페이지
-  const renderPostDetail = () => {
-    if (!selectedPost) return null;
-
-    return (
-      <div style={{ paddingBottom: '100px' }}>
-        {/* 헤더 */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-          <button
-            onClick={() => setSelectedPost(null)}
-            style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '20px',
-              backgroundColor: COLORS.card,
-              border: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-            }}
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={COLORS.text} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="19" y1="12" x2="5" y2="12"></line>
-              <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-          </button>
-          <button
-            onClick={() => alert('공유하기')}
-            style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '20px',
-              backgroundColor: COLORS.card,
-              border: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-            }}
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={COLORS.text} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="18" cy="5" r="3"></circle>
-              <circle cx="6" cy="12" r="3"></circle>
-              <circle cx="18" cy="19" r="3"></circle>
-              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-            </svg>
-          </button>
-        </div>
-
-        {/* 게시글 정보 */}
-        <div style={{ backgroundColor: COLORS.card, borderRadius: '20px', padding: '20px', marginBottom: '16px' }}>
-          {/* 카테고리 및 메타 정보 */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '12px', flexWrap: 'wrap' }}>
-            <span style={{ fontSize: '12px', color: COLORS.subText, backgroundColor: COLORS.bg, padding: '4px 10px', borderRadius: '8px' }}>{selectedPost.category}</span>
-            <span style={{ fontSize: '12px', fontWeight: '500', color: COLORS.primary, backgroundColor: COLORS.peach, padding: '4px 10px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <MapPin size={12} />
-              {selectedPost.region}
-            </span>
-            <span style={{ fontSize: '12px', color: COLORS.subText }}>·</span>
-            <span style={{ fontSize: '12px', color: COLORS.subText }}>{selectedPost.time}</span>
-          </div>
-
-          {/* 제목 */}
-          <h1 style={{ fontSize: '22px', fontWeight: '700', color: COLORS.text, marginBottom: '16px', lineHeight: '30px' }}>
-            {selectedPost.title}
-          </h1>
-
-          {/* 작성자 정보 */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', paddingBottom: '16px', borderBottom: `1px solid ${COLORS.border}` }}>
-            <div style={{ width: '40px', height: '40px', borderRadius: '20px', backgroundColor: COLORS.peach, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>👩</div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: '15px', fontWeight: '600', color: COLORS.text }}>{selectedPost.author}</div>
-              <div style={{ fontSize: '12px', color: COLORS.subText, marginTop: '2px' }}>{selectedPost.region} 마망</div>
-            </div>
-          </div>
-
-          {/* 게시글 내용 */}
-          <div style={{ paddingTop: '16px' }}>
-            <div style={{ fontSize: '15px', color: COLORS.text, lineHeight: '24px', whiteSpace: 'pre-wrap' }}>
-              {selectedPost.category === '중고팁' && '유모차 직거래할 때 꼭 확인해야 할 사항들을 정리해봤어요!\n\n1. 작동 상태 확인\n- 바퀴 회전 및 잠금장치 테스트\n- 접이식 기능 정상 작동 여부\n- 브레이크 작동 확인\n\n2. 안전 인증 확인\n- KC 인증 마크 확인\n- 제조일자 및 사용 기한 확인\n\n3. 직거래 시 주의사항\n- 공공장소에서 만나기\n- 현금 거래 시 주의\n- 거래 전 사진으로 상태 확인\n\n이런 점들을 체크하시면 안전하게 거래하실 수 있어요! 😊'}
-              {selectedPost.category === '대여후기' && '바운서를 2개월 동안 대여해봤는데 정말 만족스러웠어요!\n\n처음에는 구매할까 고민이 많았는데, 사용 기간이 짧을 것 같아서 대여로 결정했어요. 결과적으로 정말 좋은 선택이었습니다!\n\n장점:\n- 가격 부담 없이 사용 가능\n- 깨끗하게 관리되어 있음\n- 대여 업체가 친절함\n\n단점:\n- 반납 시기가 아쉬웠어요 (아기가 좋아해서)\n\n다음에는 다른 육아템도 대여로 시도해볼 예정이에요! 🍼'}
-              {selectedPost.category === '7-12개월' && '이유식 식기 추천 부탁드려요!\n\n우리 아기가 이제 8개월인데 이유식을 시작하려고 해요. 어떤 식기를 사용하시는지 추천해주시면 감사하겠습니다!\n\n고려사항:\n- 안전한 재질 (BPA free)\n- 세척이 쉬운 제품\n- 가격대는 중간 정도\n\n혹시 중고로 구매해도 괜찮을까요? 아니면 신품을 사는 게 나을까요?'}
-              {selectedPost.category === '동네정보' && '잠실 롯데월드몰 수유실 정보 공유해요!\n\n위치: 3층, 5층에 각각 있음\n\n시설:\n- 깨끗하고 넓음\n- 수유 의자 편안함\n- 물티슈, 기저귀 교환대 완비\n- 따뜻한 물 사용 가능\n\n단점:\n- 주말에는 사람이 많아서 대기 시간 있음\n\n다른 마망분들도 참고하시면 좋을 것 같아요! 💕'}
-              {(!selectedPost.category || selectedPost.category === '임신' || selectedPost.category === '신생아' || selectedPost.category === '0–6개월') && '게시글 내용이 여기에 표시됩니다.\n\n우리 동네 마망들과 함께 육아 정보를 나누고 소통하는 공간이에요. 다양한 경험과 팁을 공유해주세요! 😊'}
-            </div>
-          </div>
-
-          {/* 좋아요 및 댓글 수 */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '20px', paddingTop: '16px', borderTop: `1px solid ${COLORS.border}` }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
-              <Heart size={20} color={COLORS.text} />
-              <span style={{ fontSize: '14px', color: COLORS.text, fontWeight: '500' }}>{selectedPost.meta.split('좋아요 ')[1]?.split(' ')[0] || '0'}</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
-              <MessageCircle size={20} color={COLORS.text} />
-              <span style={{ fontSize: '14px', color: COLORS.text, fontWeight: '500' }}>{selectedPost.meta.split('댓글 ')[1]?.split(' ')[0] || '0'}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* 댓글 섹션 */}
-        <div style={{ backgroundColor: COLORS.card, borderRadius: '20px', padding: '20px', marginBottom: '16px' }}>
-          <h3 style={{ fontSize: '18px', fontWeight: '600', color: COLORS.text, marginBottom: '16px' }}>
-            댓글 {selectedPost.meta.split('댓글 ')[1]?.split(' ')[0] || '0'}
-          </h3>
-
-          {/* 댓글 목록 */}
-          <div style={{ marginBottom: '16px' }}>
-            {[
-              { author: '도하맘', text: '정말 유용한 정보 감사해요! 저도 참고하겠습니다 😊', time: '1시간 전' },
-              { author: '송파마망', text: '저도 같은 경험이 있어요. 추가로 궁금한 점 있으면 물어보세요!', time: '30분 전' },
-            ].map((comment, idx) => (
-              <div key={idx} style={{ paddingBottom: '16px', marginBottom: '16px', borderBottom: idx < 1 ? `1px solid ${COLORS.border}` : 'none' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                  <div style={{ width: '32px', height: '32px', borderRadius: '16px', backgroundColor: COLORS.peach, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px' }}>👩</div>
-                  <div>
-                    <div style={{ fontSize: '14px', fontWeight: '600', color: COLORS.text }}>{comment.author}</div>
-                    <div style={{ fontSize: '11px', color: COLORS.subText }}>{comment.time}</div>
-                  </div>
-                </div>
-                <div style={{ fontSize: '14px', color: COLORS.text, lineHeight: '20px', marginLeft: '40px' }}>
-                  {comment.text}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* 댓글 입력 */}
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-            <div style={{ width: '32px', height: '32px', borderRadius: '16px', backgroundColor: COLORS.peach, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px' }}>👶</div>
-            <input
-              type="text"
-              placeholder="댓글을 입력하세요..."
-              style={{
-                flex: 1,
-                padding: '12px 16px',
-                borderRadius: '20px',
-                border: `1px solid ${COLORS.border}`,
-                fontSize: '14px',
-                backgroundColor: COLORS.bg,
-                color: COLORS.text,
-                outline: 'none',
-              }}
-            />
-            <button
-              onClick={() => alert('댓글 작성')}
-              style={{
-                padding: '12px 20px',
-                borderRadius: '20px',
-                backgroundColor: COLORS.primary,
-                border: 'none',
-                fontSize: '14px',
-                fontWeight: '600',
-                color: '#FFF',
-                cursor: 'pointer',
-              }}
-            >
-              등록
-            </button>
-          </div>
-        </div>
-
-        {/* 관련 게시글 */}
-        <h3 style={{ fontSize: '18px', fontWeight: '600', color: COLORS.text, marginBottom: '12px' }}>관련 게시글</h3>
-        {posts.filter(p => p.category === selectedPost.category && p.id !== selectedPost.id).slice(0, 2).map((post) => (
-          <div 
-            key={post.id}
-            onClick={() => setSelectedPost(post)}
-            style={{ backgroundColor: COLORS.card, borderRadius: '18px', padding: '16px', marginBottom: '10px', boxShadow: '0 3px 6px rgba(0,0,0,0.03)', cursor: 'pointer' }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px', flexWrap: 'wrap' }}>
-              <span style={{ fontSize: '11px', color: COLORS.subText }}>{post.category}</span>
-              <span style={{ fontSize: '11px', fontWeight: '500', color: COLORS.primary, backgroundColor: COLORS.peach, padding: '2px 8px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '2px' }}>
-                <MapPin size={10} />
-                {post.region}
-              </span>
-              <span style={{ fontSize: '11px', color: COLORS.subText }}>·</span>
-              <span style={{ fontSize: '11px', color: COLORS.subText }}>{post.time}</span>
-            </div>
-            <div style={{ fontSize: '15px', fontWeight: '600', color: COLORS.text, marginBottom: '8px' }}>{post.title}</div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '12px', color: COLORS.text, fontWeight: '500' }}>{post.author}</span>
-              <span style={{ fontSize: '12px', color: COLORS.subText }}>{post.meta}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  };
-
   // 포켓 화면
   const renderPocket = () => {
     // 실제 찜한 상품 개수 계산
@@ -2128,9 +1936,7 @@ export default function MamangPocket() {
       ) : (
         <>
           <div style={{ padding: '20px' }}>
-            {selectedPost ? (
-              renderPostDetail()
-            ) : selectedProduct ? (
+            {selectedProduct ? (
               renderProductDetail()
             ) : showAllProducts ? (
               renderAllProducts()
@@ -2148,7 +1954,7 @@ export default function MamangPocket() {
           </div>
 
           {/* 하단 네비게이션 - 상세 페이지에서는 숨김 */}
-          {!selectedCategory && !selectedProduct && !showAllProducts && !selectedPost && (
+          {!selectedCategory && !selectedProduct && !showAllProducts && (
             <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, display: 'flex', justifyContent: 'space-around', backgroundColor: COLORS.card, borderTop: `1px solid ${COLORS.border}`, padding: '12px 0', boxShadow: '0 -2px 10px rgba(0,0,0,0.05)', zIndex: 100 }}>
               {[
                 { key: 'home', icon: Home, label: '홈' },
