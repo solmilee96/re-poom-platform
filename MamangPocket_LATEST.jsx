@@ -1772,31 +1772,32 @@ export default function MamangPocket() {
           {communityView === 'myArea' ? '우리 동네 인기 포스트' : '오늘의 인기 포스트'}
         </h2>
 
-        {filteredPosts.map((post) => {
-          const handlePostClick = () => {
-            console.log('✅ 게시글 클릭 이벤트 발생:', post.id, post.title);
-            console.log('✅ setSelectedPost 호출 전:', selectedPost);
-            setSelectedPost(post);
-            console.log('✅ setSelectedPost 호출 후');
-          };
-          
-          return (
-            <div 
-              key={post.id} 
-              onClick={handlePostClick}
-              style={{ 
-                backgroundColor: COLORS.card, 
-                borderRadius: '18px', 
-                padding: '16px', 
-                marginTop: '10px', 
-                boxShadow: '0 3px 6px rgba(0,0,0,0.03)', 
-                cursor: 'pointer',
-                userSelect: 'none',
-                WebkitTapHighlightColor: 'transparent',
-                position: 'relative',
-                zIndex: 1
-              }}
-            >
+        {filteredPosts.map((post) => (
+          <div 
+            key={post.id} 
+            onClick={() => {
+              console.log('게시글 클릭됨:', post.id, post.title);
+              setSelectedPost(post);
+            }}
+            style={{ 
+              backgroundColor: COLORS.card, 
+              borderRadius: '18px', 
+              padding: '16px', 
+              marginTop: '10px', 
+              boxShadow: '0 3px 6px rgba(0,0,0,0.03)', 
+              cursor: 'pointer',
+              userSelect: 'none',
+              WebkitTapHighlightColor: 'transparent'
+            }}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setSelectedPost(post);
+              }
+            }}
+          >
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px', flexWrap: 'wrap' }}>
               <span style={{ fontSize: '11px', color: COLORS.subText }}>{post.category}</span>
               <span style={{ fontSize: '11px', fontWeight: '500', color: COLORS.primary, backgroundColor: COLORS.peach, padding: '2px 8px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '2px' }}>
@@ -1812,8 +1813,7 @@ export default function MamangPocket() {
               <span style={{ fontSize: '12px', color: COLORS.subText }}>{post.meta}</span>
             </div>
           </div>
-          );
-        })}
+        ))}
 
         {/* 글쓰기 카드 */}
         <div style={{ backgroundColor: COLORS.mint, borderRadius: '20px', padding: '18px', marginTop: '24px' }}>
