@@ -1,15 +1,5 @@
-# Vercel에서 무시할 파일
 node_modules
 .git
-.DS_Store
+.vercel
 *.log
-.env.local
-.vscode
-.idea
-
-
-
-
-
-
-
+.DS_Store
