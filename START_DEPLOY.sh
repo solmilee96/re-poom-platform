@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# 배포 시작 스크립트
+
+echo "🚀 마망포켓 배포를 시작합니다..."
+echo ""
+echo "📋 배포 방법 선택:"
+echo ""
+echo "1️⃣  Vercel CLI로 직접 배포 (지금 바로)"
+echo "   → vercel login 후 vercel --prod"
+echo ""
+echo "2️⃣  GitHub Actions 자동 배포 (앞으로 자동)"
+echo "   → git push만 하면 자동 배포"
+echo ""
+echo "어떤 방법을 사용하시겠습니까?"
+echo ""
+echo "터미널에서 다음 중 하나를 실행하세요:"
+echo ""
+echo "【방법 1 - 직접 배포】"
+echo "  vercel login"
+echo "  vercel --prod"
+echo ""
+echo "【방법 2 - GitHub 푸시 후 자동 배포】"
+echo "  git push"
+echo "  (GitHub Secrets 설정 필요 - GITHUB_SECRETS.md 참고)"
+echo ""
+echo "현재 상태:"
+echo "  ✅ 빌드 완료"
+echo "  ✅ 코드 준비 완료"
+echo "  ⏳ 배포 대기 중"
+echo ""
+echo "📧 Vercel 계정: solmilee96@gmail.com"
+
