@@ -1,11 +1,13 @@
 {
-  "name": "baby-goods-platform",
+  "name": "mamang-pocket",
   "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "npm run build && vercel --prod",
+    "deploy:auto": "./auto_deploy_simple.sh"
   },
   "engines": {
     "node": ">=20.0.0",
