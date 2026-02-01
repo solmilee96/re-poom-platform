@@ -148,63 +148,63 @@
       };
 
       const temperamentQuestions = [
-        { dimension: '활동성', question: '{{name}}이(가) 집에서 놀 때, 주로 어떤 모습인가요?', description: '아이의 신체적 에너지 수준과 움직임의 빈도를 파악합니다', options: [
+        { dimension: '활동성', question: '{{name}}이(가) 집에서 놀 때,\n주로 어떤 모습인가요?', description: '아이의 신체적 에너지 수준과 움직임의 빈도를 파악합니다', options: [
           { text: '한시도 가만히 못 있고 끊임없이 움직여요', score: 10, emoji: '🚀' },
           { text: '활발하지만 조용한 놀이도 10-15분은 해요', score: 7.5, emoji: '🏃' },
           { text: '활동적인 놀이와 조용한 놀이를 번갈아 해요', score: 5, emoji: '🚶' },
           { text: '조용한 놀이를 선호하고 격한 활동은 금방 지쳐요', score: 2.5, emoji: '🧘' },
           { text: '거의 안 움직이고 한 자리에 오래 앉아있어요', score: 1, emoji: '🪷' }
         ]},
-        { dimension: '규칙성', question: '잠드는 시간, 배고파하는 시간이 얼마나 일정한가요?', description: '생리적 리듬의 예측 가능성을 측정합니다', options: [
+        { dimension: '규칙성', question: '잠드는 시간, 배고파하는 시간이\n얼마나 일정한가요?', description: '생리적 리듬의 예측 가능성을 측정합니다', options: [
           { text: '매일 거의 같은 시간, 시계처럼 정확해요', score: 10, emoji: '⏰' },
           { text: '대체로 비슷하지만 30분-1시간 차이 나요', score: 7.5, emoji: '📅' },
           { text: '기본 패턴은 있지만 매일 조금씩 달라요', score: 5, emoji: '🔄' },
           { text: '매일 완전히 달라요, 예측이 어려워요', score: 2.5, emoji: '🎲' },
           { text: '아예 패턴이 없고 완전 랜덤이에요', score: 1, emoji: '❓' }
         ]},
-        { dimension: '접근성', question: '낯선 사람이나 새로운 장소를 만나면?', description: '새로운 자극에 대한 초기 반응 경향을 봅니다', options: [
+        { dimension: '접근성', question: '낯선 사람이나 새로운 장소를\n만나면?', description: '새로운 자극에 대한 초기 반응 경향을 봅니다', options: [
           { text: '즉시 다가가서 웃으며 반가워해요', score: 10, emoji: '🤗' },
           { text: '약간 경계하지만 2-3분 안에 다가가요', score: 7.5, emoji: '👋' },
           { text: '5-10분 지켜본 후 천천히 탐색해요', score: 5, emoji: '👀' },
           { text: '15분 이상 엄마한테 붙어있고 떼면 울어요', score: 2.5, emoji: '😰' },
           { text: '거부하고 울며 한 시간이 지나도 적응 못해요', score: 1, emoji: '😭' }
         ]},
-        { dimension: '적응성', question: '계획 변경, 새 음식 등 변화가 생기면?', description: '변화에 적응하는 속도와 유연성을 측정합니다', options: [
+        { dimension: '적응성', question: '계획 변경, 새 음식 등\n변화가 생기면?', description: '변화에 적응하는 속도와 유연성을 측정합니다', options: [
           { text: '오히려 좋아해요, 변화를 즐기고 바로 적응해요', score: 10, emoji: '✨' },
           { text: '처음 5분은 어색하지만 금방 받아들여요', score: 7.5, emoji: '🌟' },
           { text: '조금 불편해하지만 10-20분이면 적응해요', score: 5, emoji: '⏳' },
           { text: '저항하고 울어요, 30분-1시간 달래야 해요', score: 2.5, emoji: '😣' },
           { text: '극도로 힘들어해서 몇 시간이 지나도 적응 못해요', score: 1, emoji: '💢' }
         ]},
-        { dimension: '반응 강도', question: '감정을 표현할 때 강도는 어느 정도인가요?', description: '감정 표현의 크기와 에너지를 평가합니다', options: [
+        { dimension: '반응 강도', question: '감정을 표현할 때,\n강도는 어느 정도인가요?', description: '감정 표현의 크기와 에너지를 평가합니다', options: [
           { text: '모든 감정이 폭발적, 온몸으로 표현해요', score: 10, emoji: '💥' },
           { text: '감정 표현이 큰 편, 환하게 웃고 크게 울어요', score: 7.5, emoji: '😆' },
           { text: '적당히 표현해요, 웃고 울고 징징대요', score: 5, emoji: '😊' },
           { text: '조용한 편, 살짝 웃고 약간 찡그려요', score: 2.5, emoji: '😌' },
           { text: '거의 무표정, 기쁜지 슬픈지 잘 모르겠어요', score: 1, emoji: '😐' }
         ]},
-        { dimension: '기분 상태', question: '평소 {{name}}이(가)의 전반적인 기분은 어떤가요?', description: '기본 정서의 긍정성/부정성 경향을 봅니다', options: [
+        { dimension: '기분 상태', question: '평소 {{name}}이(가)의\n전반적인 기분은 어떤가요?', description: '기본 정서의 긍정성/부정성 경향을 봅니다', options: [
           { text: '거의 항상 밝고 즐거워해요', score: 10, emoji: '😄' },
           { text: '대체로 기분 좋은 상태예요', score: 7.5, emoji: '🙂' },
           { text: '좋을 때와 안 좋을 때가 비슷해요', score: 5, emoji: '😐' },
           { text: '약간 까다로운 편, 불편해하는 모습을 더 자주 봐요', score: 2.5, emoji: '😟' },
           { text: '거의 항상 칭얼대요, 웃는 모습 보기 어려워요', score: 1, emoji: '😢' }
         ]},
-        { dimension: '주의 산만성', question: '집중할 때 주변 자극이 있으면?', description: '외부 자극에 의한 주의 전환 정도를 측정합니다', options: [
+        { dimension: '주의 산만성', question: '집중할 때\n주변 자극이 있으면?', description: '외부 자극에 의한 주의 전환 정도를 측정합니다', options: [
           { text: '작은 소리에도 바로 돌려요, 5초 이상 집중 불가능', score: 10, emoji: '🦋' },
           { text: '쉽게 주의가 분산돼요, 자주 딴 짓 해요', score: 7.5, emoji: '👂' },
           { text: '어느 정도 집중하지만 흥미로운 자극엔 돌려요', score: 5, emoji: '👁️' },
           { text: '꽤 집중해요, 웬만한 자극엔 신경 안 써요', score: 2.5, emoji: '🎯' },
           { text: '엄청난 집중력, 불러도 대답 안 해요', score: 1, emoji: '🔬' }
         ]},
-        { dimension: '지속성', question: '어려운 과제가 잘 안 되면 어떻게 하나요?', description: '좌절 상황에서의 끈기와 인내심을 평가합니다', options: [
+        { dimension: '지속성', question: '어려운 과제가 잘 안 되면\n어떻게 하나요?', description: '좌절 상황에서의 끈기와 인내심을 평가합니다', options: [
           { text: '계속 도전해요, 성공할 때까지 포기를 몰라요', score: 10, emoji: '💪' },
           { text: '5-10번 시도하다 안 되면 도움 요청해요', score: 7.5, emoji: '🔧' },
           { text: '3-5번 시도하다 안 되면 다른 걸 찾아요', score: 5, emoji: '🤔' },
           { text: '한두 번 해보고 바로 포기하거나 울어요', score: 2.5, emoji: '😤' },
           { text: '시도조차 안 해요, "엄마가 해줘" 해요', score: 1, emoji: '🏳️' }
         ]},
-        { dimension: '감각 민감도', question: '옷 태그, 소음, 음식 질감 등에 대한 반응은?', description: '감각 처리의 민감성을 종합적으로 봅니다', options: [
+        { dimension: '감각 민감도', question: '옷 태그, 소음, 음식 질감 등에 대한\n반응은?', description: '감각 처리의 민감성을 종합적으로 봅니다', options: [
           { text: '극도로 예민해요, 시끄러운 곳에서 귀 막아요', score: 10, emoji: '🔊' },
           { text: '꽤 민감해요, 특정 소리나 촉감 싫어해요', score: 7.5, emoji: '👃' },
           { text: '보통이에요, 가끔 특정한 것만 불편해해요', score: 5, emoji: '👂' },
@@ -214,28 +214,28 @@
       ];
 
       const parentQuestions = [
-        { dimension: '스트레스 내성', question: '아이가 30분 넘게 떼쓰고 울 때, 나의 반응은?', description: '고강도 육아 상황에서의 정서 조절 능력을 봅니다', options: [
+        { dimension: '스트레스 내성', question: '아이가 30분 넘게 떼쓰고 울 때,\n나의 반응은?', description: '고강도 육아 상황에서의 정서 조절 능력을 봅니다', options: [
           { text: '흔들리지 않고 차분해요, 침착하게 대처해요', score: 10 },
           { text: '처음엔 당황하지만 곧 진정하고 달래요', score: 7.5 },
           { text: '스트레스 느끼지만 참고 견뎌요', score: 5 },
           { text: '함께 힘들어지고 목소리가 커져요', score: 2.5 },
           { text: '감당 안 돼요, 같이 울거나 나가버려요', score: 1 }
         ]},
-        { dimension: '반응 속도', question: '아이가 "엄마!"하고 부르거나 울음 소리를 내면?', description: '아이의 신호에 대한 반응성과 민감성을 측정합니다', options: [
+        { dimension: '반응 속도', question: '아이가 "엄마!"하고 부르거나\n울음 소리를 내면?', description: '아이의 신호에 대한 반응성과 민감성을 측정합니다', options: [
           { text: '즉시 달려가요, 기다리게 하는 게 불안해요', score: 10 },
           { text: '곧바로 반응하지만 급하지 않으면 "잠깐만"', score: 7.5 },
           { text: '하던 일 마무리하고 가요, 상황 봐요', score: 5 },
           { text: '급한 게 아니면 아이가 스스로 해결하길 기다려요', score: 2.5 },
           { text: '정말 간절하게 부를 때만 가요', score: 1 }
         ]},
-        { dimension: '통제 욕구', question: '계획대로 안 될 때 어떻게 느끼나요?', description: '예측 가능성과 통제에 대한 욕구 수준을 파악합니다', options: [
+        { dimension: '통제 욕구', question: '계획대로 안 될 때\n어떻게 느끼나요?', description: '예측 가능성과 통제에 대한 욕구 수준을 파악합니다', options: [
           { text: '많이 불안해요, 루틴 깨지면 하루가 망한 것 같아요', score: 10 },
           { text: '불편하지만 계획 B로 조정할 수 있어요', score: 7.5 },
           { text: '약간 아쉽지만 "뭐 어때" 하고 넘어가요', score: 5 },
           { text: '개의치 않아요, 원래 계획이 별로 없어요', score: 2.5 },
           { text: '계획 없는 게 더 편해요, 즉흥적으로 해요', score: 1 }
         ]},
-        { dimension: '완벽주의', question: '육아 정보를 접할 때 나는?', description: '육아에서의 기준과 자기 평가 경향을 봅니다', options: [
+        { dimension: '완벽주의', question: '육아 정보를 접할 때\n나는?', description: '육아에서의 기준과 자기 평가 경향을 봅니다', options: [
           { text: '다 따라하려 노력해요, 못 지키면 자책해요', score: 10 },
           { text: '최대한 따라하지만 안 되면 괜찮다고 달래요', score: 7.5 },
           { text: '참고하되 우리 상황에 맞게 적용해요', score: 5 },
@@ -613,7 +613,7 @@
                     <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-amber-400 absolute -top-2 -right-2" style={{ animation: 'spin 3s linear infinite' }} />
                   </div>
                   <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-rose-400 via-pink-400 to-amber-400 bg-clip-text text-transparent leading-tight">아이 여행</h1>
-                  <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-2 px-1">&#39;왜 이럴까?&#39;를 &#39;그래서 그랬구나&#39;로 바꿔주는, 아이 기질 기반 행동 가이드 서비스</p>
+                  <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-2 px-1">&#39;왜 이럴까?&#39;를 &#39;그래서 그랬구나&#39;로 바꿔주는,<br />아이 기질 기반 행동 가이드 서비스</p>
                   <p className="text-lg sm:text-xl md:text-2xl text-gray-700 font-medium mt-3 sm:mt-4 px-2 leading-snug">아이의 마음 지도를 따라, 함께 여행해볼까요?</p>
                 </div>
                 <div className="bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-[32px] p-5 sm:p-8 md:p-10 shadow-2xl border-2 sm:border-4 border-rose-200 mb-6 sm:mb-8">
@@ -655,7 +655,7 @@
                 <div className="bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-[32px] p-5 sm:p-8 md:p-10 shadow-2xl border-2 sm:border-4 border-rose-200">
                   <div className="text-center mb-6 sm:mb-8">
                     <Baby className="w-14 h-14 sm:w-16 sm:h-16 text-rose-400 mx-auto mb-3 sm:mb-4" />
-                    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-2 sm:mb-3 leading-snug px-1">아이의 마음으로 들어가는 여행을 시작해볼까요?</h2>
+                    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-2 sm:mb-3 leading-snug px-1">아이의 마음을 알아가는 여행을<br />시작해볼까요?</h2>
                     <p className="text-sm sm:text-base text-gray-600">이름과 생년월일을 알려주시면, 더 정확한 분석이 가능해요.</p>
                   </div>
                   <form onSubmit={handleChildInfoSubmit} className="space-y-4 sm:space-y-6">
@@ -685,7 +685,7 @@
                 <div className="bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-[32px] p-5 sm:p-8 md:p-10 shadow-2xl border-2 sm:border-4 border-amber-200" style={{ animation: 'slideUp 0.5s ease-out' }}>
                   <div className="text-center mb-6 sm:mb-8">
                     <span className="inline-block px-4 sm:px-6 py-1.5 sm:py-2 bg-amber-100 text-amber-700 rounded-full text-xs sm:text-sm font-medium mb-3 sm:mb-4">{temperamentQuestions[currentQuestion].dimension}</span>
-                    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 leading-snug sm:leading-relaxed mb-2 sm:mb-3 px-1">{temperamentQuestions[currentQuestion].question.replace('{{name}}', childInfo.name)}</h2>
+                    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 leading-snug sm:leading-relaxed mb-2 sm:mb-3 px-1 whitespace-pre-line">{temperamentQuestions[currentQuestion].question.replace('{{name}}', childInfo.name)}</h2>
                     <p className="text-xs sm:text-sm text-gray-500 italic">{temperamentQuestions[currentQuestion].description}</p>
                   </div>
                   <div className="space-y-2 sm:space-y-3">
@@ -714,7 +714,7 @@
                 <div className="bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-[32px] p-5 sm:p-8 md:p-10 shadow-2xl border-2 sm:border-4 border-blue-200">
                   <div className="text-center mb-6 sm:mb-8">
                     <span className="inline-block px-4 sm:px-6 py-1.5 sm:py-2 bg-blue-100 text-blue-700 rounded-full text-xs sm:text-sm font-medium mb-3 sm:mb-4">{parentQuestions[currentQuestion].dimension}</span>
-                    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 leading-snug sm:leading-relaxed mb-2 sm:mb-3 px-1">{parentQuestions[currentQuestion].question}</h2>
+                    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 leading-snug sm:leading-relaxed mb-2 sm:mb-3 px-1 whitespace-pre-line">{parentQuestions[currentQuestion].question}</h2>
                     <p className="text-xs sm:text-sm text-gray-500 italic">{parentQuestions[currentQuestion].description}</p>
                   </div>
                   <div className="space-y-2 sm:space-y-3">
@@ -738,7 +738,7 @@
                 <div className="bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-[32px] p-5 sm:p-8 md:p-10 shadow-2xl border-2 sm:border-4 border-amber-200">
                   <div className="text-center mb-5 sm:mb-8">
                     <MessageCircle className="w-14 h-14 sm:w-16 sm:h-16 text-amber-400 mx-auto mb-3 sm:mb-4" />
-                    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-2 sm:mb-3 leading-snug">요즘 {childInfo.name}이, 어떤 행동이 제일 힘드신가요?</h2>
+                    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-2 sm:mb-3 leading-snug px-1">요즘 {childInfo.name}이,<br />어떤 행동이 제일 힘드신가요?</h2>
                     <p className="text-sm sm:text-base text-gray-600">구체적으로 적어주시면 더 정확한 조언을 드릴 수 있어요.</p>
                   </div>
                   <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
@@ -812,6 +812,22 @@
                       <p className="text-sm text-gray-600 leading-relaxed mt-4 pt-4 border-t border-rose-200/50">
                         Thomas & Chess(1977)의 뉴욕 종단 연구에 따르면 기질은 생후 초기부터 관찰되는 선천적 성향입니다. Rothbart & Bates(2006)는 기질을 &#39;생물학적 기반의 정서·주의·활동성 개인차&#39;로 정의하며, 양육 방식이 아닌 아이 고유의 특성임을 강조합니다.
                       </p>
+                    </div>
+                  </div>
+                  <div className="mb-6 sm:mb-10 pb-6 sm:pb-10 border-b-2 border-dashed border-purple-200">
+                    <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl sm:rounded-[24px] p-5 sm:p-8 border-2 border-purple-200">
+                      <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-800 mb-4 sm:mb-6 flex items-center">
+                        <Baby className="w-5 h-5 sm:w-6 sm:h-6 mr-2 text-purple-500 flex-shrink-0" />
+                        {childInfo.name}이의 기질 프로필
+                      </h3>
+                      <div className="space-y-4">
+                        {temperamentQuestions.map((q, idx) => (
+                          <div key={idx}>
+                            <div className="flex justify-between mb-2"><span className="text-sm font-medium text-gray-700">{q.dimension}</span><span className="text-sm font-bold text-purple-600">{result.childScores[idx]}/10</span></div>
+                            <div className="h-3 bg-gray-200 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-purple-400 to-pink-400 rounded-full transition-all duration-1000" style={{ width: `${(result.childScores[idx] / 10) * 100}%` }} /></div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                   <div className="mb-6 sm:mb-10 pb-6 sm:pb-10 border-b-2 border-dashed border-teal-200">
@@ -917,20 +933,6 @@
                       </div>
                     </div>
                   )}
-                  <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl sm:rounded-[24px] p-5 sm:p-8 border-2 border-purple-200 mb-6 sm:mb-8">
-                    <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-800 mb-4 sm:mb-6 flex items-center">
-                      <Baby className="w-5 h-5 sm:w-6 sm:h-6 mr-2 text-purple-500 flex-shrink-0" />
-                      {childInfo.name}이의 기질 프로필
-                    </h3>
-                    <div className="space-y-4">
-                      {temperamentQuestions.map((q, idx) => (
-                        <div key={idx}>
-                          <div className="flex justify-between mb-2"><span className="text-sm font-medium text-gray-700">{q.dimension}</span><span className="text-sm font-bold text-purple-600">{result.childScores[idx]}/10</span></div>
-                          <div className="h-3 bg-gray-200 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-purple-400 to-pink-400 rounded-full transition-all duration-1000" style={{ width: `${(result.childScores[idx] / 10) * 100}%` }} /></div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
                   <div className="flex justify-center flex-wrap gap-3 sm:gap-4">
                     <button onClick={() => { setStep('chat'); saveToStorage(); }} className="w-full sm:w-auto px-5 sm:px-8 py-3 sm:py-4 text-sm sm:text-base bg-gradient-to-r from-rose-400 to-pink-400 text-white font-bold rounded-xl sm:rounded-[24px] hover:shadow-2xl hover:scale-[1.02] sm:hover:scale-105 active:scale-[0.98] transition-all duration-300 flex items-center justify-center space-x-2 sm:space-x-3 min-h-[48px]"><MessageCircle className="w-5 h-5 flex-shrink-0" /><span>계속 상담하기</span></button>
                     <button onClick={() => setStep('welcome')} className="w-full sm:w-auto px-5 sm:px-8 py-3 sm:py-4 text-sm sm:text-base bg-white border-2 sm:border-3 border-blue-300 text-blue-600 font-bold rounded-xl sm:rounded-[24px] hover:shadow-xl hover:scale-[1.02] sm:hover:scale-105 active:scale-[0.98] transition-all duration-300 flex items-center justify-center space-x-2 min-h-[48px]"><Home className="w-5 h-5 flex-shrink-0" /><span>홈으로</span></button>
