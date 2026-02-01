@@ -48,8 +48,8 @@
 
   <script type="text/babel" data-presets="react">
     const { useState, useEffect } = React;
-    // 아쉬워요 피드백 시 슬랙 알림용 API (Next.js 등 배포한 API 주소로 설정, 비우면 알림 없음)
-    const FEEDBACK_API_URL = '';
+    // 아쉬워요 피드백 시 슬랙 알림용 API (Vercel 배포 후 프로젝트 URL로 변경, 비우면 알림 없음)
+    const FEEDBACK_API_URL = 'https://re-poom-platform.vercel.app/api/feedback';
 
     // Icon components
     const Baby = ({ className, ...props }) => (
