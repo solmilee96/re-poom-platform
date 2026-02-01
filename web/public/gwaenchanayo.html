@@ -393,21 +393,17 @@
         } else {
           concernAnalysis = `**"${concern}"에 대한 분석:**\n\n${name}이(${age})의 이 행동을 기질적 관점에서 이해해볼게요. 구체적인 고민을 입력하시면 더 맞춤 분석을 드릴 수 있어요.`;
         }
-        // 분기 순서: getTemperamentType 우선순위와 동일 (1.감각민감 2.에너자이저 3.신중파 4.탐험가 5.순둥이 6.밸런서)
+        // 설명 분기: 표시된 기질 유형(temperamentType.type)과 동일한 기준으로 분기해, 결과와 설명이 항상 일치하도록 함
         const parentHighControl = parentScores[2] > 7;
         const parentLowStress = parentScores[0] < 5;
-        const regularity = childScores[1];
-        const approach = childScores[2];
-        const adaptability = childScores[3];
-        const mood = childScores[5];
 
-        if (highSensitivity) {
+        if (temperamentType.type === '섬세파') {
           interpretation = `${name}이는 **'${temperamentType.type}' ${temperamentType.emoji}** 기질이에요. Elaine Aron(1996)의 연구에서 'Highly Sensitive Child'로 분류되는 유형으로, 전체 아동의 약 15-20%가 이에 해당해요. ${age} 시기에는 특히 소리, 빛, 촉감 같은 자극을 **훨씬 더 강하게 느끼는 예민한 신경계**를 가지고 있어요.`;
           reassurance = `쇼핑몰에서 울거나 옷 입는 걸 거부하는 ${name}이는 지금 **'감각 과부하(Sensory Overload)'** 상태예요. 이건 버릇이나 고집이 아니라, 뇌가 "자극이 너무 많아!"라고 알려주는 생리적 반응이에요.`;
           script = `**${name}이(섬세파) 감각 조절 대화법:**\n\n**1단계: 과부하 징후 인지** - 귀 막기, 눈 감기, 짜증 증가 → Dunn(1997): 예민한 아이의 **뇌가 보내는 SOS**\n\n**2단계: 즉각 환경 조정**\n"${name}아, 여기 너무 (시끄럽다/밝다). 조용한 곳으로 가자."\n\n**3단계: 감각 줄이기** - 소음: 화장실, 복도 / 조명: 커튼 닫기, 선글라스\n\n**4단계: 그라운딩** "손 꽉 잡아. 천천히 숨 쉬자. 하나, 둘, 셋..." → Porges(2011) 미주신경 이론\n\n**출처:** Dunn, W. (1997). Sensory Profile. Ayres, A.J. (1979). Sensory Integration and the Child.`;
           practicalTips = [{ title: '외출 전 감각 준비', content: `외출 전에 "시끄러운 곳에 가는데, 귀마개 가져갈까?"처럼 예고하고 대비책을 함께 준비하세요.`, source: 'Aron, E. (1996)' }, { title: '옷감 선택권 주기', content: `옷 살 때 ${name}이가 직접 만져보게 하세요. 태그는 미리 다 제거하고, 부드러운 면 소재를 선택하세요.`, source: 'Kranowitz, C. (2005)' }, { title: '다운타임 확보', content: `${age} 예민한 아이는 하루에 최소 1-2시간의 조용한 시간이 필요해요. 일정에 의도적으로 "쉬는 시간"을 넣으세요.`, source: 'Aron, E. (2002)' }];
           realExamples = [{ situation: '옷 입히려고 하면 울고 저항', solution: `${name}이가 직접 옷을 고르게 함. 2-3벌 중 "어떤 게 기분 좋아?" 물어보기.`, mom: '24개월 여아 엄마', result: '선택권을 주니까 저항이 80% 줄었어요.' }, { situation: '식당에서 식사 중 갑자기 울고 나가자고 함', solution: `식당 선택 시 구석 자리 예약. 노이즈 캔슬링 귀마개 준비. 20분 이상 있을 때는 중간에 밖에 나가서 쉬는 시간 주기.`, mom: '30개월 남아 엄마', result: '귀마개 하나로 외식이 가능해졌어요.' }];
-        } else if (regularity <= 4 && adaptability <= 4 && highIntensity) {
+        } else if (temperamentType.type === '에너자이저') {
           interpretation = `${name}이는 **'${temperamentType.type}' ${temperamentType.emoji}** 기질이에요. 이는 Chess & Thomas(1977)의 연구에서 'Spirited Child'로 분류되는 유형으로, **적응성이 낮고 반응 강도가 높은** 특성을 보여요. ${age} 아이에게 이런 기질은 나쁜 게 아니라, 환경 변화에 민감하게 반응하며 자신의 감정을 솔직하게 표현하는 것이에요.`;
           reassurance = `새로운 장소나 낯선 사람을 만날 때 ${name}이가 폭발적으로 떼를 쓰는 건 "${name}이가 지금 불안해!"라고 외치는 **도움 요청 신호**예요. Mary Sheedy Kurcinka의 연구(Raising Your Spirited Child, 2006)에 따르면, 이런 아이들은 변화에 대한 예고와 감정 인정이 특히 중요해요.`;
           let dialogueTitle = ''; let dialogueContent = '';
@@ -424,25 +420,26 @@
           script = dialogueTitle + dialogueContent;
           practicalTips = [{ title: '변화 예고하기', content: `최소 10-15분 전에 알려주세요. "5분 후에 나갈 거야"보다 "손 씻고, 신발 신고 나갈 거야"처럼 단계를 설명하면 더 효과적이에요.`, source: 'Kurcinka, M. S. (2006)' }, { title: '감정 언어 가르치기', content: `${age} 아이는 감정을 표현하는 단어가 부족해요. "화났어?", "무서워?" 같은 질문으로 감정 이름을 알려주세요.`, source: 'Gottman, J. (1997) Raising An Emotionally Intelligent Child' }, { title: '진정 공간 만들기', content: `집에 쿠션, 인형, 부드러운 조명이 있는 조용한 코너를 만들어주세요. 감정이 폭발할 때 피난처가 돼요.`, source: 'Siegel, D. & Bryson, T. (2012) The Whole-Brain Child' }];
           realExamples = [{ situation: '마트에서 과자 사달라고 바닥에 드러누워 울기', solution: `"지금 과자 먹고 싶구나. 근데 오늘은 안 사는 날이야. 대신 집에 가서 엄마랑 쿠키 만들어 먹을까?" (대안 제시)`, mom: '33개월 남아 엄마', result: '처음엔 계속 울었지만, 3-4번 반복하니 "쿠키 만들어?" 하면서 진정됐어요.' }, { situation: '목욕 거부로 매일 전쟁', solution: `목욕 30분 전부터 "곧 목욕 시간이야", "10분 남았어" 알림. 목욕 순서표 그림판 만들어서 보여주기.`, mom: '27개월 여아 엄마', result: '예측 가능해지니까 저항이 절반으로 줄었어요. 순서표 넘기는 걸 재밌어해요.' }, { situation: '어린이집 등원 시 매일 울음', solution: `등원 전 "엄마 손 흔들흔들, 뽀뽀뽀" 의식 만들기. 선생님께 ${name}이가 좋아하는 놀잇감 미리 꺼내달라고 부탁.`, mom: '36개월 남아 엄마', result: '2주 정도 걸렸지만, 이제 의식하고 바로 놀잇감 달려가요.' }];
-        } else if (approach <= 4 && adaptability <= 5 && childScores[4] <= 5) {
+        } else if (temperamentType.type === '신중파') {
           interpretation = `${name}이는 **'${temperamentType.type}' ${temperamentType.emoji}** 기질이에요. Chess & Thomas(1977)의 연구에서 'Slow-to-Warm-Up Child'로 분류되는 유형으로, 전체 아동의 약 15%가 이에 해당해요. ${age} 시기에는 **새로운 상황을 조심스럽게 관찰한 후 천천히 참여**하는 특성이 나타나요.`;
           reassurance = `어린이집 첫날 울거나 낯선 사람 앞에서 얼어붙는 ${name}이는 '겁쟁이'가 아니에요. Kagan(1994)의 연구에서 이런 아이들은 **행동 억제 시스템(BIS)**이 활성화된 것으로, 신중함은 위험 회피 능력이자 생존 전략이에요.`;
           script = `**${name}이(신중파) 워밍업 대화법:**\n\n**1단계: 관찰 시간 확보** "${name}아, 여기 처음이지? 엄마랑 앉아서 구경하자." → 5-10분 관찰 시간이 참여 의욕 3배 ↑ (Kagan, 1994)\n\n**2단계: 언어화** "저기 미끄럼틀 있네. 빨간색이다."\n\n**3단계: 점진적 접근** "엄마 손 잡고 가까이 가볼까? 만져만 보자."\n\n**4단계: 무압박 참여** "타고 싶으면 타고, 아니면 구경만 해도 돼."\n\n**출처:** Thomas, A. & Chess, S. (1977). Kagan, J. (1994). Galen's Prophecy.`;
           practicalTips = [{ title: '예고와 준비', content: `새로운 장소 방문 전 사진이나 영상을 보여주세요. ${name}이의 뇌가 "낯설지 않아"라고 인식하면 적응이 2배 빨라져요.`, source: 'Kagan, J. (1994)' }, { title: '강요 금지', content: `"빨리 해", "용기 내" 같은 말은 역효과예요. ${name}이가 준비됐을 때 자연스럽게 시도할 거예요.`, source: 'Thomas & Chess (1977)' }, { title: '작은 성공 축적', content: `한 번 성공한 경험을 반복 노출하세요. 익숙함이 자신감으로 이어져요.`, source: 'Bandura, A. (1977)' }];
           realExamples = [{ situation: '어린이집 적응 안 됨 (3주째 울음)', solution: `선생님께 ${name}이 좋아하는 인형 미리 준비 부탁. 등원 후 "인형이 ${name}이 기다렸대" 말하며 10분 같이 놀다가 나옴.`, mom: '30개월 여아 엄마', result: '4주차부터 인형 보자마자 울음 멈춤.' }, { situation: '생일파티에서 혼자 구석에만 있음', solution: `억지로 끌어내지 않고, 엄마가 옆에서 아이들 노는 거 같이 구경. "저 친구 풍선 가지고 노네" 설명해줌.`, mom: '34개월 남아 엄마', result: '30분 후 스스로 풍선 만지러 감.' }];
-        } else if (childScores[0] >= 8) {
+        } else if (temperamentType.type === '탐험가') {
           interpretation = `${name}이는 **'${temperamentType.type}' ${temperamentType.emoji}** 기질이에요. Buss & Plomin(1984)의 연구에서 'Active Child'로 분류되는 유형으로, **운동 에너지 수준이 평균의 2배**예요. ${age} 시기에는 끊임없이 움직이고, 탐색하고, 만지고 싶어하는 욕구가 강해요.`;
           reassurance = `${name}이가 5분도 못 앉아있고 집안을 뛰어다니는 건 '산만함'이 아니라 **뇌가 요구하는 정상적인 움직임**이에요. Panksepp(1998)의 연구에서 높은 활동성은 SEEKING 시스템(탐색 본능) 활성화로, 학습과 발달에 긍정적이에요.`;
           script = `**${name}이(탐험가) 에너지 방향 대화법:**\n\n**1단계: 에너지 인정** "${name}아, 몸이 막 움직이고 싶구나. 엄마 알아."\n\n**2단계: 안전한 방향 제시** "여기서는 안 돼. 위험해. 밖에 나가서 뛰자."\n\n**3단계: 에너지 소진 활동** "이 공 던져봐. 10번!" → Pellegrini & Smith(1998): 하루 2시간 격렬한 활동 필수\n\n**4단계: 진정 신호** "이제 천천히 걷기. 하나, 둘, 셋..."\n\n**출처:** Panksepp, J. (1998). Affective Neuroscience. Pellegrini & Smith (1998). Child Development, 69(3).`;
           practicalTips = [{ title: '하루 2시간 격렬한 놀이', content: `공원, 뛰기, 점프, 오르기 등 대근육 활동이 필수예요. 에너지 발산 안 되면 밤잠도 안 와요.`, source: 'Pellegrini & Smith (1998)' }, { title: '집안 안전 공간', content: `소파 쿠션으로 점프존, 테이프로 길 만들기 등. 비 오는 날 대비 필수예요.`, source: 'Buss & Plomin (1984)' }, { title: '타이머 게임', content: `"5분 동안 조용히 앉아있기" 챌린지. 성공하면 10분 뛰어놀기. 자기 조절 연습이에요.`, source: 'Rothbart & Bates (2006)' }];
           realExamples = [{ situation: '식당에서 계속 돌아다니고 뛰어다님', solution: `식사 전 식당 주차장에서 10분 뛰어놀기. 식당 도착 전 "앉아있기 게임" 예고. 5분 앉아있으면 스티커.`, mom: '35개월 남아 엄마', result: '에너지 미리 빼니까 15분은 앉아있어요.' }, { situation: '집에서 소파 위로 계속 점프', solution: `거실 한쪽에 매트 깔고 "점프존" 지정. "소파는 안 돼, 여기서 점프!" 일관된 규칙.`, mom: '32개월 여아 엄마', result: '1주일 걸렸지만 이제 점프존에서만 놀아요.' }];
-        } else if (childScores[1] >= 7 && childScores[3] >= 7 && childScores[5] >= 7) {
+        } else if (temperamentType.type === '순둥이') {
           interpretation = `${name}이는 **'${temperamentType.type}' ${temperamentType.emoji}** 기질이에요. Thomas & Chess(1977)의 연구에서 'Easy Child'로 분류되는 유형으로, 전체 아동의 약 40%가 이에 해당해요. ${age} 시기에는 **규칙적인 생활 리듬, 빠른 적응력, 긍정적인 기분**을 보여요.`;
           reassurance = `${name}이(가) 키우기 쉽다고 해서 엄마가 덜 중요한 건 아니에요. Belsky(1984)의 연구에서 순한 아이일수록 **부모의 양육 태도에 더 민감**하게 반응한다고 밝혀졌어요.`;
           script = `**${name}이(순둥이) 성장 촉진 대화법:**\n\n**감정 표현 촉진** "${name}아, 지금 블록 쌓기 재미있어? 엄마한테 보여줄래?" → 관심 표현이 자존감 형성\n\n**선택 연습** "오늘 뭐 먹고 싶어? ${name}이가 골라봐." → Deci & Ryan(1985): 순한 아이일수록 선택 경험 필요\n\n**거절 허용** "${name}아, 하기 싫으면 '싫어'라고 말해도 돼."\n\n**출처:** Thomas, A. & Chess, S. (1977). Gottman, J. (1997). Raising An Emotionally Intelligent Child.`;
           practicalTips = [{ title: '감정 어휘 확장', content: `"화났어" 외에 "속상해", "아쉬워", "부러워" 등 다양한 감정 단어를 알려주세요.`, source: 'Gottman, J. (1997)' }, { title: '선택 기회 제공', content: `하루에 3번 이상 ${name}이가 선택하게 하세요. "오늘 뭐 입을까?", "간식 뭐 먹을까?"`, source: 'Deci & Ryan (1985)' }, { title: '관심 지속', content: `순둥이라고 방치하지 마세요. 하루 15분 ${name}이만을 위한 시간을 확보하세요.`, source: 'Belsky, J. (1984)' }];
           realExamples = [{ situation: '동생이 장난감 빼앗아도 가만히 있음', solution: `"${name}아, 그 장난감 ${name}이 거야. '내 거야'라고 말해봐." 자기 주장 연습 시킴.`, mom: '36개월 남아 엄마', result: '3주 후 스스로 "내 거!" 말하기 시작.' }, { situation: '엄마가 시키는 대로만 함 (의견 표현 안 함)', solution: `매일 "오늘 뭐 하고 싶어?" 물어봄. "잘 모르겠으면 엄마가 2가지 말할게" 선택 연습.`, mom: '33개월 여아 엄마', result: '2개월 후 "나는 이거 하고 싶어" 스스로 말하기 시작.' }];
         } else {
+          // 밸런서 (Balanced Child): 위 유형에 해당하지 않는 균형형
           interpretation = `${name}이는 **'${temperamentType.type}' ${temperamentType.emoji}** 기질이에요. ${age} 시기에 각 기질 영역에서 극단적이지 않고 균형을 보이는 건 매우 긍정적이에요.`;
           reassurance = `${name}이(가) 가끔 보이는 문제 행동은 기질보다는 **발달 단계**나 **환경적 요인**과 관련이 있을 가능성이 커요. 엄마는 충분히 잘하고 계세요.`;
           script = `**${name}이(균형형) + ${parentType.type} 맞춤 대화법:**\n\n**P.E.T. 4단계 문제 해결 대화법** (Gordon, 1970):\n\n**1단계: 문제 인식** "${name}아, 무슨 일이야?"\n\n**2단계: 적극적 경청** "(장난감을 뺏겼구나/친구가 같이 안 놀아줬구나). 그래서 속상했어?"\n\n**3단계: 해결책 브레인스토밍** "어떻게 하면 좋을까? ${name}이 생각은?" → Shure & Spivack(1982): 아이가 직접 해결책 제시하면 실행률 3배 ↑\n\n**4단계: 선택과 실행** "좋은 생각이다. 그럼 해볼까?"\n\n**출처:** Gordon, T. (1970). P.E.T. Shure, M.B. & Spivack, G. (1982). Interpersonal problem-solving in young children.`;
