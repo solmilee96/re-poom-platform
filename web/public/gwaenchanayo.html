@@ -320,15 +320,15 @@
         let concernAnalysis = '';
         let parentAnalysis = '';
         if (parentType.type === '회복이 필요한 엄마') {
-          parentAnalysis = `엄마는 지금 **'${parentType.type}' ${parentType.emoji}** 상태예요. 스트레스 내성이 낮고 에너지가 고갈된 상태에서는 아무리 좋은 육아법도 실천하기 어려워요.\n\n**가장 시급한 것:**\n1. 하루 30분이라도 혼자만의 시간 확보\n2. 도움 요청하기 (배우자, 친정, 시댁, 돌봄 서비스)\n3. "완벽한 엄마" 기준 내려놓기\n\n💙 엄마가 먼저 회복해야 ${name}이도 행복해질 수 있어요.`;
+          parentAnalysis = `엄마는 지금 **'${parentType.type}'** 상태예요. 스트레스 내성이 낮고 에너지가 고갈된 상태에서는 아무리 좋은 육아법도 실천하기 어려워요.\n\n**가장 시급한 것:**\n1. 하루 30분이라도 혼자만의 시간 확보\n2. 도움 요청하기 (배우자, 친정, 시댁, 돌봄 서비스)\n3. "완벽한 엄마" 기준 내려놓기\n\n엄마가 먼저 회복해야 ${name}이도 행복해질 수 있어요.`;
         } else if (parentType.type === '계획형 엄마') {
-          parentAnalysis = `엄마는 **'${parentType.type}' ${parentType.emoji}** 스타일이에요. 체계적이고 완벽을 추구하는 건 큰 장점이지만, ${name}이(${age})는 아직 루틴을 완벽하게 따르기 어려운 시기예요.\n\n**엄마의 강점 활용법:**\n1. "완벽한 루틴"보다 "80% 성공 루틴" 목표로\n2. 계획이 안 될 때를 위한 플랜 B 미리 준비\n3. ${name}이의 작은 성공에 집중하기\n\n📋 엄마의 계획성은 결국 ${name}이에게 안정감을 줄 거예요.`;
+          parentAnalysis = `엄마는 **'${parentType.type}'** 스타일이에요. 체계적이고 완벽을 추구하는 건 큰 장점이지만, ${name}이(${age})는 아직 루틴을 완벽하게 따르기 어려운 시기예요.\n\n**엄마의 강점 활용법:**\n1. "완벽한 루틴"보다 "80% 성공 루틴" 목표로\n2. 계획이 안 될 때를 위한 플랜 B 미리 준비\n3. ${name}이의 작은 성공에 집중하기\n\n엄마의 계획성은 결국 ${name}이에게 안정감을 줄 거예요.`;
         } else if (parentType.type === '공감형 엄마') {
-          parentAnalysis = `엄마는 **'${parentType.type}' ${parentType.emoji}** 스타일이에요. ${name}이의 신호에 즉각 반응하는 따뜻함은 애착 형성에 아주 좋아요. 다만 너무 빨리 반응하면 ${name}이가 스스로 해결할 기회를 놓칠 수 있어요.\n\n**균형 잡는 법:**\n1. 10초 기다려보기 - ${name}이가 스스로 시도할 시간 주기\n2. "엄마 도와줄까?" 물어보기\n3. 엄마의 에너지 관리도 중요해요\n\n💕 엄마의 공감 능력은 ${name}이의 정서 발달에 큰 자산이에요.`;
+          parentAnalysis = `엄마는 **'${parentType.type}'** 스타일이에요. ${name}이의 신호에 즉각 반응하는 따뜻함은 애착 형성에 아주 좋아요. 다만 너무 빨리 반응하면 ${name}이가 스스로 해결할 기회를 놓칠 수 있어요.\n\n**균형 잡는 법:**\n1. 10초 기다려보기 - ${name}이가 스스로 시도할 시간 주기\n2. "엄마 도와줄까?" 물어보기\n3. 엄마의 에너지 관리도 중요해요\n\n엄마의 공감 능력은 ${name}이의 정서 발달에 큰 자산이에요.`;
         } else if (parentType.type === '여유형 엄마') {
-          parentAnalysis = `엄마는 **'${parentType.type}' ${parentType.emoji}** 스타일이에요. 느긋하고 유연한 태도는 ${name}이(${age})에게 심리적 여유를 줘요. 다만 ${name}이의 기질에 따라 적당한 구조가 필요할 수 있어요.\n\n**주의할 점:**\n1. 아이가 불안해하는 신호는 놓치지 않기\n2. 기본적인 루틴(식사, 수면)은 유지하기\n3. 경계선은 명확하게\n\n🌈 엄마의 여유로움은 ${name}이의 자율성을 키우는 좋은 환경이에요.`;
+          parentAnalysis = `엄마는 **'${parentType.type}'** 스타일이에요. 느긋하고 유연한 태도는 ${name}이(${age})에게 심리적 여유를 줘요. 다만 ${name}이의 기질에 따라 적당한 구조가 필요할 수 있어요.\n\n**주의할 점:**\n1. 아이가 불안해하는 신호는 놓치지 않기\n2. 기본적인 루틴(식사, 수면)은 유지하기\n3. 경계선은 명확하게\n\n엄마의 여유로움은 ${name}이의 자율성을 키우는 좋은 환경이에요.`;
         } else {
-          parentAnalysis = `엄마는 **'${parentType.type}' ${parentType.emoji}** 스타일이에요. 여러 면에서 균형잡힌 육아 태도를 가지고 계세요.\n\n⭐ 상황에 따라 유연하게 대응할 수 있는 엄마의 강점을 계속 활용하세요!`;
+          parentAnalysis = `엄마는 **'${parentType.type}'** 스타일이에요. 여러 면에서 균형잡힌 육아 태도를 가지고 계세요.\n\n상황에 따라 유연하게 대응할 수 있는 엄마의 강점을 계속 활용하세요.`;
         }
         const concernLower = concern.toLowerCase();
         const hasSleep = concernLower.includes('잠') || concernLower.includes('수면') || concernLower.includes('자');
@@ -387,7 +387,7 @@
         if (highSensitivity) {
           interpretation = `${name}이는 **'${temperamentType.type}' ${temperamentType.emoji}** 기질이에요. Elaine Aron(1996)의 연구에서 'Highly Sensitive Child'로 분류되는 유형으로, 전체 아동의 약 15-20%가 이에 해당해요. ${age} 시기에는 특히 소리, 빛, 촉감 같은 자극을 **훨씬 더 강하게 느끼는 예민한 신경계**를 가지고 있어요.`;
           reassurance = `쇼핑몰에서 울거나 옷 입는 걸 거부하는 ${name}이는 지금 **'감각 과부하(Sensory Overload)'** 상태예요. 이건 버릇이나 고집이 아니라, 뇌가 "자극이 너무 많아!"라고 알려주는 생리적 반응이에요.`;
-          script = `**${name}이(섬세파) 감각 조절 대화법:**\n\n**1단계: 과부하 징후 인지** - 귀 막기, 눈 감기, 짜증 증가 → Dunn(1997): 예민한 아이의 **뇌가 보내는 SOS**\n\n**2단계: 즉각 환경 조정**\n"${name}아, 여기 너무 (시끄럽다/밝다). 조용한 곳으로 가자."\n\n**3단계: 감각 줄이기** - 소음: 화장실, 복도 / 조명: 커튼 닫기, 선글라스\n\n**4단계: 그라운딩** "손 꽉 잡아. 천천히 숨 쉬자. 하나, 둘, 셋..." → Porges(2011) 미주신경 이론\n\n📚 **출처:** Dunn, W. (1997). Sensory Profile. Ayres, A.J. (1979). Sensory Integration and the Child.`;
+          script = `**${name}이(섬세파) 감각 조절 대화법:**\n\n**1단계: 과부하 징후 인지** - 귀 막기, 눈 감기, 짜증 증가 → Dunn(1997): 예민한 아이의 **뇌가 보내는 SOS**\n\n**2단계: 즉각 환경 조정**\n"${name}아, 여기 너무 (시끄럽다/밝다). 조용한 곳으로 가자."\n\n**3단계: 감각 줄이기** - 소음: 화장실, 복도 / 조명: 커튼 닫기, 선글라스\n\n**4단계: 그라운딩** "손 꽉 잡아. 천천히 숨 쉬자. 하나, 둘, 셋..." → Porges(2011) 미주신경 이론\n\n**출처:** Dunn, W. (1997). Sensory Profile. Ayres, A.J. (1979). Sensory Integration and the Child.`;
           practicalTips = [{ title: '외출 전 감각 준비', content: `외출 전에 "시끄러운 곳에 가는데, 귀마개 가져갈까?"처럼 예고하고 대비책을 함께 준비하세요.`, source: 'Aron, E. (1996)' }, { title: '옷감 선택권 주기', content: `옷 살 때 ${name}이가 직접 만져보게 하세요. 태그는 미리 다 제거하고, 부드러운 면 소재를 선택하세요.`, source: 'Kranowitz, C. (2005)' }, { title: '다운타임 확보', content: `${age} 예민한 아이는 하루에 최소 1-2시간의 조용한 시간이 필요해요. 일정에 의도적으로 "쉬는 시간"을 넣으세요.`, source: 'Aron, E. (2002)' }];
           realExamples = [{ situation: '옷 입히려고 하면 울고 저항', solution: `${name}이가 직접 옷을 고르게 함. 2-3벌 중 "어떤 게 기분 좋아?" 물어보기.`, mom: '24개월 여아 엄마', result: '선택권을 주니까 저항이 80% 줄었어요.' }, { situation: '식당에서 식사 중 갑자기 울고 나가자고 함', solution: `식당 선택 시 구석 자리 예약. 노이즈 캔슬링 귀마개 준비. 20분 이상 있을 때는 중간에 밖에 나가서 쉬는 시간 주기.`, mom: '30개월 남아 엄마', result: '귀마개 하나로 외식이 가능해졌어요.' }];
         } else if (regularity <= 4 && adaptability <= 4 && highIntensity) {
@@ -396,13 +396,13 @@
           let dialogueTitle = ''; let dialogueContent = '';
           if (parentHighControl) {
             dialogueTitle = `**${name}이(에너자이저) + 계획형 엄마 맞춤 대화법:**`;
-            dialogueContent = `\n\n엄마의 계획성과 ${name}이의 즉흥성이 충돌할 때 사용하세요.\n\n**상황: 갑자기 계획 변경 시**\n\n❌ **피해야 할 말** (통제형 실수):\n"아니야, 계획대로 해야지!"\n→ ${name}이의 뇌는 이미 '거부 모드' 진입\n\n✅ **근거 기반 대화** (Kurcinka, 2006):\n"${name}아, 엄마는 ○○ 계획했는데, ${name}이는 다르게 하고 싶구나. 둘 다 해볼까? 먼저 엄마 것 5분, 그다음 ${name}이 것 5분."\n\n**왜 효과적인가:** \n- Baumrind(1991)의 연구: 권위있는(authoritative) 양육이 권위주의적(authoritarian)보다 효과적\n- 엄마의 계획과 아이의 욕구를 **모두 인정**하는 타협안\n- ${name}이의 뇌에서 도파민(보상 호르몬) 분비 → 협력 증가\n\n📚 **출처:** Kurcinka, M.S. (2006). Raising Your Spirited Child (Revised). HarperCollins.`;
+            dialogueContent = `\n\n엄마의 계획성과 ${name}이의 즉흥성이 충돌할 때 사용하세요.\n\n**상황: 갑자기 계획 변경 시**\n\n❌ **피해야 할 말** (통제형 실수):\n"아니야, 계획대로 해야지!"\n→ ${name}이의 뇌는 이미 '거부 모드' 진입\n\n✅ **근거 기반 대화** (Kurcinka, 2006):\n"${name}아, 엄마는 ○○ 계획했는데, ${name}이는 다르게 하고 싶구나. 둘 다 해볼까? 먼저 엄마 것 5분, 그다음 ${name}이 것 5분."\n\n**왜 효과적인가:** \n- Baumrind(1991)의 연구: 권위있는(authoritative) 양육이 권위주의적(authoritarian)보다 효과적\n- 엄마의 계획과 아이의 욕구를 **모두 인정**하는 타협안\n- ${name}이의 뇌에서 도파민(보상 호르몬) 분비 → 협력 증가\n\n**출처:** Kurcinka, M.S. (2006). Raising Your Spirited Child (Revised). HarperCollins.`;
           } else if (parentLowStress) {
             dialogueTitle = `**${name}이(에너자이저) + 지친 엄마를 위한 최소 에너지 대화법:**`;
-            dialogueContent = `\n\n엄마의 에너지가 바닥났을 때도 쓸 수 있는 간단한 방법이에요.\n\n**상황: 엄마가 너무 지쳐서 감정 조절이 안 될 때**\n\n❌ **하지 말아야 할 것:**\n긴 설명, 협상, 달래기 → 엄마 에너지 고갈 악화\n\n✅ **3단어 규칙** (Siegel & Bryson, 2011):\n"${name}아. 멈춰. 위험해."\n"${name}아. 안돼. 끝."\n"${name}아. 화났어. 쉴게."\n\n**왜 효과적인가:**\n- Siegel & Bryson(2011) The Whole-Brain Child: 짧고 명확한 언어가 감정 뇌(편도체) 진정\n- ${age} 아이는 긴 문장 처리 불가 (작업 기억 한계)\n- 엄마의 **번아웃 예방**이 최우선\n\n**엄마 회복 후:**\n"아까 엄마가 화났지? ${name}아가 ○○해서 엄마 힘들었어. 다음엔 이렇게 해줄래?"\n\n📚 **출처:** Siegel, D.J. & Bryson, T.P. (2011). The Whole-Brain Child. Bantam.`;
+            dialogueContent = `\n\n엄마의 에너지가 바닥났을 때도 쓸 수 있는 간단한 방법이에요.\n\n**상황: 엄마가 너무 지쳐서 감정 조절이 안 될 때**\n\n❌ **하지 말아야 할 것:**\n긴 설명, 협상, 달래기 → 엄마 에너지 고갈 악화\n\n✅ **3단어 규칙** (Siegel & Bryson, 2011):\n"${name}아. 멈춰. 위험해."\n"${name}아. 안돼. 끝."\n"${name}아. 화났어. 쉴게."\n\n**왜 효과적인가:**\n- Siegel & Bryson(2011) The Whole-Brain Child: 짧고 명확한 언어가 감정 뇌(편도체) 진정\n- ${age} 아이는 긴 문장 처리 불가 (작업 기억 한계)\n- 엄마의 **번아웃 예방**이 최우선\n\n**엄마 회복 후:**\n"아까 엄마가 화났지? ${name}아가 ○○해서 엄마 힘들었어. 다음엔 이렇게 해줄래?"\n\n**출처:** Siegel, D.J. & Bryson, T.P. (2011). The Whole-Brain Child. Bantam.`;
           } else {
             dialogueTitle = `**${name}이(에너자이저) 맞춤 4단계 대화법:**`;
-            dialogueContent = `\n\n**근거:** Gottman(1997)의 감정 코칭 5단계를 ${age} 수준으로 조정\n\n**1단계: 감정 포착 (Emotion Coaching)**\n"${name}아, 지금 화났구나."\n→ 연구: 감정 명명만으로 편도체 활성 40% 감소 (Lieberman et al., 2007)\n\n**2단계: 공감 (Validation)**\n"그럴 수 있어. ○○ 안 되니까 속상하지."\n→ 연구: 공감 받은 아이의 코르티솔(스트레스) 50% 감소 (Shenk & Fruzzetti, 2011)\n\n**3단계: 한계 설정 (Limit Setting)**\n"근데 때리는 건 안 돼. 아파."\n→ 연구: 명확한 경계가 안전감 제공 (Gershoff et al., 2018)\n\n**4단계: 대안 제시 (Problem Solving)**\n"화나면 '엄마, 화나!'라고 말하거나 이 쿠션 때려."\n→ 연구: 대체 행동 제시가 억제보다 2배 효과적 (Kazdin, 2008)\n\n📚 **출처:** \n- Gottman, J. (1997). Raising An Emotionally Intelligent Child. Simon & Schuster.\n- Lieberman, M.D. et al. (2007). Putting feelings into words. Psychological Science, 18(5).`;
+            dialogueContent = `\n\n**근거:** Gottman(1997)의 감정 코칭 5단계를 ${age} 수준으로 조정\n\n**1단계: 감정 포착 (Emotion Coaching)**\n"${name}아, 지금 화났구나."\n→ 연구: 감정 명명만으로 편도체 활성 40% 감소 (Lieberman et al., 2007)\n\n**2단계: 공감 (Validation)**\n"그럴 수 있어. ○○ 안 되니까 속상하지."\n→ 연구: 공감 받은 아이의 코르티솔(스트레스) 50% 감소 (Shenk & Fruzzetti, 2011)\n\n**3단계: 한계 설정 (Limit Setting)**\n"근데 때리는 건 안 돼. 아파."\n→ 연구: 명확한 경계가 안전감 제공 (Gershoff et al., 2018)\n\n**4단계: 대안 제시 (Problem Solving)**\n"화나면 '엄마, 화나!'라고 말하거나 이 쿠션 때려."\n→ 연구: 대체 행동 제시가 억제보다 2배 효과적 (Kazdin, 2008)\n\n**출처:** \n- Gottman, J. (1997). Raising An Emotionally Intelligent Child. Simon & Schuster.\n- Lieberman, M.D. et al. (2007). Putting feelings into words. Psychological Science, 18(5).`;
           }
           script = dialogueTitle + dialogueContent;
           practicalTips = [{ title: '변화 예고하기', content: `최소 10-15분 전에 알려주세요. "5분 후에 나갈 거야"보다 "손 씻고, 신발 신고 나갈 거야"처럼 단계를 설명하면 더 효과적이에요.`, source: 'Kurcinka, M. S. (2006)' }, { title: '감정 언어 가르치기', content: `${age} 아이는 감정을 표현하는 단어가 부족해요. "화났어?", "무서워?" 같은 질문으로 감정 이름을 알려주세요.`, source: 'Gottman, J. (1997) Raising An Emotionally Intelligent Child' }, { title: '진정 공간 만들기', content: `집에 쿠션, 인형, 부드러운 조명이 있는 조용한 코너를 만들어주세요. 감정이 폭발할 때 피난처가 돼요.`, source: 'Siegel, D. & Bryson, T. (2012) The Whole-Brain Child' }];
@@ -410,25 +410,25 @@
         } else if (approach <= 4 && adaptability <= 5 && childScores[4] <= 5) {
           interpretation = `${name}이는 **'${temperamentType.type}' ${temperamentType.emoji}** 기질이에요. Chess & Thomas(1977)의 연구에서 'Slow-to-Warm-Up Child'로 분류되는 유형으로, 전체 아동의 약 15%가 이에 해당해요. ${age} 시기에는 **새로운 상황을 조심스럽게 관찰한 후 천천히 참여**하는 특성이 나타나요.`;
           reassurance = `어린이집 첫날 울거나 낯선 사람 앞에서 얼어붙는 ${name}이는 '겁쟁이'가 아니에요. Kagan(1994)의 연구에서 이런 아이들은 **행동 억제 시스템(BIS)**이 활성화된 것으로, 신중함은 위험 회피 능력이자 생존 전략이에요.`;
-          script = `**${name}이(신중파) 워밍업 대화법:**\n\n**1단계: 관찰 시간 확보** "${name}아, 여기 처음이지? 엄마랑 앉아서 구경하자." → 5-10분 관찰 시간이 참여 의욕 3배 ↑ (Kagan, 1994)\n\n**2단계: 언어화** "저기 미끄럼틀 있네. 빨간색이다."\n\n**3단계: 점진적 접근** "엄마 손 잡고 가까이 가볼까? 만져만 보자."\n\n**4단계: 무압박 참여** "타고 싶으면 타고, 아니면 구경만 해도 돼."\n\n📚 **출처:** Thomas, A. & Chess, S. (1977). Kagan, J. (1994). Galen's Prophecy.`;
+          script = `**${name}이(신중파) 워밍업 대화법:**\n\n**1단계: 관찰 시간 확보** "${name}아, 여기 처음이지? 엄마랑 앉아서 구경하자." → 5-10분 관찰 시간이 참여 의욕 3배 ↑ (Kagan, 1994)\n\n**2단계: 언어화** "저기 미끄럼틀 있네. 빨간색이다."\n\n**3단계: 점진적 접근** "엄마 손 잡고 가까이 가볼까? 만져만 보자."\n\n**4단계: 무압박 참여** "타고 싶으면 타고, 아니면 구경만 해도 돼."\n\n**출처:** Thomas, A. & Chess, S. (1977). Kagan, J. (1994). Galen's Prophecy.`;
           practicalTips = [{ title: '예고와 준비', content: `새로운 장소 방문 전 사진이나 영상을 보여주세요. ${name}이의 뇌가 "낯설지 않아"라고 인식하면 적응이 2배 빨라져요.`, source: 'Kagan, J. (1994)' }, { title: '강요 금지', content: `"빨리 해", "용기 내" 같은 말은 역효과예요. ${name}이가 준비됐을 때 자연스럽게 시도할 거예요.`, source: 'Thomas & Chess (1977)' }, { title: '작은 성공 축적', content: `한 번 성공한 경험을 반복 노출하세요. 익숙함이 자신감으로 이어져요.`, source: 'Bandura, A. (1977)' }];
           realExamples = [{ situation: '어린이집 적응 안 됨 (3주째 울음)', solution: `선생님께 ${name}이 좋아하는 인형 미리 준비 부탁. 등원 후 "인형이 ${name}이 기다렸대" 말하며 10분 같이 놀다가 나옴.`, mom: '30개월 여아 엄마', result: '4주차부터 인형 보자마자 울음 멈춤.' }, { situation: '생일파티에서 혼자 구석에만 있음', solution: `억지로 끌어내지 않고, 엄마가 옆에서 아이들 노는 거 같이 구경. "저 친구 풍선 가지고 노네" 설명해줌.`, mom: '34개월 남아 엄마', result: '30분 후 스스로 풍선 만지러 감.' }];
         } else if (childScores[0] >= 8) {
           interpretation = `${name}이는 **'${temperamentType.type}' ${temperamentType.emoji}** 기질이에요. Buss & Plomin(1984)의 연구에서 'Active Child'로 분류되는 유형으로, **운동 에너지 수준이 평균의 2배**예요. ${age} 시기에는 끊임없이 움직이고, 탐색하고, 만지고 싶어하는 욕구가 강해요.`;
           reassurance = `${name}이가 5분도 못 앉아있고 집안을 뛰어다니는 건 '산만함'이 아니라 **뇌가 요구하는 정상적인 움직임**이에요. Panksepp(1998)의 연구에서 높은 활동성은 SEEKING 시스템(탐색 본능) 활성화로, 학습과 발달에 긍정적이에요.`;
-          script = `**${name}이(탐험가) 에너지 방향 대화법:**\n\n**1단계: 에너지 인정** "${name}아, 몸이 막 움직이고 싶구나. 엄마 알아."\n\n**2단계: 안전한 방향 제시** "여기서는 안 돼. 위험해. 밖에 나가서 뛰자."\n\n**3단계: 에너지 소진 활동** "이 공 던져봐. 10번!" → Pellegrini & Smith(1998): 하루 2시간 격렬한 활동 필수\n\n**4단계: 진정 신호** "이제 천천히 걷기. 하나, 둘, 셋..."\n\n📚 **출처:** Panksepp, J. (1998). Affective Neuroscience. Pellegrini & Smith (1998). Child Development, 69(3).`;
+          script = `**${name}이(탐험가) 에너지 방향 대화법:**\n\n**1단계: 에너지 인정** "${name}아, 몸이 막 움직이고 싶구나. 엄마 알아."\n\n**2단계: 안전한 방향 제시** "여기서는 안 돼. 위험해. 밖에 나가서 뛰자."\n\n**3단계: 에너지 소진 활동** "이 공 던져봐. 10번!" → Pellegrini & Smith(1998): 하루 2시간 격렬한 활동 필수\n\n**4단계: 진정 신호** "이제 천천히 걷기. 하나, 둘, 셋..."\n\n**출처:** Panksepp, J. (1998). Affective Neuroscience. Pellegrini & Smith (1998). Child Development, 69(3).`;
           practicalTips = [{ title: '하루 2시간 격렬한 놀이', content: `공원, 뛰기, 점프, 오르기 등 대근육 활동이 필수예요. 에너지 발산 안 되면 밤잠도 안 와요.`, source: 'Pellegrini & Smith (1998)' }, { title: '집안 안전 공간', content: `소파 쿠션으로 점프존, 테이프로 길 만들기 등. 비 오는 날 대비 필수예요.`, source: 'Buss & Plomin (1984)' }, { title: '타이머 게임', content: `"5분 동안 조용히 앉아있기" 챌린지. 성공하면 10분 뛰어놀기. 자기 조절 연습이에요.`, source: 'Rothbart & Bates (2006)' }];
           realExamples = [{ situation: '식당에서 계속 돌아다니고 뛰어다님', solution: `식사 전 식당 주차장에서 10분 뛰어놀기. 식당 도착 전 "앉아있기 게임" 예고. 5분 앉아있으면 스티커.`, mom: '35개월 남아 엄마', result: '에너지 미리 빼니까 15분은 앉아있어요.' }, { situation: '집에서 소파 위로 계속 점프', solution: `거실 한쪽에 매트 깔고 "점프존" 지정. "소파는 안 돼, 여기서 점프!" 일관된 규칙.`, mom: '32개월 여아 엄마', result: '1주일 걸렸지만 이제 점프존에서만 놀아요.' }];
         } else if (childScores[1] >= 7 && childScores[3] >= 7 && childScores[5] >= 7) {
           interpretation = `${name}이는 **'${temperamentType.type}' ${temperamentType.emoji}** 기질이에요. Thomas & Chess(1977)의 연구에서 'Easy Child'로 분류되는 유형으로, 전체 아동의 약 40%가 이에 해당해요. ${age} 시기에는 **규칙적인 생활 리듬, 빠른 적응력, 긍정적인 기분**을 보여요.`;
           reassurance = `${name}이(가) 키우기 쉽다고 해서 엄마가 덜 중요한 건 아니에요. Belsky(1984)의 연구에서 순한 아이일수록 **부모의 양육 태도에 더 민감**하게 반응한다고 밝혀졌어요.`;
-          script = `**${name}이(순둥이) 성장 촉진 대화법:**\n\n**감정 표현 촉진** "${name}아, 지금 블록 쌓기 재미있어? 엄마한테 보여줄래?" → 관심 표현이 자존감 형성\n\n**선택 연습** "오늘 뭐 먹고 싶어? ${name}이가 골라봐." → Deci & Ryan(1985): 순한 아이일수록 선택 경험 필요\n\n**거절 허용** "${name}아, 하기 싫으면 '싫어'라고 말해도 돼."\n\n📚 **출처:** Thomas, A. & Chess, S. (1977). Gottman, J. (1997). Raising An Emotionally Intelligent Child.`;
+          script = `**${name}이(순둥이) 성장 촉진 대화법:**\n\n**감정 표현 촉진** "${name}아, 지금 블록 쌓기 재미있어? 엄마한테 보여줄래?" → 관심 표현이 자존감 형성\n\n**선택 연습** "오늘 뭐 먹고 싶어? ${name}이가 골라봐." → Deci & Ryan(1985): 순한 아이일수록 선택 경험 필요\n\n**거절 허용** "${name}아, 하기 싫으면 '싫어'라고 말해도 돼."\n\n**출처:** Thomas, A. & Chess, S. (1977). Gottman, J. (1997). Raising An Emotionally Intelligent Child.`;
           practicalTips = [{ title: '감정 어휘 확장', content: `"화났어" 외에 "속상해", "아쉬워", "부러워" 등 다양한 감정 단어를 알려주세요.`, source: 'Gottman, J. (1997)' }, { title: '선택 기회 제공', content: `하루에 3번 이상 ${name}이가 선택하게 하세요. "오늘 뭐 입을까?", "간식 뭐 먹을까?"`, source: 'Deci & Ryan (1985)' }, { title: '관심 지속', content: `순둥이라고 방치하지 마세요. 하루 15분 ${name}이만을 위한 시간을 확보하세요.`, source: 'Belsky, J. (1984)' }];
           realExamples = [{ situation: '동생이 장난감 빼앗아도 가만히 있음', solution: `"${name}아, 그 장난감 ${name}이 거야. '내 거야'라고 말해봐." 자기 주장 연습 시킴.`, mom: '36개월 남아 엄마', result: '3주 후 스스로 "내 거!" 말하기 시작.' }, { situation: '엄마가 시키는 대로만 함 (의견 표현 안 함)', solution: `매일 "오늘 뭐 하고 싶어?" 물어봄. "잘 모르겠으면 엄마가 2가지 말할게" 선택 연습.`, mom: '33개월 여아 엄마', result: '2개월 후 "나는 이거 하고 싶어" 스스로 말하기 시작.' }];
         } else {
           interpretation = `${name}이는 **'${temperamentType.type}' ${temperamentType.emoji}** 기질이에요. ${age} 시기에 각 기질 영역에서 극단적이지 않고 균형을 보이는 건 매우 긍정적이에요.`;
           reassurance = `${name}이(가) 가끔 보이는 문제 행동은 기질보다는 **발달 단계**나 **환경적 요인**과 관련이 있을 가능성이 커요. 엄마는 충분히 잘하고 계세요.`;
-          script = `**${name}이(균형형) + ${parentType.type} 맞춤 대화법:**\n\n**P.E.T. 4단계 문제 해결 대화법** (Gordon, 1970):\n\n**1단계: 문제 인식** "${name}아, 무슨 일이야?"\n\n**2단계: 적극적 경청** "(장난감을 뺏겼구나/친구가 같이 안 놀아줬구나). 그래서 속상했어?"\n\n**3단계: 해결책 브레인스토밍** "어떻게 하면 좋을까? ${name}이 생각은?" → Shure & Spivack(1982): 아이가 직접 해결책 제시하면 실행률 3배 ↑\n\n**4단계: 선택과 실행** "좋은 생각이다. 그럼 해볼까?"\n\n📚 **출처:** Gordon, T. (1970). P.E.T. Shure, M.B. & Spivack, G. (1982). Interpersonal problem-solving in young children.`;
+          script = `**${name}이(균형형) + ${parentType.type} 맞춤 대화법:**\n\n**P.E.T. 4단계 문제 해결 대화법** (Gordon, 1970):\n\n**1단계: 문제 인식** "${name}아, 무슨 일이야?"\n\n**2단계: 적극적 경청** "(장난감을 뺏겼구나/친구가 같이 안 놀아줬구나). 그래서 속상했어?"\n\n**3단계: 해결책 브레인스토밍** "어떻게 하면 좋을까? ${name}이 생각은?" → Shure & Spivack(1982): 아이가 직접 해결책 제시하면 실행률 3배 ↑\n\n**4단계: 선택과 실행** "좋은 생각이다. 그럼 해볼까?"\n\n**출처:** Gordon, T. (1970). P.E.T. Shure, M.B. & Spivack, G. (1982). Interpersonal problem-solving in young children.`;
           practicalTips = [{ title: '일관성 유지하기', content: `규칙은 명확하게, 일관되게 적용하세요. "안 돼"라고 했으면 끝까지 지키는 게 중요해요.`, source: 'Gordon, T. (1970)' }, { title: '감정 코칭', content: `${age} 아이는 감정 이름을 배우는 중이에요. "화났어", "슬퍼" 같은 단어를 자주 사용해주세요.`, source: 'Gottman, J. (1997)' }, { title: '질보다 양', content: `하루 15분 ${name}이가 주도하는 놀이 시간을 만들어보세요.`, source: 'Lansbury, J. (2014) No Bad Kids' }];
           realExamples = [{ situation: '장난감 정리 안 하고 떼쓰기', solution: `"5분 후에 정리할 거야" 예고 → 타이머 설정 → 함께 정리하기 → "와, ${name}이가 블록 3개나 정리했네!" 구체적 칭찬`, mom: '32개월 남아 엄마', result: '타이머 소리 들으면 이제 알아서 정리 시작해요.' }, { situation: '동생 때리기', solution: `"때리면 아파. 동생한테 이렇게 해 (살짝 쓰다듬기)" 즉각 개입 + "화났으면 엄마한테 말해" 대안 제시`, mom: '29개월 여아 엄마', result: '한 달 정도 걸렸지만 이제 "엄마, 화나!" 말로 표현해요.' }];
         }
@@ -790,13 +790,12 @@
                   </div>
                   <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-rose-400 via-pink-400 to-amber-400 bg-clip-text text-transparent leading-tight">아이 여행</h1>
                   <p className="text-lg sm:text-xl md:text-2xl text-gray-700 font-medium mb-2 leading-snug">오늘, 아이의 마음 지도를 함께 펼쳐봅니다.</p>
-                  <p className="text-base sm:text-lg md:text-xl text-gray-500">{childInfo.name}이, {getChildAge()} 💕</p>
+                  <p className="text-base sm:text-lg md:text-xl text-gray-500">{childInfo.name}이, {getChildAge()}</p>
                 </div>
                 <div className="bg-white rounded-2xl sm:rounded-[32px] p-5 sm:p-8 md:p-10 shadow-2xl border-2 sm:border-4 border-rose-200 mb-6 sm:mb-8">
                   <div className="text-center mb-6 sm:mb-10">
                     <div className="inline-block px-5 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-[24px] mb-3 sm:mb-4" style={{ backgroundColor: tc[0], border: '2px solid', borderColor: tc[1] }}>
                       <div className="flex items-center gap-2 sm:gap-3">
-                        <span className="text-4xl sm:text-5xl">{result.temperamentType.emoji}</span>
                         <div className="text-left"><h3 className="text-xl sm:text-2xl font-bold text-gray-800">{result.temperamentType.type}</h3><p className="text-xs sm:text-sm text-gray-600">{result.temperamentType.english}</p></div>
                       </div>
                     </div>
@@ -838,7 +837,6 @@
                     <div className="text-center mb-4 sm:mb-6">
                       <div className="inline-block px-5 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-[24px]" style={{ backgroundColor: pc[0], border: '2px solid', borderColor: pc[1] }}>
                         <div className="flex items-center gap-2 sm:gap-3">
-                          <span className="text-3xl sm:text-4xl">{result.parentType.emoji}</span>
                           <div className="text-left"><h3 className="text-lg sm:text-xl font-bold text-gray-800">{result.parentType.type}</h3><p className="text-xs sm:text-sm text-gray-600">{result.parentType.english}</p></div>
                         </div>
                       </div>
@@ -874,7 +872,7 @@
                         <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800">엄마의 고민</h2>
                       </div>
                       <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl sm:rounded-[24px] p-5 sm:p-8 border-2 border-indigo-200">
-                        <div className="bg-white rounded-xl sm:rounded-[16px] p-3 sm:p-4 mb-3 sm:mb-4"><p className="text-xs sm:text-sm text-indigo-600 font-medium mb-2">💬 엄마가 적어주신 고민</p><p className="text-sm sm:text-base text-gray-700 italic leading-relaxed">"{behaviorInput}"</p></div>
+                        <div className="bg-white rounded-xl sm:rounded-[16px] p-3 sm:p-4 mb-3 sm:mb-4"><p className="text-xs sm:text-sm text-indigo-600 font-medium mb-2">엄마가 적어주신 고민</p><p className="text-sm sm:text-base text-gray-700 italic leading-relaxed">"{behaviorInput}"</p></div>
                         <p className="text-sm sm:text-base md:text-lg leading-relaxed text-gray-700 whitespace-pre-line" dangerouslySetInnerHTML={{ __html: result.concernAnalysis.replace(/\*\*(.*?)\*\*/g, '<strong class="text-indigo-600 font-bold">$1</strong>') }} />
                       </div>
                     </div>
@@ -885,7 +883,7 @@
                       <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800">바로 쓸 수 있는 대화법</h2>
                     </div>
                     <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl sm:rounded-[24px] p-5 sm:p-8 border-2 border-blue-200">
-                      <p className="text-sm sm:text-base leading-relaxed text-gray-700 whitespace-pre-line" dangerouslySetInnerHTML={{ __html: result.script.replace(/\*\*(.*?)\*\*/g, '<strong class="text-blue-700 font-bold">$1</strong>').replace(/📚/g, '<br/><br/>📚') }} />
+                      <p className="text-sm sm:text-base leading-relaxed text-gray-700 whitespace-pre-line" dangerouslySetInnerHTML={{ __html: result.script.replace(/\*\*(.*?)\*\*/g, '<strong class="text-blue-700 font-bold">$1</strong>').replace(/📚\s*/g, '<br/><br/>') }} />
                     </div>
                   </div>
                   {result.practicalTips && result.practicalTips.length > 0 && (
@@ -899,7 +897,7 @@
                           <div key={idx} className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl sm:rounded-[20px] p-4 sm:p-6 border-2 border-green-200">
                             <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-2 flex items-center"><span className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-green-500 text-white flex items-center justify-center text-xs sm:text-sm mr-2 flex-shrink-0">{idx + 1}</span>{tip.title}</h3>
                             <p className="text-sm sm:text-base text-gray-700 mb-2 leading-relaxed">{tip.content}</p>
-                            <p className="text-xs text-green-700 italic">📚 출처: {tip.source}</p>
+                            <p className="text-xs text-green-700 italic">출처: {tip.source}</p>
                           </div>
                         ))}
                       </div>
@@ -915,16 +913,15 @@
                         {result.realExamples.map((example, idx) => (
                           <div key={idx} className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl sm:rounded-[20px] p-4 sm:p-6 border-2 border-purple-200">
                             <div className="flex items-start gap-2 sm:gap-3 mb-3">
-                              <span className="text-xl sm:text-2xl flex-shrink-0">💬</span>
                               <div className="flex-1 min-w-0">
                                 <h4 className="text-sm sm:text-base font-bold text-gray-800 mb-1">상황: {example.situation}</h4>
                                 <div className="bg-white rounded-xl sm:rounded-[12px] p-3 sm:p-4 mb-2 sm:mb-3">
-                                  <p className="text-xs sm:text-sm text-gray-600 mb-1">✅ 해결 방법</p>
+                                  <p className="text-xs sm:text-sm text-gray-600 mb-1">해결 방법</p>
                                   <p className="text-sm sm:text-base text-gray-700 leading-relaxed">{example.solution}</p>
                                 </div>
                                 <div className="flex flex-wrap items-center justify-between gap-1 text-xs sm:text-sm">
-                                  <span className="text-purple-600 font-medium">👤 {example.mom}</span>
-                                  <span className="text-green-600 font-medium">✨ {example.result}</span>
+                                  <span className="text-purple-600 font-medium">{example.mom}</span>
+                                  <span className="text-green-600 font-medium">{example.result}</span>
                                 </div>
                               </div>
                             </div>
@@ -939,7 +936,7 @@
                     <button onClick={handleReset} className="w-full sm:w-auto px-5 sm:px-8 py-3 sm:py-4 text-sm sm:text-base bg-white border-2 sm:border-3 border-rose-300 text-rose-600 font-bold rounded-xl sm:rounded-[24px] hover:shadow-xl hover:scale-[1.02] sm:hover:scale-105 active:scale-[0.98] transition-all duration-300 flex items-center justify-center space-x-2 min-h-[48px]"><RotateCcw className="w-5 h-5 flex-shrink-0" /><span>초기화</span></button>
                   </div>
                 </div>
-                <p className="text-center text-xs sm:text-sm text-gray-500 mt-6 sm:mt-8 px-2 leading-relaxed">💙 이 분석은 Chess & Thomas의 아동 기질 이론을 바탕으로 제작되었습니다. 전문적인 의학적 진단이 필요한 경우 소아청소년과 전문의와 상담하세요.</p>
+                <p className="text-center text-xs sm:text-sm text-gray-500 mt-6 sm:mt-8 px-2 leading-relaxed">이 분석은 Chess & Thomas의 아동 기질 이론을 바탕으로 제작되었습니다. 전문적인 의학적 진단이 필요한 경우 소아청소년과 전문의와 상담하세요.</p>
               </div>
             </div>
             );
