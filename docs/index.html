@@ -19,6 +19,7 @@
       --coral-light: #fce0db;
       --coral-muted: #fef6f5;
       --coral-dark: #e87a6e;
+      --coral-title: #f5b5a8;
       --coral-button: #ec9585;
       /* 크리미 옐로우 - 연노랑 다크 화사하게 */
       --warm-yellow: #fefce8;
@@ -627,11 +628,10 @@
             <div className="min-h-screen flex items-center justify-center p-4 sm:p-6">
               <div className="max-w-2xl w-full">
                 <div className="text-center mb-6 sm:mb-8" style={{ animation: 'fadeIn 1s ease-in' }}>
-                  <div className="inline-block mb-4 sm:mb-6 relative">
-                    <Baby className="w-16 h-16 sm:w-20 sm:h-20 text-[var(--coral-dark)]" style={{ animation: 'bounce 2s ease-in-out infinite' }} />
-                    <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-[var(--warm-yellow-dark)] absolute -top-2 -right-2" style={{ animation: 'spin 3s linear infinite' }} />
+                  <div className="inline-block mb-4 sm:mb-6">
+                    <img src="logo.png" alt="아이 여행" className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 object-contain mx-auto" style={{ animation: 'bounce 2s ease-in-out infinite' }} />
                   </div>
-                  <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-3 sm:mb-4 text-[var(--coral-dark)] leading-tight">아이 여행</h1>
+                  <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-3 sm:mb-4 text-[var(--coral-title)] leading-tight">아이 여행</h1>
                   <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-2 px-1">&#39;왜 이럴까?&#39;를 &#39;그래서 그랬구나&#39;로 바꿔주는,<br />아이 기질 기반 행동 가이드 서비스</p>
                   <p className="text-lg sm:text-xl md:text-2xl text-gray-700 font-medium mt-3 sm:mt-4 px-2 leading-snug">아이의 마음 지도를 따라, 함께 여행해볼까요?</p>
                 </div>
@@ -821,9 +821,9 @@
                 </div>
                 <div className="bg-white rounded-2xl sm:rounded-[32px] p-5 sm:p-8 md:p-10 shadow-xl border-2 sm:border-4 border-[var(--coral-light)] mb-6 sm:mb-8">
                   <div className="text-center mb-6 sm:mb-10">
-                    <div className="inline-block px-5 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-[24px] mb-3 sm:mb-4 bg-[var(--coral-muted)] border-2 border-[var(--coral-light)]">
-                      <div className="flex items-center gap-2 sm:gap-3">
-                        <div className="text-left"><h3 className="text-xl sm:text-2xl font-bold text-gray-800">{result.temperamentType.type}</h3><p className="text-xs sm:text-sm text-gray-600">{result.temperamentType.english}</p></div>
+                    <div className="inline-block px-5 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-[24px] mb-3 sm:mb-4 bg-[var(--coral-muted)] border-2 border-[var(--coral-light)] text-center">
+                      <div className="flex items-center justify-center gap-2 sm:gap-3">
+                        <div><h3 className="text-xl sm:text-2xl font-bold text-gray-800">{result.temperamentType.type}</h3><p className="text-xs sm:text-sm text-gray-600">{result.temperamentType.english}</p></div>
                       </div>
                     </div>
                     <p className="text-sm sm:text-base text-gray-600 mt-2 leading-relaxed px-1">{result.temperamentType.description}</p>
