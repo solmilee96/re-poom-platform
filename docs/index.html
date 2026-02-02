@@ -298,13 +298,14 @@
         ]}
       ];
 
-      // 부모 유형 분류
+      // [사용자 고정] 부모 유형 분류. 극단(반응속도·에너지 등) 시 균형형 배제. 사용자 직접 변경 요청 전까지 수정하지 말 것.
       const getParentType = (scores) => {
         const stressTolerance = scores[0];
         const responseSpeed = scores[1];
         const controlNeed = scores[2];
         const perfectionism = scores[3];
         const energyLevel = scores[4];
+        const hasParentExtreme = (responseSpeed <= 2 || responseSpeed >= 8 || energyLevel <= 2 || energyLevel >= 8);
         if (stressTolerance <= 3 && energyLevel <= 3) {
           return { type: '회복이 필요한 엄마', emoji: '💙', english: 'Burnout Risk', description: '지금 많이 지쳐있어요. 먼저 엄마를 돌봐야 해요.', color: 'blue' };
         }
@@ -314,13 +315,21 @@
         if (responseSpeed >= 8 && controlNeed <= 4) {
           return { type: '공감형 엄마', emoji: '💕', english: 'Responsive Parent', description: '아이의 신호에 즉각 반응하는 따뜻한 엄마', color: 'pink' };
         }
+        // 반응 느림 + 에너지 높음 → 페이스형 (선택적 반응, 자기 페이스)
+        if (responseSpeed <= 2 && energyLevel >= 8) {
+          return { type: '페이스형 엄마', emoji: '🕐', english: 'Paced Parent', description: '선택적으로 반응하고 에너지가 충만한 엄마', color: 'teal' };
+        }
         if (stressTolerance >= 7 && perfectionism <= 4) {
           return { type: '여유형 엄마', emoji: '🌈', english: 'Relaxed Parent', description: '느긋하고 유연한 엄마', color: 'green' };
         }
-        return { type: '균형형 엄마', emoji: '⭐', english: 'Balanced Parent', description: '여러 면에서 균형잡힌 엄마', color: 'teal' };
+        // 균형형: 반응·에너지가 극단이 아닐 때만
+        if (!hasParentExtreme) {
+          return { type: '균형형 엄마', emoji: '⭐', english: 'Balanced Parent', description: '여러 면에서 균형잡힌 엄마', color: 'teal' };
+        }
+        return { type: '혼합형 엄마', emoji: '🌈', english: 'Mixed Parent Profile', description: '여러 성향이 조합된 독특한 양육 스타일', color: 'teal' };
       };
 
-      // 기질 유형 분류 (Chess & Thomas, 1977 + Elaine Aron, 1996)
+      // [사용자 고정] 기질 유형 분류 (Chess & Thomas, 1977 + Elaine Aron, 1996). 극단 점수 시 밸런서 배제. 사용자 직접 변경 요청 전까지 수정하지 말 것.
       const getTemperamentType = (scores) => {
         const activity = scores[0];
         const regularity = scores[1];
@@ -329,11 +338,16 @@
         const intensity = scores[4];
         const mood = scores[5];
         const sensitivity = scores[8];
+        const hasExtreme = (arr) => arr.slice(0, 6).some(s => s <= 2 || s >= 8); // 6개 핵심 차원만 (활동·규칙·접근·적응·반응강도·기분)
         if (sensitivity >= 8) {
           return { type: '섬세파', emoji: '🎨', english: 'Highly Sensitive Child', description: '세상을 섬세하게 느끼는 감각이 예민한 아이', color: 'purple' };
         }
         if (regularity <= 4 && adaptability <= 4 && intensity >= 7) {
           return { type: '에너자이저', emoji: '⚡', english: 'Spirited Child', description: '감정이 강렬하고 변화에 민감한 아이', color: 'red' };
+        }
+        // 접근성 매우 낮음 → 신중파 (Thomas & Chess: Slow-to-Warm-Up = 초기 위축). 기분 낮음+낮은 접근도 신중파.
+        if (approach <= 2 || (mood <= 2 && approach <= 4 && intensity <= 5)) {
+          return { type: '신중파', emoji: '🔍', english: 'Slow-to-Warm-Up Child', description: '신중하고 천천히 적응하는 관찰형 아이', color: 'blue' };
         }
         if (approach <= 4 && adaptability <= 5 && intensity <= 5) {
           return { type: '신중파', emoji: '🔍', english: 'Slow-to-Warm-Up Child', description: '신중하고 천천히 적응하는 관찰형 아이', color: 'blue' };
@@ -343,6 +357,10 @@
         }
         if (regularity >= 7 && adaptability >= 7 && mood >= 7) {
           return { type: '순둥이', emoji: '😊', english: 'Easy Child', description: '규칙적이고 적응을 잘하는 키우기 쉬운 아이', color: 'green' };
+        }
+        // 밸런서: 어떤 차원도 극단(≤2 또는 ≥8)이 아닐 때만 (Rothbart & Bates: 균형 = 극단 부재).
+        if (hasExtreme(scores)) {
+          return { type: '혼합형', emoji: '🌈', english: 'Mixed Profile', description: '여러 기질이 조합된 독특한 아이', color: 'teal' };
         }
         return { type: '밸런서', emoji: '⚖️', english: 'Balanced Child', description: '여러 기질이 골고루 나타나는 균형잡힌 아이', color: 'teal' };
       };
@@ -367,15 +385,19 @@
         let concernAnalysis = '';
         let parentAnalysis = '';
         if (parentType.type === '회복이 필요한 엄마') {
-          parentAnalysis = `엄마는 지금 **'${parentType.type}'** 상태예요. 스트레스 내성이 낮고 에너지가 고갈된 상태에서는 아무리 좋은 육아법도 실천하기 어려워요.\n\n**가장 시급한 것:**\n1. 하루 30분이라도 혼자만의 시간 확보\n2. 도움 요청하기 (배우자, 친정, 시댁, 돌봄 서비스)\n3. "완벽한 엄마" 기준 내려놓기\n\n엄마가 먼저 회복해야 ${name}이도 행복해질 수 있어요.`;
+          parentAnalysis = `엄마는 지금 **'${parentType.type}'** 상태예요. 스트레스 내성이 낮고 에너지가 고갈된 상태에서는 아무리 좋은 육아법도 실천하기 어려워요. 지금은 힘들어도 회복 후에는 같은 경험이 공감과 회복 탄력성으로 이어질 수 있어요. 다만 아이가 30분 넘게 울 때, 계획이 완전히 틀어질 때, 수면 부족·도움 부족이 겹칠 때는 감정이 폭발하거나 무기력해지기 쉬워요. 가장 시급한 것은 (1) 하루 30분이라도 혼자만의 시간 (2) 도움 요청(배우자·돌봄) (3) "완벽한 엄마" 기준 내려놓기예요. 엄마가 먼저 회복해야 ${name}이도 행복해질 수 있어요.`;
         } else if (parentType.type === '계획형 엄마') {
-          parentAnalysis = `엄마는 **'${parentType.type}'** 스타일이에요. 체계적이고 완벽을 추구하는 건 큰 장점이지만, ${name}이(${age})는 아직 루틴을 완벽하게 따르기 어려운 시기예요.\n\n**엄마의 강점 활용법:**\n1. "완벽한 루틴"보다 "80% 성공 루틴" 목표로\n2. 계획이 안 될 때를 위한 플랜 B 미리 준비\n3. ${name}이의 작은 성공에 집중하기\n\n엄마의 계획성은 결국 ${name}이에게 안정감을 줄 거예요.`;
+          parentAnalysis = `엄마는 **'${parentType.type}'** 스타일이에요. 체계적이고 완벽을 추구하는 건 큰 장점이지만, ${name}이(${age})는 아직 루틴을 완벽하게 따르기 어려운 시기예요. 계획성·일관성은 아이에게 예측 가능성과 안정감을 주는 편이에요. 다만 계획이 깨지거나 "80%만 해도 됐는데"가 안 될 때는 불안·자책·아이에게 잔소리가 늘어날 수 있어요.\n\n**활용법:** "완벽한 루틴"보다 "80% 성공 루틴", 플랜 B 미리 준비, ${name}이의 작은 성공에 집중하기. 엄마의 계획성은 결국 ${name}이에게 안정감을 줄 거예요.`;
         } else if (parentType.type === '공감형 엄마') {
-          parentAnalysis = `엄마는 **'${parentType.type}'** 스타일이에요. ${name}이의 신호에 즉각 반응하는 따뜻함은 애착 형성에 아주 좋아요. 다만 너무 빨리 반응하면 ${name}이가 스스로 해결할 기회를 놓칠 수 있어요.\n\n**균형 잡는 법:**\n1. 10초 기다려보기 - ${name}이가 스스로 시도할 시간 주기\n2. "엄마 도와줄까?" 물어보기\n3. 엄마의 에너지 관리도 중요해요\n\n엄마의 공감 능력은 ${name}이의 정서 발달에 큰 자산이에요.`;
+          parentAnalysis = `엄마는 **'${parentType.type}'** 스타일이에요. ${name}이의 신호에 즉각 반응하는 따뜻함은 애착 형성에 아주 좋아요. 민감한 반응은 아이의 정서 조절·자존감 발달에 도움이 되는 편이에요. 다만 너무 빨리 달려가면 아이가 스스로 해결할 기회를 놓치고, 엄마 에너지가 빨리 소진될 수 있어요.\n\n**활용법:** 10초 기다려보기, "엄마 도와줄까?" 물어보기, 엄마의 휴식도 챙기기. 엄마의 공감 능력은 ${name}이의 정서 발달에 큰 자산이에요.`;
         } else if (parentType.type === '여유형 엄마') {
-          parentAnalysis = `엄마는 **'${parentType.type}'** 스타일이에요. 느긋하고 유연한 태도는 ${name}이(${age})에게 심리적 여유를 줘요. 다만 ${name}이의 기질에 따라 적당한 구조가 필요할 수 있어요.\n\n**주의할 점:**\n1. 아이가 불안해하는 신호는 놓치지 않기\n2. 기본적인 루틴(식사, 수면)은 유지하기\n3. 경계선은 명확하게\n\n엄마의 여유로움은 ${name}이의 자율성을 키우는 좋은 환경이에요.`;
+          parentAnalysis = `엄마는 **'${parentType.type}'** 스타일이에요. 느긋하고 유연한 태도는 ${name}이(${age})에게 심리적 여유를 줘요. 유연성은 아이의 자율성·도전 욕구를 키우고 스트레스가 덜 전달되는 편이에요. 다만 아이가 불안해하거나 예측이 필요할 때(신중파·에너자이저 아이)는 "뭐 어때"만 반복하면 오히려 불안해할 수 있어요.\n\n**활용법:** 아이가 불안해하는 신호 놓치지 않기, 기본 루틴(식사·수면) 유지, 경계선은 명확하게. 엄마의 여유로움은 ${name}이의 자율성을 키우는 좋은 환경이에요.`;
+        } else if (parentType.type === '페이스형 엄마') {
+          parentAnalysis = `엄마는 **'${parentType.type}'** 스타일이에요. 아이 부를 때 즉각 달려가기보다 '잠깐만' 하고 자기 페이스를 유지하는 편이에요. 반응 속도는 느릴 수 있지만 에너지가 충만해 저녁에도 여유가 있어요. 선택적으로 반응하는 태도는 아이가 스스로 해결할 기회를 늘려 주는 편이에요. 다만 아이가 진짜 위험하거나 극심하게 울 때는 "엄마 잠깐만"이 길어지면 불안해할 수 있어요. 급한 울음·부름에는 짧게라도 반응해 주시면 좋아요.`;
+        } else if (parentType.type === '혼합형 엄마') {
+          parentAnalysis = `엄마는 **'${parentType.type}'** 프로필이에요. 반응 속도·에너지·스트레스 내성 등이 한쪽으로 치우쳐 있어, 하나의 유형으로 묶기 어려운 조합이에요.\n\n아래 양육자 프로필 막대를 보시고, 높은 항목(강점)과 낮은 항목(쉬어가기)을 함께 참고하시면 돼요. 극단이 있는 만큼 그 부분은 배우자·돌봄과 나누는 것도 도움이 됩니다.`;
         } else {
-          parentAnalysis = `엄마는 **'${parentType.type}'** 스타일이에요. 여러 면에서 균형잡힌 육아 태도를 가지고 계세요.\n\n상황에 따라 유연하게 대응할 수 있는 엄마의 강점을 계속 활용하세요.`;
+          parentAnalysis = `엄마는 **'${parentType.type}'** 스타일이에요. 여러 면에서 균형잡힌 육아 태도를 가지고 계세요. 반응·스트레스·에너지가 극단이 아니라 상황에 맞게 조절하기 쉬운 편이에요. 다만 피곤·수면 부족·연속 실패가 겹치면 평소보다 반응이 예리해지거나 무기력해질 수 있어요. 그때는 휴식·도움 요청을 먼저 챙기세요. 상황에 따라 유연하게 대응할 수 있는 엄마의 강점을 계속 활용하세요.`;
         }
         const concernLower = concern.toLowerCase();
         const hasSleep = concernLower.includes('잠') || concernLower.includes('수면') || concernLower.includes('자');
@@ -428,13 +450,13 @@
         const parentLowStress = parentScores[0] < 5;
 
         if (temperamentType.type === '섬세파') {
-          interpretation = `${name}이는 **'${temperamentType.type}' ${temperamentType.emoji}** 기질이에요. Elaine Aron(1996)의 연구에서 'Highly Sensitive Child'로 분류되는 유형으로, 전체 아동의 약 15-20%가 이에 해당해요. ${age} 시기에는 특히 소리, 빛, 촉감 같은 자극을 **훨씬 더 강하게 느끼는 예민한 신경계**를 가지고 있어요.`;
+          interpretation = `${name}이는 **'${temperamentType.type}' ${temperamentType.emoji}** 기질이에요. 전체 아동의 약 15-20%가 이에 해당하는 유형으로, ${age} 시기에는 특히 소리, 빛, 촉감 같은 자극을 **훨씬 더 강하게 느끼는 예민한 신경계**를 가지고 있어요.\n\n이 기질의 아이들은 미세한 변화·감정·예술적 자극에 뛰어나고, 깊은 사고와 공감 능력이 발달하기 쉬워요. 시끄러운 장소, 밝은 조명, 거친 옷감·태그, 새로운 음식 질감처럼 감각 자극이 많거나 강할 때는 불안·거부·울음이 늘어날 수 있어요. 이는 생리적 반응이에요.`;
           reassurance = `쇼핑몰에서 울거나 옷 입는 걸 거부하는 ${name}이는 지금 **'감각 과부하(Sensory Overload)'** 상태예요. 이건 버릇이나 고집이 아니라, 뇌가 "자극이 너무 많아!"라고 알려주는 생리적 반응이에요.`;
           script = `**${name}이(섬세파) 감각 조절 대화법:**\n\n**1단계: 과부하 징후 인지** - 귀 막기, 눈 감기, 짜증 증가 → Dunn(1997): 예민한 아이의 **뇌가 보내는 SOS**\n\n**2단계: 즉각 환경 조정**\n"${name}아, 여기 너무 (시끄럽다/밝다). 조용한 곳으로 가자."\n\n**3단계: 감각 줄이기** - 소음: 화장실, 복도 / 조명: 커튼 닫기, 선글라스\n\n**4단계: 그라운딩** "손 꽉 잡아. 천천히 숨 쉬자. 하나, 둘, 셋..." → Porges(2011) 미주신경 이론\n\n**출처:** Dunn, W. (1997). Sensory Profile. Ayres, A.J. (1979). Sensory Integration and the Child.`;
           practicalTips = [{ title: '외출 전 감각 준비', content: `외출 전에 "시끄러운 곳에 가는데, 귀마개 가져갈까?"처럼 예고하고 대비책을 함께 준비하세요.`, source: 'Aron, E. (1996)' }, { title: '옷감 선택권 주기', content: `옷 살 때 ${name}이가 직접 만져보게 하세요. 태그는 미리 다 제거하고, 부드러운 면 소재를 선택하세요.`, source: 'Kranowitz, C. (2005)' }, { title: '다운타임 확보', content: `${age} 예민한 아이는 하루에 최소 1-2시간의 조용한 시간이 필요해요. 일정에 의도적으로 "쉬는 시간"을 넣으세요.`, source: 'Aron, E. (2002)' }];
           realExamples = [{ situation: '옷 입히려고 하면 울고 저항', solution: `${name}이가 직접 옷을 고르게 함. 2-3벌 중 "어떤 게 기분 좋아?" 물어보기.`, mom: '24개월 여아 엄마', result: '선택권을 주니까 저항이 80% 줄었어요.' }, { situation: '식당에서 식사 중 갑자기 울고 나가자고 함', solution: `식당 선택 시 구석 자리 예약. 노이즈 캔슬링 귀마개 준비. 20분 이상 있을 때는 중간에 밖에 나가서 쉬는 시간 주기.`, mom: '30개월 남아 엄마', result: '귀마개 하나로 외식이 가능해졌어요.' }];
         } else if (temperamentType.type === '에너자이저') {
-          interpretation = `${name}이는 **'${temperamentType.type}' ${temperamentType.emoji}** 기질이에요. 이는 Chess & Thomas(1977)의 연구에서 'Spirited Child'로 분류되는 유형으로, **적응성이 낮고 반응 강도가 높은** 특성을 보여요. ${age} 아이에게 이런 기질은 나쁜 게 아니라, 환경 변화에 민감하게 반응하며 자신의 감정을 솔직하게 표현하는 것이에요.`;
+          interpretation = `${name}이는 **'${temperamentType.type}' ${temperamentType.emoji}** 기질이에요. **적응성이 낮고 반응 강도가 높은** 특성을 보여, 환경 변화에 민감하게 반응하며 자신의 감정을 솔직하게 표현하는 유형이에요. ${age} 아이에게 이런 기질은 나쁜 게 아니라 개성에 가까워요.\n\n이 기질의 아이들은 에너지·열정·주도성이 뛰어나고, 한번 마음이 맞으면 깊은 유대를 보여요. 계획 변경, 낯선 장소·사람, 예고 없이 끝나는 놀이, "안 돼"만 반복될 때 감정이 폭발하거나 떼쓰기가 길어질 수 있어요. 반응 강도가 높은 아이는 스트레스 호르몬(코르티솔) 반응이 큰 편이에요.`;
           reassurance = `새로운 장소나 낯선 사람을 만날 때 ${name}이가 폭발적으로 떼를 쓰는 건 "${name}이가 지금 불안해!"라고 외치는 **도움 요청 신호**예요. Mary Sheedy Kurcinka의 연구(Raising Your Spirited Child, 2006)에 따르면, 이런 아이들은 변화에 대한 예고와 감정 인정이 특히 중요해요.`;
           let dialogueTitle = ''; let dialogueContent = '';
           if (parentHighControl) {
@@ -451,26 +473,32 @@
           practicalTips = [{ title: '변화 예고하기', content: `최소 10-15분 전에 알려주세요. "5분 후에 나갈 거야"보다 "손 씻고, 신발 신고 나갈 거야"처럼 단계를 설명하면 더 효과적이에요.`, source: 'Kurcinka, M. S. (2006)' }, { title: '감정 언어 가르치기', content: `${age} 아이는 감정을 표현하는 단어가 부족해요. "화났어?", "무서워?" 같은 질문으로 감정 이름을 알려주세요.`, source: 'Gottman, J. (1997) Raising An Emotionally Intelligent Child' }, { title: '진정 공간 만들기', content: `집에 쿠션, 인형, 부드러운 조명이 있는 조용한 코너를 만들어주세요. 감정이 폭발할 때 피난처가 돼요.`, source: 'Siegel, D. & Bryson, T. (2012) The Whole-Brain Child' }];
           realExamples = [{ situation: '마트에서 과자 사달라고 바닥에 드러누워 울기', solution: `"지금 과자 먹고 싶구나. 근데 오늘은 안 사는 날이야. 대신 집에 가서 엄마랑 쿠키 만들어 먹을까?" (대안 제시)`, mom: '33개월 남아 엄마', result: '처음엔 계속 울었지만, 3-4번 반복하니 "쿠키 만들어?" 하면서 진정됐어요.' }, { situation: '목욕 거부로 매일 전쟁', solution: `목욕 30분 전부터 "곧 목욕 시간이야", "10분 남았어" 알림. 목욕 순서표 그림판 만들어서 보여주기.`, mom: '27개월 여아 엄마', result: '예측 가능해지니까 저항이 절반으로 줄었어요. 순서표 넘기는 걸 재밌어해요.' }, { situation: '어린이집 등원 시 매일 울음', solution: `등원 전 "엄마 손 흔들흔들, 뽀뽀뽀" 의식 만들기. 선생님께 ${name}이가 좋아하는 놀잇감 미리 꺼내달라고 부탁.`, mom: '36개월 남아 엄마', result: '2주 정도 걸렸지만, 이제 의식하고 바로 놀잇감 달려가요.' }];
         } else if (temperamentType.type === '신중파') {
-          interpretation = `${name}이는 **'${temperamentType.type}' ${temperamentType.emoji}** 기질이에요. Chess & Thomas(1977)의 연구에서 'Slow-to-Warm-Up Child'로 분류되는 유형으로, 전체 아동의 약 15%가 이에 해당해요. ${age} 시기에는 **새로운 상황을 조심스럽게 관찰한 후 천천히 참여**하는 특성이 나타나요.`;
+          interpretation = `${name}이는 **'${temperamentType.type}' ${temperamentType.emoji}** 기질이에요. 전체 아동의 약 15%가 이에 해당해요. **접근성**(낯선 사람·장소에 대한 초기 반응)이 낮은 편이라, ${age} 시기에는 **새로운 상황을 조심스럽게 관찰한 후 천천히 참여**하는 특성이 나타나요. 적응성은 한번 익히면 빠른 편일 수 있어요. 기분이 낮은 편(평소 불쾌 정서가 많음)일 수도 있어요.\n\n이 기질의 아이들은 위험 회피·관찰력·인내가 뛰어나고, 익숙해지면 깊은 애착을 보여요. 낯선 사람·장소, 갑작스런 변화, "빨리 해"·"용기 내" 같은 압박에 불안·울음·거부가 늘어날 수 있어요. 적응에 시간이 필요한 유형이에요.`;
           reassurance = `어린이집 첫날 울거나 낯선 사람 앞에서 얼어붙는 ${name}이는 '겁쟁이'가 아니에요. Kagan(1994)의 연구에서 이런 아이들은 **행동 억제 시스템(BIS)**이 활성화된 것으로, 신중함은 위험 회피 능력이자 생존 전략이에요.`;
           script = `**${name}이(신중파) 워밍업 대화법:**\n\n**1단계: 관찰 시간 확보** "${name}아, 여기 처음이지? 엄마랑 앉아서 구경하자." → 5-10분 관찰 시간이 참여 의욕 3배 ↑ (Kagan, 1994)\n\n**2단계: 언어화** "저기 미끄럼틀 있네. 빨간색이다."\n\n**3단계: 점진적 접근** "엄마 손 잡고 가까이 가볼까? 만져만 보자."\n\n**4단계: 무압박 참여** "타고 싶으면 타고, 아니면 구경만 해도 돼."\n\n**출처:** Thomas, A. & Chess, S. (1977). Kagan, J. (1994). Galen's Prophecy.`;
           practicalTips = [{ title: '예고와 준비', content: `새로운 장소 방문 전 사진이나 영상을 보여주세요. ${name}이의 뇌가 "낯설지 않아"라고 인식하면 적응이 2배 빨라져요.`, source: 'Kagan, J. (1994)' }, { title: '강요 금지', content: `"빨리 해", "용기 내" 같은 말은 역효과예요. ${name}이가 준비됐을 때 자연스럽게 시도할 거예요.`, source: 'Thomas & Chess (1977)' }, { title: '작은 성공 축적', content: `한 번 성공한 경험을 반복 노출하세요. 익숙함이 자신감으로 이어져요.`, source: 'Bandura, A. (1977)' }];
           realExamples = [{ situation: '어린이집 적응 안 됨 (3주째 울음)', solution: `선생님께 ${name}이 좋아하는 인형 미리 준비 부탁. 등원 후 "인형이 ${name}이 기다렸대" 말하며 10분 같이 놀다가 나옴.`, mom: '30개월 여아 엄마', result: '4주차부터 인형 보자마자 울음 멈춤.' }, { situation: '생일파티에서 혼자 구석에만 있음', solution: `억지로 끌어내지 않고, 엄마가 옆에서 아이들 노는 거 같이 구경. "저 친구 풍선 가지고 노네" 설명해줌.`, mom: '34개월 남아 엄마', result: '30분 후 스스로 풍선 만지러 감.' }];
         } else if (temperamentType.type === '탐험가') {
-          interpretation = `${name}이는 **'${temperamentType.type}' ${temperamentType.emoji}** 기질이에요. Buss & Plomin(1984)의 연구에서 'Active Child'로 분류되는 유형으로, **운동 에너지 수준이 평균의 2배**예요. ${age} 시기에는 끊임없이 움직이고, 탐색하고, 만지고 싶어하는 욕구가 강해요.`;
+          interpretation = `${name}이는 **'${temperamentType.type}' ${temperamentType.emoji}** 기질이에요. **운동 에너지 수준이 평균의 2배** 정도로, ${age} 시기에는 끊임없이 움직이고, 탐색하고, 만지고 싶어하는 욕구가 강해요.\n\n이 기질의 아이들은 호기심·학습·도전 욕구가 크고, 격렬한 놀이가 신체·사회성 발달에 도움이 돼요. 움직이지 못하거나 조용히 앉아 있기·대기 시간이 길 때, 실내에서 에너지를 쓸 곳이 없을 때 짜증·산만함·뛰어다니기가 늘어날 수 있어요.`;
           reassurance = `${name}이가 5분도 못 앉아있고 집안을 뛰어다니는 건 '산만함'이 아니라 **뇌가 요구하는 정상적인 움직임**이에요. Panksepp(1998)의 연구에서 높은 활동성은 SEEKING 시스템(탐색 본능) 활성화로, 학습과 발달에 긍정적이에요.`;
           script = `**${name}이(탐험가) 에너지 방향 대화법:**\n\n**1단계: 에너지 인정** "${name}아, 몸이 막 움직이고 싶구나. 엄마 알아."\n\n**2단계: 안전한 방향 제시** "여기서는 안 돼. 위험해. 밖에 나가서 뛰자."\n\n**3단계: 에너지 소진 활동** "이 공 던져봐. 10번!" → Pellegrini & Smith(1998): 하루 2시간 격렬한 활동 필수\n\n**4단계: 진정 신호** "이제 천천히 걷기. 하나, 둘, 셋..."\n\n**출처:** Panksepp, J. (1998). Affective Neuroscience. Pellegrini & Smith (1998). Child Development, 69(3).`;
           practicalTips = [{ title: '하루 2시간 격렬한 놀이', content: `공원, 뛰기, 점프, 오르기 등 대근육 활동이 필수예요. 에너지 발산 안 되면 밤잠도 안 와요.`, source: 'Pellegrini & Smith (1998)' }, { title: '집안 안전 공간', content: `소파 쿠션으로 점프존, 테이프로 길 만들기 등. 비 오는 날 대비 필수예요.`, source: 'Buss & Plomin (1984)' }, { title: '타이머 게임', content: `"5분 동안 조용히 앉아있기" 챌린지. 성공하면 10분 뛰어놀기. 자기 조절 연습이에요.`, source: 'Rothbart & Bates (2006)' }];
           realExamples = [{ situation: '식당에서 계속 돌아다니고 뛰어다님', solution: `식사 전 식당 주차장에서 10분 뛰어놀기. 식당 도착 전 "앉아있기 게임" 예고. 5분 앉아있으면 스티커.`, mom: '35개월 남아 엄마', result: '에너지 미리 빼니까 15분은 앉아있어요.' }, { situation: '집에서 소파 위로 계속 점프', solution: `거실 한쪽에 매트 깔고 "점프존" 지정. "소파는 안 돼, 여기서 점프!" 일관된 규칙.`, mom: '32개월 여아 엄마', result: '1주일 걸렸지만 이제 점프존에서만 놀아요.' }];
         } else if (temperamentType.type === '순둥이') {
-          interpretation = `${name}이는 **'${temperamentType.type}' ${temperamentType.emoji}** 기질이에요. Thomas & Chess(1977)의 연구에서 'Easy Child'로 분류되는 유형으로, 전체 아동의 약 40%가 이에 해당해요. ${age} 시기에는 **규칙적인 생활 리듬, 빠른 적응력, 긍정적인 기분**을 보여요.`;
+          interpretation = `${name}이는 **'${temperamentType.type}' ${temperamentType.emoji}** 기질이에요. 전체 아동의 약 40%가 이에 해당해요. ${age} 시기에는 **규칙적인 생활 리듬, 빠른 적응력, 긍정적인 기분**을 보여요.\n\n이 기질의 아이들은 규칙성·적응력·긍정 정서가 높아 새 환경·루틴에 잘 맞춰지고, 선택 기회를 주면 자율성·동기가 잘 자라요. 순한 아이일수록 부모의 무관심·갈등에 더 민감해요. "잘하니까" 방치하거나 의견을 묻지 않으면 소극적·자기주장 부족으로 이어질 수 있어요.`;
           reassurance = `${name}이(가) 키우기 쉽다고 해서 엄마가 덜 중요한 건 아니에요. Belsky(1984)의 연구에서 순한 아이일수록 **부모의 양육 태도에 더 민감**하게 반응한다고 밝혀졌어요.`;
           script = `**${name}이(순둥이) 성장 촉진 대화법:**\n\n**감정 표현 촉진** "${name}아, 지금 블록 쌓기 재미있어? 엄마한테 보여줄래?" → 관심 표현이 자존감 형성\n\n**선택 연습** "오늘 뭐 먹고 싶어? ${name}이가 골라봐." → Deci & Ryan(1985): 순한 아이일수록 선택 경험 필요\n\n**거절 허용** "${name}아, 하기 싫으면 '싫어'라고 말해도 돼."\n\n**출처:** Thomas, A. & Chess, S. (1977). Gottman, J. (1997). Raising An Emotionally Intelligent Child.`;
           practicalTips = [{ title: '감정 어휘 확장', content: `"화났어" 외에 "속상해", "아쉬워", "부러워" 등 다양한 감정 단어를 알려주세요.`, source: 'Gottman, J. (1997)' }, { title: '선택 기회 제공', content: `하루에 3번 이상 ${name}이가 선택하게 하세요. "오늘 뭐 입을까?", "간식 뭐 먹을까?"`, source: 'Deci & Ryan (1985)' }, { title: '관심 지속', content: `순둥이라고 방치하지 마세요. 하루 15분 ${name}이만을 위한 시간을 확보하세요.`, source: 'Belsky, J. (1984)' }];
           realExamples = [{ situation: '동생이 장난감 빼앗아도 가만히 있음', solution: `"${name}아, 그 장난감 ${name}이 거야. '내 거야'라고 말해봐." 자기 주장 연습 시킴.`, mom: '36개월 남아 엄마', result: '3주 후 스스로 "내 거!" 말하기 시작.' }, { situation: '엄마가 시키는 대로만 함 (의견 표현 안 함)', solution: `매일 "오늘 뭐 하고 싶어?" 물어봄. "잘 모르겠으면 엄마가 2가지 말할게" 선택 연습.`, mom: '33개월 여아 엄마', result: '2개월 후 "나는 이거 하고 싶어" 스스로 말하기 시작.' }];
+        } else if (temperamentType.type === '혼합형') {
+          interpretation = `${name}이는 **'${temperamentType.type}' ${temperamentType.emoji}** 프로필이에요. 일부 기질 영역에서 극단적인 점수가 있어, 하나의 유형으로 묶기 어려운 조합이에요. 이런 아이들도 기질과 환경이 잘 맞으면 잘 적응해요.\n\n아래 기질 프로필 막대를 보시고, 높은 항목(강점)과 낮은 항목(케어가 필요한 부분)을 함께 보시면 돼요.`;
+          reassurance = `${name}이(가) 극단 점수가 있어도 '이상한 아이'가 아니에요. Rothbart & Bates(2006)는 기질을 '생물학적 기반의 개인차'로 보며, 환경이 맞을 때 강점으로 발현된다고 했어요.`;
+          script = `**${name}이(혼합형) + ${parentType.type} 맞춤 대화법:**\n\n**P.E.T. 4단계** (Gordon, 1970): "${name}아, 무슨 일이야?" → 적극적 경청 → "어떻게 하면 좋을까?" → 선택과 실행. 프로필에서 낮은 항목(예: 접근성·기분)이 있으면 예고·선택권을, 높은 항목(예: 활동성)이 있으면 에너지 발산 기회를 더 주세요.`;
+          practicalTips = [{ title: '프로필 막대 참고', content: `극단이 있는 항목만 골라 케어하세요. 모든 항목을 바꾸려 하지 마세요.`, source: 'Thomas & Chess (1977)' }, { title: '감정 코칭', content: `"화났어", "슬퍼" 같은 감정 이름을 자주 사용해주세요.`, source: 'Gottman, J. (1997)' }, { title: '일관성', content: `규칙은 명확하고 일관되게 적용하세요.`, source: 'Gordon, T. (1970)' }];
+          realExamples = [{ situation: '장난감 정리 안 하고 떼쓰기', solution: `"5분 후에 정리할 거야" 예고 → 타이머 → 함께 정리 → 구체적 칭찬`, mom: '32개월 남아 엄마', result: '타이머 소리 들으면 정리 시작해요.' }, { situation: '동생 때리기', solution: `"때리면 아파. 이렇게 해 (쓰다듬기)" + "화났으면 엄마한테 말해"`, mom: '29개월 여아 엄마', result: '"엄마, 화나!" 말로 표현해요.' }];
         } else {
-          // 밸런서 (Balanced Child): 위 유형에 해당하지 않는 균형형
-          interpretation = `${name}이는 **'${temperamentType.type}' ${temperamentType.emoji}** 기질이에요. ${age} 시기에 각 기질 영역에서 극단적이지 않고 균형을 보이는 건 매우 긍정적이에요.`;
+          // 밸런서 (Balanced Child): 어떤 차원도 극단이 아닐 때
+          interpretation = `${name}이는 **'${temperamentType.type}' ${temperamentType.emoji}** 기질이에요. ${age} 시기에 각 기질 영역에서 극단적이지 않고 균형을 보이는 건 매우 긍정적이에요. 이런 아이들은 새로운 상황·규칙에 비교적 유연하게 반응하는 편이에요.\n\n여러 상황에 골고루 적응하는 편이라, 유치원·새 환경 적응이 상대적으로 수월할 수 있어요. 피곤하거나 배고프거나 자극이 과할 때는 다른 아이들처럼 짜증·울음이 늘어날 수 있어요. 그때는 휴식·간식·조용한 공간을 먼저 챙겨 주세요.`;
           reassurance = `${name}이(가) 가끔 보이는 문제 행동은 기질보다는 **발달 단계**나 **환경적 요인**과 관련이 있을 가능성이 커요. 엄마는 충분히 잘하고 계세요.`;
           script = `**${name}이(균형형) + ${parentType.type} 맞춤 대화법:**\n\n**P.E.T. 4단계 문제 해결 대화법** (Gordon, 1970):\n\n**1단계: 문제 인식** "${name}아, 무슨 일이야?"\n\n**2단계: 적극적 경청** "(장난감을 뺏겼구나/친구가 같이 안 놀아줬구나). 그래서 속상했어?"\n\n**3단계: 해결책 브레인스토밍** "어떻게 하면 좋을까? ${name}이 생각은?" → Shure & Spivack(1982): 아이가 직접 해결책 제시하면 실행률 3배 ↑\n\n**4단계: 선택과 실행** "좋은 생각이다. 그럼 해볼까?"\n\n**출처:** Gordon, T. (1970). P.E.T. Shure, M.B. & Spivack, G. (1982). Interpersonal problem-solving in young children.`;
           practicalTips = [{ title: '일관성 유지하기', content: `규칙은 명확하게, 일관되게 적용하세요. "안 돼"라고 했으면 끝까지 지키는 게 중요해요.`, source: 'Gordon, T. (1970)' }, { title: '감정 코칭', content: `${age} 아이는 감정 이름을 배우는 중이에요. "화났어", "슬퍼" 같은 단어를 자주 사용해주세요.`, source: 'Gottman, J. (1997)' }, { title: '질보다 양', content: `하루 15분 ${name}이가 주도하는 놀이 시간을 만들어보세요.`, source: 'Lansbury, J. (2014) No Bad Kids' }];
@@ -895,7 +923,7 @@
                     <div className="bg-[var(--mint-muted)] rounded-xl sm:rounded-[24px] p-5 sm:p-8 border-2 border-[var(--mint-light)]">
                       <p className="text-sm sm:text-base md:text-lg leading-relaxed text-gray-700 whitespace-pre-line" dangerouslySetInnerHTML={{ __html: result.parentAnalysis.replace(/\*\*(.*?)\*\*/g, '<strong style="color:var(--mint-dark);font-weight:700">$1</strong>') }} />
                       <p className="text-xs sm:text-sm text-gray-600 leading-relaxed mt-4 pt-4 border-t border-[var(--mint-light)]">
-                        Baumrind(1967, 1991)의 연구에 따르면 반응성(온정)과 요구도(통제)가 균형 잡힌 &#39;권위 있는(authoritative)&#39; 양육 스타일은 아동의 사회적·정서적 발달과 긍정적 연관이 있는 것으로 나타났습니다.
+                        반응성(온정)과 요구도(통제)가 균형 잡힌 양육 스타일은 아동의 사회적·정서적 발달에 긍정적 영향을 줄 수 있어요.
                       </p>
                     </div>
                     <div className="mt-4 sm:mt-6 bg-white rounded-xl sm:rounded-[20px] p-4 sm:p-6 border-2 border-[var(--mint-light)]">
