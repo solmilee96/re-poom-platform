@@ -48,8 +48,8 @@
 
   <script type="text/babel" data-presets="react">
     const { useState, useEffect } = React;
-    // 아쉬워요 피드백 시 슬랙 알림 (웹훅 URL은 보안상 저장소에 포함하지 않음. 알림이 필요하면 로컬/배포 환경에서 설정)
-    const SLACK_WEBHOOK_DIRECT = '';
+    // 아쉬워요 피드백 → Slack (GitHub Pages는 CORS로 직접 웹훅 불가 → API 프록시 사용)
+    const FEEDBACK_API_URL = 'https://web-5rd50ag63-solmilee96s-projects.vercel.app/api/feedback';
 
     // Icon components
     const Baby = ({ className, ...props }) => (
@@ -167,18 +167,13 @@
 
       const sendFeedbackToSlack = (choice, text, childName) => {
         if (choice !== '아쉬워요') return;
-        const message = [
-          '아이 여행 피드백 (아쉬워요)',
-          childName ? '아이 이름: ' + childName : '',
-          text ? '내용: ' + text : '(내용 없음)',
-        ].filter(Boolean).join('\n');
-        if (SLACK_WEBHOOK_DIRECT) {
-          // Content-Type 헤더를 넣으면 CORS preflight가 발생해 Slack에서 차단됨. 생략하면 알림 전송 가능.
-          fetch(SLACK_WEBHOOK_DIRECT, {
-            method: 'POST',
-            body: JSON.stringify({ text: message }),
-          }).catch(() => {});
-        }
+        const apiUrl = FEEDBACK_API_URL;
+        if (!apiUrl) return;
+        fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ choice: '아쉬워요', text: text || '', childName: childName || '' }),
+        }).catch(() => {});
       };
 
       const getChildAge = () => {
