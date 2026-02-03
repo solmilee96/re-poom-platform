@@ -173,7 +173,10 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ choice: '아쉬워요', text: text || '', childName: childName || '' }),
-        }).catch(() => {});
+        })
+          .then((r) => (r.ok ? r.json() : r.json().then((d) => Promise.reject(new Error(d.error || r.status)))))
+          .then(() => {})
+          .catch((e) => console.warn('피드백 전송 실패:', e.message));
       };
 
       const getChildAge = () => {

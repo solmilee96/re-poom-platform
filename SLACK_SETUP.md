@@ -88,6 +88,25 @@ Slack 알림이 가려면 **Vercel**에 웹훅 URL을 넣어야 합니다.
   내용: (입력한 내용)
   ```
 
+## 알림이 안 올 때
+
+1. **Vercel 프로젝트 Root Directory가 `web` 인 경우**  
+   이 저장소에는 **`web/api/feedback.js`** 가 포함되어 있어야 합니다. (이미 포함됨)  
+   Root가 `web` 이면 배포 시 **`web` 폴더만** 올라가므로, 루트의 `api/` 는 배포에 없습니다. `web/api/` 에 있는 API만 사용됩니다.
+
+2. **환경 변수 적용**  
+   Vercel에서 `SLACK_WEBHOOK_URL` 을 추가·수정한 뒤에는 반드시 **Redeploy** 를 한 번 실행해야 합니다.
+
+3. **브라우저에서 확인**  
+   개발자 도구(F12) → **Console** 탭에서 **아쉬워요** 보내기 후 `피드백 전송 실패: ...` 메시지가 나오면, API 오류 메시지를 확인할 수 있습니다.  
+   **Network** 탭에서 `feedback` 요청을 선택해 상태 코드(200 / 500 등)와 응답 내용을 확인해 보세요.
+
+4. **API 직접 호출 테스트**  
+   터미널에서 아래처럼 호출해 보세요 (실제 Vercel URL로 바꿔서).  
+   `curl -X POST https://web-5rd50ag63-solmilee96s-projects.vercel.app/api/feedback -H "Content-Type: application/json" -d '{"choice":"아쉬워요","text":"테스트","childName":""}'`  
+   - 200 + `{"ok":true}` 이면 API와 Slack 전송은 정상입니다.  
+   - 500 "Slack webhook not configured" 이면 Vercel에 `SLACK_WEBHOOK_URL` 이 없거나 적용 전입니다.
+
 ## 주의
 
 - 웹훅 URL은 **저장소 코드에 넣지 마세요**. **Vercel 환경 변수** `SLACK_WEBHOOK_URL` 에만 넣으면 API에서만 사용되어 노출되지 않습니다.
