@@ -73,11 +73,14 @@ module.exports = async function handler(req, res) {
       }
     }
     body = body || {};
-    const { choice, text, childName } = body;
+    const { choice, text, childName, birthDate, ageDisplay } = body;
+    const label = choice === '아쉬워요' ? '아쉬워요' : (choice === '좋았어요' ? '좋았어요' : choice || '피드백');
     const message = [
-      '아이 여행 피드백 (아쉬워요)',
+      '아이 여행 피드백 (' + label + ')',
       childName ? '아이 이름: ' + childName : '',
-      text ? '내용: ' + text : '(내용 없음)',
+      birthDate ? '생년월일: ' + birthDate : '',
+      ageDisplay ? '나이: ' + ageDisplay : '',
+      text ? '내용: ' + text : (label === '아쉬워요' ? '(내용 없음)' : ''),
     ]
       .filter(Boolean)
       .join('\n');

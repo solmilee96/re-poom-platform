@@ -49,7 +49,7 @@
   <script type="text/babel" data-presets="react">
     const { useState, useEffect } = React;
     // 아쉬워요 피드백 → Slack (GitHub Pages는 CORS로 직접 웹훅 불가 → API 프록시 사용)
-    const FEEDBACK_API_URL = 'https://web-f70ba7pj1-solmilee96s-projects.vercel.app/api/feedback';
+    const FEEDBACK_API_URL = 'https://web-2f2a0rn5i-solmilee96s-projects.vercel.app/api/feedback';
 
     // Icon components
     const Baby = ({ className, ...props }) => (
@@ -165,14 +165,19 @@
         localStorage.setItem('gwaenchanayo_feedback', JSON.stringify(list));
       };
 
-      const sendFeedbackToSlack = (choice, text, childName) => {
-        if (choice !== '아쉬워요') return;
+      const sendFeedbackToSlack = (choice, text, childName, birthDate, ageDisplay) => {
         const apiUrl = FEEDBACK_API_URL;
         if (!apiUrl) return;
         fetch(apiUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ choice: '아쉬워요', text: text || '', childName: childName || '' }),
+          body: JSON.stringify({
+            choice: choice || '좋았어요',
+            text: text || '',
+            childName: childName || '',
+            birthDate: birthDate || '',
+            ageDisplay: ageDisplay || '',
+          }),
         })
           .then((r) => (r.ok ? r.json() : r.json().then((d) => Promise.reject(new Error(d.error || r.status)))))
           .then(() => {})
@@ -1037,7 +1042,7 @@
                       <p className="text-xs sm:text-sm text-gray-500 mb-4">간략히 적어주시면 서비스 개선에 참고할게요.</p>
                       <textarea value={feedbackText} onChange={(e) => setFeedbackText(e.target.value)} placeholder="예: 결과가 조금 일반적으로 느껴져요, 더 구체적인 팁이 있으면 좋겠어요" className="w-full h-24 sm:h-28 p-3 sm:p-4 border-2 border-[var(--coral-light)] rounded-xl resize-none text-sm sm:text-base focus:outline-none focus:border-[var(--coral)]" maxLength={500} />
                       <div className="flex gap-3 mt-4">
-                        <button type="button" onClick={() => { saveFeedback('아쉬워요', feedbackText); sendFeedbackToSlack('아쉬워요', feedbackText, childInfo.name); setFeedbackGiven(true); setShowFeedbackPopup(false); setFeedbackText(''); }} className="flex-1 py-3 bg-[var(--coral-button)] text-white font-bold rounded-xl hover:opacity-90 min-h-[48px]">보내기</button>
+                        <button type="button" onClick={() => { saveFeedback('아쉬워요', feedbackText); sendFeedbackToSlack('아쉬워요', feedbackText, childInfo.name, childInfo.birthDate, getChildAge()); setFeedbackGiven(true); setShowFeedbackPopup(false); setFeedbackText(''); }} className="flex-1 py-3 bg-[var(--coral-button)] text-white font-bold rounded-xl hover:opacity-90 min-h-[48px]">보내기</button>
                         <button type="button" onClick={() => { setShowFeedbackPopup(false); setFeedbackText(''); }} className="px-5 py-3 bg-white border-2 border-gray-300 text-gray-700 font-bold rounded-xl hover:bg-gray-50 min-h-[48px]">취소</button>
                       </div>
                     </div>
@@ -1048,7 +1053,7 @@
                   <div className="mt-8 sm:mt-10 pt-6 sm:pt-8 border-t-2 border-dashed border-[var(--coral-light)]">
                     <p className="text-center text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4">아이 여행 어떠셨나요?</p>
                     <div className="flex justify-center gap-3 sm:gap-4 flex-wrap">
-                      <button type="button" onClick={() => { saveFeedback('좋았어요', ''); setFeedbackGiven(true); }} className="px-6 sm:px-8 py-3 sm:py-4 bg-[var(--coral)] text-white text-sm sm:text-base font-bold rounded-xl sm:rounded-[20px] hover:opacity-90 transition-all min-h-[48px]">좋았어요</button>
+                      <button type="button" onClick={() => { saveFeedback('좋았어요', ''); sendFeedbackToSlack('좋았어요', '', childInfo?.name || '', childInfo?.birthDate || '', getChildAge()); setFeedbackGiven(true); }} className="px-6 sm:px-8 py-3 sm:py-4 bg-[var(--coral)] text-white text-sm sm:text-base font-bold rounded-xl sm:rounded-[20px] hover:opacity-90 transition-all min-h-[48px]">좋았어요</button>
                       <button type="button" onClick={() => setShowFeedbackPopup(true)} className="px-6 sm:px-8 py-3 sm:py-4 bg-white border-2 border-gray-300 text-gray-700 text-sm sm:text-base font-bold rounded-xl sm:rounded-[20px] hover:bg-gray-50 transition-all min-h-[48px]">아쉬워요</button>
                     </div>
                   </div>
