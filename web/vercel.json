@@ -1,0 +1,8 @@
+{
+  "buildCommand": "",
+  "outputDirectory": ".",
+  "rewrites": [
+    { "source": "/", "destination": "/public/gwaenchanayo.html" },
+    { "source": "/gwaenchanayo.html", "destination": "/public/gwaenchanayo.html" }
+  ]
+}
