@@ -30,7 +30,7 @@
 
 ## 배포 URL
 배포 성공 후:
-- `https://re-poom-platform-solmilee96s-projects.vercel.app`
+- `https://web-obutmwll6-solmilee96s-projects.vercel.app`
 
 
 

@@ -103,11 +103,11 @@ Slack 알림이 가려면 **Vercel**에 웹훅 URL을 넣어야 합니다.
 
 4. **API 직접 호출 테스트**  
    터미널에서 아래처럼 호출해 보세요 (실제 Vercel URL로 바꿔서).  
-   `curl -X POST https://web-nb20krt3b-solmilee96s-projects.vercel.app/api/feedback -H "Content-Type: application/json" -d '{"choice":"아쉬워요","text":"테스트","childName":""}'`  
+   `curl -X POST https://web-obutmwll6-solmilee96s-projects.vercel.app/api/feedback -H "Content-Type: application/json" -d '{"choice":"아쉬워요","text":"테스트","childName":""}'`  
    - 200 + `{"ok":true}` 이면 API와 Slack 전송은 정상입니다.  
    - 500 "Slack webhook not configured" 이면 Vercel에 `SLACK_WEBHOOK_URL` 이 없거나 적용 전입니다.
 
 ## 주의
 
 - 웹훅 URL은 **저장소 코드에 넣지 마세요**. **Vercel 환경 변수** `SLACK_WEBHOOK_URL` 에만 넣으면 API에서만 사용되어 노출되지 않습니다.
-- Vercel 프로젝트 URL이 `web-nb20krt3b-solmilee96s-projects.vercel.app` 이 아닌 경우, `docs/index.html` 의 `FEEDBACK_API_URL` 을 실제 Vercel 배포 URL로 바꾼 뒤 다시 배포해야 합니다.
+- Vercel 프로젝트 URL이 `web-obutmwll6-solmilee96s-projects.vercel.app` 이 아닌 경우, `docs/index.html` 의 `FEEDBACK_API_URL` 을 실제 Vercel 배포 URL로 바꾼 뒤 다시 배포해야 합니다.

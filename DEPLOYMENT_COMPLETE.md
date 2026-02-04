@@ -35,7 +35,7 @@
    - https://vercel.com/solmilee96s-projects/re-poom-platform
 
 2. **배포 URL** (배포 성공 후)
-   - https://re-poom-platform-solmilee96s-projects.vercel.app
+   - https://web-obutmwll6-solmilee96s-projects.vercel.app
 
 ## 문제 해결
 

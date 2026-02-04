@@ -21,7 +21,7 @@ echo "2. GitHub Actions (워크플로우 사용 시):"
 echo "   https://github.com/solmilee96/re-poom-platform/actions"
 echo ""
 echo "3. 배포 URL 확인:"
-echo "   https://re-poom-platform-solmilee96s-projects.vercel.app"
+echo "   https://web-obutmwll6-solmilee96s-projects.vercel.app"
 echo ""
 
 

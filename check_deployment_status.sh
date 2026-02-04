@@ -11,7 +11,7 @@ echo ""
 
 # 배포 URL 확인
 echo "🌐 배포 URL 확인:"
-URL="https://re-poom-platform-solmilee96s-projects.vercel.app"
+URL="https://web-obutmwll6-solmilee96s-projects.vercel.app"
 HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 5 "$URL" 2>/dev/null)
 
 if [ "$HTTP_CODE" = "200" ]; then

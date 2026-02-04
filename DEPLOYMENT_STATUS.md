@@ -48,7 +48,7 @@ npm run build
 
 ## 배포 URL
 성공 시:
-- `https://re-poom-platform-solmilee96s-projects.vercel.app`
+- `https://web-obutmwll6-solmilee96s-projects.vercel.app`
 
 ## 도움이 필요하면
 Vercel 대시보드의 빌드 로그에서 정확한 에러 메시지를 확인하세요.
