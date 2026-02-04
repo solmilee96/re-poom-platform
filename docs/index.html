@@ -3,15 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    (function() {
+      var path = document.location.pathname;
+      var basePath = path.endsWith('/') ? path : path.replace(/\/[^/]*$/, '/');
+      document.write('<base href="' + document.location.origin + basePath + '">');
+    })();
+  </script>
   <title>아이 여행 - &#39;왜 이럴까?&#39;를 &#39;그래서 그랬구나&#39;로 바꿔주는, 아이 기질 기반 행동 가이드 서비스</title>
   
+  <script>
+    (function() {
+      var c = window.console;
+      if (!c || !c.warn) return;
+      var w = c.warn;
+      c.warn = function() {
+        var s = (arguments[0] && typeof arguments[0] === 'string') ? arguments[0] : '';
+        if (s.indexOf('tailwindcss.com') !== -1 || s.indexOf('Tailwind') !== -1 && s.indexOf('production') !== -1) return;
+        if (s.indexOf('in-browser Babel') !== -1 || s.indexOf('precompile') !== -1 && s.indexOf('production') !== -1) return;
+        return w.apply(c, arguments);
+      };
+    })();
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  
+  <script crossorigin src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.0/babel.min.js"></script>
+  <script>
+    window.__cdnReady = function() {
+      return typeof window.React !== 'undefined' && typeof window.ReactDOM !== 'undefined' && (typeof window.Babel !== 'undefined' || (window.babel && window.babel.register));
+    };
+  </script>
   <style>
     :root {
       /* 화사한 코랄톤 - 브라운 느낌 제거 */
@@ -97,11 +121,6 @@
     const ArrowRight = ({ className, ...props }) => (
       <svg className={className} {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
-      </svg>
-    );
-    const ChevronLeft = ({ className, ...props }) => (
-      <svg className={className} {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="m15 18-6-6 6-6"/>
       </svg>
     );
     const RotateCcw = ({ className, ...props }) => (
@@ -639,11 +658,11 @@
         } else if (hasClothing) {
           concernAnalysis = `**"${concern}"에 대한 기질 기반 심층 분석:**\n\n`;
           if (highSensitivity || temperamentType.type === '섬세파') {
-            concernAnalysis += `${name}이(${age})는 **감각이 예민한 기질**이에요. 옷감의 촉감, 태그, 압박감, 또는 옷 입는 순서가 바뀌는 것을 **평균보다 훨씬 불쾌하게** 느낄 수 있어요. 이건 버릇이나 고집이 아니라 **감각 과부하**에 가까운 반응이에요.\n\n**실천 팁:** 옷 살 때 ${name}이가 직접 만져보게 하고, 태그는 미리 제거해 두세요. 2~3벌 중에서 "어떤 게 기분 좋아?" 하고 선택하게 하면 거부가 줄어드는 경우가 많아요.`;
+            concernAnalysis += `${name}이(${age})는 **감각이 예민한 기질**이에요. 옷감의 촉감, 태그, 압박감, 또는 옷 입는 순서가 바뀌는 것을 **평균보다 훨씬 불쾌하게** 느낄 수 있어요. 이건 버릇이나 고집이 아니라 **감각 과부하**에 가까운 반응이에요.\n\n**실천 팁:** 옷 살 때 ${name}이가 직접 만져보게 하고, 태그는 미리 제거해 두세요. 2~3벌 중에서 '어떤 게 기분 좋아?' 하고 선택하게 하면 거부가 줄어드는 경우가 많아요.`;
           } else if (lowAdaptability) {
-            concernAnalysis += `${name}이(${age})는 **변화나 순서에 민감한 기질**이에요. "지금 하던 거 말고 옷부터 입자"는 식의 제안이 **예상 밖**이라면 스트레스를 느끼고 거부할 수 있어요.\n\n**실천 팁:** "이제 옷 입을 시간이야"처럼 5분 전에 예고하고, 매일 비슷한 순서(예: 기저귀 → 옷)를 유지해 보세요. 선택권을 주면("빨간 티 vs 노란 티") 참여가 잘 되는 편이에요.`;
+            concernAnalysis += `${name}이(${age})는 **변화나 순서에 민감한 기질**이에요. '지금 하던 거 말고 옷부터 입자'는 식의 제안이 **예상 밖**이라면 스트레스를 느끼고 거부할 수 있어요.\n\n**실천 팁:** '이제 옷 입을 시간이야'처럼 5분 전에 예고하고, 매일 비슷한 순서(예: 기저귀 → 옷)를 유지해 보세요. 선택권을 주면('빨간 티 vs 노란 티') 참여가 잘 되는 편이에요.`;
           } else {
-            concernAnalysis += `${name}이(${age})는 ${age} 시기 **자율성**이 커지는 단계예요. "엄마가 정해 주는 것"보다 "내가 고르는 것"에 대한 욕구가 있어서, 옷 입히기를 거부하는 경우가 있어요.\n\n**실천 팁:** "오늘은 이거랑 이거 중에 뭐 입을까?"처럼 작은 선택을 주세요. "엄마가 도와줄까, ${name}이가 할까?"도 시도해 보시면 좋아요.`;
+            concernAnalysis += `${name}이(${age})는 ${age} 시기 **자율성**이 커지는 단계예요. "엄마가 정해 주는 것"보다 "내가 고르는 것"에 대한 욕구가 있어서, 옷 입히기를 거부하는 경우가 있어요.\n\n**실천 팁:** '오늘은 이거랑 이거 중에 뭐 입을까?'처럼 작은 선택을 주세요. '엄마가 도와줄까, ${name}이가 할까?'도 시도해 보시면 좋아요.`;
           }
         } else {
           const t = temperamentType.type;
@@ -745,6 +764,7 @@
           consultationPrefix = `${name}이에 대해 여러 번 이야기 나눠 주셔서, 조금씩 더 맞춰 드릴 수 있게 되고 있어요.\n\n`;
         }
         const addPrefix = (s) => (consultationPrefix ? consultationPrefix + s : s);
+        const _qm = '?';
 
         if (/틀려|아니에요|다른데|맞지\s*않|안\s*맞|4단계|단계.*틀|그게\s*아니/.test(q)) {
           return addPrefix(`제가 말씀드린 내용이 ${name}이 상황과 다르게 느껴지시는군요. 어느 부분이 특히 그렇게 느껴지셨나요? 혹은 지금 가장 힘드신 게 **떼쓰기, 잠, 밥, 옷 입기, 또래 관계** 중 어떤 것인지 한 가지만 적어 주시면, 그걸 기준으로 다시 맞춰서 말씀드릴게요. 💕`);
@@ -753,91 +773,103 @@
         if (isFollowUp && lastAssistantText) {
           if (lastAboutEating && /야채|채소|편식|먹기 싫어|안 먹어|그래도 안|해도 안/.test(q)) {
             if (highSensitivity) {
-              return addPrefix(`야채는 질감이나 냄새가 강해서, ${name}이처럼 감각이 예민한 편이면 거부감이 더 크게 느껴질 수 있어요. 무리하게 먹이기보다는 한 가지만 골라서(예: 당근만) 부드럽게 익혀서 퓨레처럼 보여주시고, ${name}이가 손으로 만져 보거나 냄새만 맡게 해 두는 것부터 시작해 보세요. 8~15번 정도 식탁에만 올려두어도 "익숙함"이 생기면서 조금씩 받아들이는 경우가 많아요. 오늘은 "이거 있어"만 말하고 먹으라고 하지 않으셔도 돼요. 💕`;
+              return addPrefix('야채는 질감이나 냄새가 강해서, ' + name + '이처럼 감각이 예민한 편이면 거부감이 더 크게 느껴질 수 있어요. 무리하게 먹이기보다는 한 가지만 골라서(예: 당근만) 부드럽게 익혀서 퓨레처럼 보여주시고, ' + name + '이가 손으로 만져 보거나 냄새만 맡게 해 두는 것부터 시작해 보세요. 8~15번 정도 식탁에만 올려두어도 익숙함이 생기면서 조금씩 받아들이는 경우가 많아요. 오늘은 이거 있어만 말하고 먹으라고 하지 않으셔도 돼요. 💕');
             }
             if (lowAdaptability) {
-              return addPrefix(`야채처럼 새로운 음식은 ${name}이한테 시간이 조금 더 걸리는 편이에요. 같은 야채를 15~20번 정도 식탁에만 올려두시고, 먹으라고 하지 않으셔도 돼요. 좋아하는 음식 옆에 작게 놓아 두시면 "이거 있어"만 말해 주세요. 강요할수록 거부가 길어지니까, 오늘은 거부해도 내일 다시 올려만 두시는 걸 2~3주 이어가 보시면 좋아요. 💕`);
+              return addPrefix(`야채처럼 새로운 음식은 ${name}이한테 시간이 조금 더 걸리는 편이에요. 같은 야채를 15~20번 정도 식탁에만 올려두시고, 먹으라고 하지 않으셔도 돼요. 좋아하는 음식 옆에 작게 놓아 두시면 \'이거 있어\'만 말해 주세요. 강요할수록 거부가 길어지니까, 오늘은 거부해도 내일 다시 올려만 두시는 걸 2~3주 이어가 보시면 좋아요. 💕`);
             }
-            return addPrefix(`야채는 많은 아이들이 단계적으로 받아들이는 음식이에요. "이거 할래? 저거 할래?"로 당근이랑 오이 중에서 골라 보게 하시거나, 밥 위에 살짝 올려만 두고 먹으라고 하지 않으셔도 돼요. 같이 앉아서 엄마가 맛있게 먹는 모습을 보여주시는 것만으로도 도움이 됩니다. 한 가지만 정해서 2주 정도 꾸준히 보여주시다가, 조금 나아지면 그다음 야채를 하나 더 도입해 보세요. 💕`;
+            return addPrefix('야채는 많은 아이들이 단계적으로 받아들이는 음식이에요. 이거 할래' + _qm + ' 저거 할래' + _qm + '로 당근이랑 오이 중에서 골라 보게 하시거나, 밥 위에 살짝 올려만 두고 먹으라고 하지 않으셔도 돼요. 같이 앉아서 엄마가 맛있게 먹는 모습을 보여주시는 것만으로도 도움이 됩니다. 한 가지만 정해서 2주 정도 꾸준히 보여주시다가, 조금 나아지면 그다음 야채를 하나 더 도입해 보세요. 💕');
           }
           if (lastAboutSleep && /잠|수면|자기|취침|밤|자려고|안\s*자|못\s*자|못자게|재우|잠들|그래도 안|해도 안/.test(q)) {
             const regular = childScores[1] > 7;
+            const sleepTipRegular = '몇 시에 재우시나요, 낮잠은 몇 시간이에요';
+            const sleepTipOrder = '목욕 → 파자마 → 책 한 권 → 불 끄기';
+            const sleepTipNow = '지금 자는 시간이야';
             return addPrefix(regular
-              ? `지난번에 말씀드린 루틴(같은 시간, 같은 순서)을 2주 정도 해 보셨을 때도 변화가 없으시면, 취침 시간을 15분만 당겨 보시거나 낮잠이 너무 늦게 끝나지 않았는지 한 번만 점검해 보세요. ${name}이는 규칙성이 있는 편이라, 시간만 조금 맞춰 주시면 금방 잡히는 경우가 많아요. 그래도 안 되시면 그때 "몇 시에 재우시나요, 낮잠은 몇 시간이에요" 같이 조금만 더 알려 주시면 그다음 단계 같이 짚어 드릴게요. 💕`
-              : `불규칙한 편인 ${name}이한테는 "매일 같은 순서"가 더 중요해요. 시간은 조금 달라도 괜찮으니까, "목욕 → 파자마 → 책 한 권 → 불 끄기"만 매일 똑같이 2~3주 이어가 보세요. 처음엔 저항해도 "지금 자는 시간이야"만 차분히 반복해 주시면 됩니다. 6~8주 넘기시면 차이가 보이는 경우가 많아요. 그동안 해 보시다가 막히는 순간이 있으면 그때 말씀해 주세요. 💕`);
+              ? `지난번에 말씀드린 루틴(같은 시간, 같은 순서)을 2주 정도 해 보셨을 때도 변화가 없으시면, 취침 시간을 15분만 당겨 보시거나 낮잠이 너무 늦게 끝나지 않았는지 한 번만 점검해 보세요. ${name}이는 규칙성이 있는 편이라, 시간만 조금 맞춰 주시면 금방 잡히는 경우가 많아요. 그래도 안 되시면 그때 ` + sleepTipRegular + ` 같이 조금만 더 알려 주시면 그다음 단계 같이 짚어 드릴게요. 💕`
+              : `불규칙한 편인 ${name}이한테는 매일 같은 순서가 더 중요해요. 시간은 조금 달라도 괜찮으니까, ` + sleepTipOrder + `만 매일 똑같이 2~3주 이어가 보세요. 처음엔 저항해도 ` + sleepTipNow + `만 차분히 반복해 주시면 됩니다. 6~8주 넘기시면 차이가 보이는 경우가 많아요. 그동안 해 보시다가 막히는 순간이 있으면 그때 말씀해 주세요. 💕`);
           }
           if (lastAboutTantrum && /떼|울|짜증|그래도|해도 안/.test(q)) {
             return addPrefix(lowAdaptability
-              ? `지난번에 말씀드린 예고나 선택권 주기, 한번 해 보셨을까요? 그래도 떼쓰는 순간이 많으시면, 그때는 "지금 속상하구나" 한 번만 말해 주신 뒤 10초 정도 가만히 계시다가, "이거 할래? 저거 할래?"로 다음 행동만 짧게 바꿔 주시면 돼요. ${name}이는 적응이 느린 편이라 같은 말을 여러 번 반복해 주셔야 익숙해져요. 2~3주 꾸준히 하시다가 "이렇게 했는데 이렇다"고 알려 주시면 그다음도 이어서 말씀드릴게요. 💕`
-              : `평소엔 적응이 잘되는 ${name}이인데 요즘만 그렇다면, 피곤하거나 배가 고르거나 자극이 많았던 날인지 한번만 돌아보시면 좋아요. 그런 날은 "이거 할래? 저거 할래?"로 선택만 주시고, 말은 짧게 해 주시는 게 좋습니다. 낮잠·취침 시간이 요즘 흐트러지지 않았는지도 점검해 보시고, 1~2주 지나도 같은 정도로 힘드시면 그때 상황을 조금만 더 말씀해 주세요. 💕`);
+              ? `지난번에 말씀드린 예고나 선택권 주기, 한번 해 보셨을까요? 그래도 떼쓰는 순간이 많으시면, 그때는 '지금 속상하구나' 한 번만 말해 주신 뒤 10초 정도 가만히 계시다가, '이거 할래? 저거 할래?'로 다음 행동만 짧게 바꿔 주시면 돼요. ${name}이는 적응이 느린 편이라 같은 말을 여러 번 반복해 주셔야 익숙해져요. 2~3주 꾸준히 하시다가 '이렇게 했는데 이렇다'고 알려 주시면 그다음도 이어서 말씀드릴게요. 💕`
+              : `평소엔 적응이 잘되는 ${name}이인데 요즘만 그렇다면, 피곤하거나 배가 고르거나 자극이 많았던 날인지 한번만 돌아보시면 좋아요. 그런 날은 '이거 할래? 저거 할래?'로 선택만 주시고, 말은 짧게 해 주시는 게 좋습니다. 낮잠·취침 시간이 요즘 흐트러지지 않았는지도 점검해 보시고, 1~2주 지나도 같은 정도로 힘드시면 그때 상황을 조금만 더 말씀해 주세요. 💕`);
           }
           if (/얼마나|몇\s*주|몇\s*달|언제쯤|기간|지켜봐|얼마나\s*지켜/.test(q)) {
             const weeks = temperamentType.type === '신중파' ? '2~4주' : temperamentType.type === '에너자이저' ? '6~8주' : temperamentType.type === '섬세파' ? '3~5주' : temperamentType.type === '탐험가' ? '4~6주' : '2~6주';
-            return addPrefix(`${name}이(${age})의 **${temperamentType.type}** 기질을 기준으로 말씀드리면, 같은 루틴을 꾸준히 해주실 때 대부분 **${weeks}** 안에 습관이 잡히기 시작해요.\n\n다만 ${temperamentType.type === '에너자이저' ? '감정 강도가 높은 아이는' : temperamentType.type === '신중파' ? '천천히 적응하는 아이는' : '아이마다'} 차이가 있어서, 2주만에 달라지기도 하고 조금 더 걸리기도 해요. 중요한 건 ‘얼마나 빨리’가 아니라, ${name}이 페이스에 맞춰 **일관되게** 해주시는 거예요.\n\n그동안 조금씩 나아지는 구간이 보이시면 그대로 이어가시고, 전혀 변함이 없다고 느껴지시면 그때 한 번 더 말씀해 주세요. 함께 짚어볼게요. 💕`;
+            const diffPhrase = temperamentType.type === '에너자이저' ? '감정 강도가 높은 아이는' : temperamentType.type === '신중파' ? '천천히 적응하는 아이는' : '아이마다';
+            return addPrefix((name + '이(' + age + ')의 **' + temperamentType.type + '** 기질을 기준으로 말씀드리면, 같은 루틴을 꾸준히 해주실 때 대부분 **' + weeks + '** 안에 습관이 잡히기 시작해요.\n\n다만 ' + diffPhrase + ' 차이가 있어서, 2주만에 달라지기도 하고 조금 더 걸리기도 해요. 중요한 건 얼마나 빨리가 아니라 ' + name + '이 페이스에 맞춰 **일관되게** 해주시는 거예요.\n\n그동안 조금씩 나아지는 구간이 보이시면 그대로 이어가시고, 전혀 변함이 없다고 느껴지시면 그때 한 번 더 말씀해 주세요. 함께 짚어볼게요. 💕'));
           }
           if (/구체적|예시|어떻게\s*해요|어떻게\s*하나|방법|실제로|해보고/.test(q)) {
             if (lowAdaptability && (lastAssistantText.includes('적응') || lastAssistantText.includes('변화'))) {
-              return addPrefix(`실제로 해보시기 좋은 순서를 ${name}이 기질에 맞춰 정리해볼게요.\n\n**1단계 (당일)**\n나가기/자기 전 10~15분 전에 "이제 손 씻고, 신발 신고 나갈 거야"처럼 **단계**를 짧게 말해주세요. "5분 후"만 말하는 것보다 뭘 할지 알려주면 ${name}이처럼 적응이 느린 아이는 마음이 더 준비돼요.\n\n**2단계 (매일)**\n같은 시간에 같은 순서를 반복해 보세요. 예: 목욕 → 파자마 → 양치 → 불 끄기. 2주 정도 꾸준히 하면 "이제 자는 구나"가 몸에 배기 시작해요.\n\n**3단계 (말로 인정)**\n"지금 싫구나. 그래도 이거 하면 엄마랑 같이 누울 수 있잖아."처럼 감정은 인정하고, 다음 행동만 짧게 말해주시면 돼요.\n\n한 번에 다 하시려 하지 마시고, 1단계만이라도 이번 주에 붙들어 보시다가 편해지면 2단계로 넘어가시면 됩니다. 💕`);
+              return addPrefix(`실제로 해보시기 좋은 순서를 ${name}이 기질에 맞춰 정리해볼게요.\n\n**1단계 (당일)**\n나가기/자기 전 10~15분 전에 '이제 손 씻고, 신발 신고 나갈 거야'처럼 **단계**를 짧게 말해주세요. '5분 후'만 말하는 것보다 뭘 할지 알려주면 ${name}이처럼 적응이 느린 아이는 마음이 더 준비돼요.\n\n**2단계 (매일)**\n같은 시간에 같은 순서를 반복해 보세요. 예: 목욕 → 파자마 → 양치 → 불 끄기. 2주 정도 꾸준히 하면 '이제 자는 구나'가 몸에 배기 시작해요.\n\n**3단계 (말로 인정)**\n'지금 싫구나. 그래도 이거 하면 엄마랑 같이 누울 수 있잖아.'처럼 감정은 인정하고, 다음 행동만 짧게 말해주시면 돼요.\n\n한 번에 다 하시려 하지 마시고, 1단계만이라도 이번 주에 붙들어 보시다가 편해지면 2단계로 넘어가시면 됩니다. 💕`);
             }
             if (highSensitivity && (lastAssistantText.includes('감각') || lastAssistantText.includes('자극'))) {
-              return addPrefix(`실제로 해보시기 좋은 걸 ${name}이처럼 감각이 예민한 아이 기준으로만 말씀드릴게요.\n\n**외출 전**\n"오늘 가는 곳은 사람이 많아서 시끄러울 수 있어. 귀 마개 가져갈까?"처럼 한 번만 미리 말해주세요. 가져가기로 했으면 가방에 넣어 두고, ${name}이가 "시끄러워" 하면 바로 쓸 수 있게 해주세요.\n\n**옷/먹을거**\n태그는 미리 잘라 두시고, 옷은 2~3벌만 보여준 다음 "어떤 게 좋아?" 하고 골라도 좋아요. 먹는 것도 한 번에 한 가지 식감·맛만 도입하고, 거부하면 "오늘은 이거만 있어. 다음에 다시 보자" 정도로 넘어가도 돼요.\n\n**과부하 났을 때**\n말이 줄거나 눈을 피하면 "여기 시끄럽지? 조금만 나가서 쉬자" 하고 데리고 나가 주세요. 설명보다 **환경만 바꿔주는 것**이 더 빨리 진정되는 경우가 많아요.\n\n작은 것부터 하나씩 시도해 보시고, 막히는 부분 있으면 그 상황 그대로 적어 주세요. 💕`);
+              return addPrefix(`실제로 해보시기 좋은 걸 ${name}이처럼 감각이 예민한 아이 기준으로만 말씀드릴게요.\n\n**외출 전**\n'오늘 가는 곳은 사람이 많아서 시끄러울 수 있어. 귀 마개 가져갈까?'처럼 한 번만 미리 말해주세요. 가져가기로 했으면 가방에 넣어 두고, ${name}이가 '시끄러워' 하면 바로 쓸 수 있게 해주세요.\n\n**옷/먹을거**\n태그는 미리 잘라 두시고, 옷은 2~3벌만 보여준 다음 '어떤 게 좋아?' 하고 골라도 좋아요. 먹는 것도 한 번에 한 가지 식감·맛만 도입하고, 거부하면 '오늘은 이거만 있어. 다음에 다시 보자' 정도로 넘어가도 돼요.\n\n**과부하 났을 때**\n말이 줄거나 눈을 피하면 '여기 시끄럽지? 조금만 나가서 쉬자' 하고 데리고 나가 주세요. 설명보다 **환경만 바꿔주는 것**이 더 빨리 진정되는 경우가 많아요.\n\n작은 것부터 하나씩 시도해 보시고, 막히는 부분 있으면 그 상황 그대로 적어 주세요. 💕`);
             }
           }
           if (/왜|이유|원인|그런\s*행동|그렇게\s*돼/.test(q)) {
-            const reason = temperamentType.type === '에너자이저' ? '뇌가 작은 자극에도 강하게 반응하는 기질이라, 원하는 대로 안 될 때 감정이 크게 올라와요.' : temperamentType.type === '신중파' ? '새로운 상황을 천천히 관찰한 뒤에야 참여하는 기질이라, 갑작스러운 변화나 압박이 있으면 불안해해요.' : temperamentType.type === '섬세파' ? '소리·빛·촉감을 주변보다 더 세게 느끼는 기질이라, 자극이 많으면 뇌가 "너무 많아"라고 반응해요.' : temperamentType.type === '탐험가' ? '움직이고 탐색하는 욕구가 커서, 가만히 있으라고만 하면 에너지가 밖으로 튀어나와요.' : '아이마다 기질이 달라서, 어떤 아이는 변화나 자극에 더 민감하게 반응해요.';
-            return addPrefix(`${name}이가 그렇게 행동하는 이유를 기질 쪽으로만 말씀드리면요.\n\n${name}이는 **${temperamentType.type}**에 가까운 기질이에요. ${reason}\n\n그래서 "버릇이 나쁜 거 아니야?"가 아니라, **지금 이 나이에 이 기질이면 자연스럽게 나올 수 있는 반응**에 가깝다고 보시면 돼요. 다만 환경을 조금만 맞춰 주시면—예고, 선택, 조용한 공간 같은 것—같은 상황에서도 훨씬 덜 힘들어하는 걸 많이 봐요.\n\n더 궁금하신 점 있으면 편하게 이어서 물어봐 주세요. 💕`);
+            const reason = temperamentType.type === '에너자이저' ? '뇌가 작은 자극에도 강하게 반응하는 기질이라, 원하는 대로 안 될 때 감정이 크게 올라와요.' : temperamentType.type === '신중파' ? '새로운 상황을 천천히 관찰한 뒤에야 참여하는 기질이라, 갑작스러운 변화나 압박이 있으면 불안해해요.' : temperamentType.type === '섬세파' ? '소리·빛·촉감을 주변보다 더 세게 느끼는 기질이라, 자극이 많으면 뇌가 \'너무 많아\'라고 반응해요.' : temperamentType.type === '탐험가' ? '움직이고 탐색하는 욕구가 커서, 가만히 있으라고만 하면 에너지가 밖으로 튀어나와요.' : '아이마다 기질이 달라서, 어떤 아이는 변화나 자극에 더 민감하게 반응해요.';
+            const reasonLabel = '버릇이 나쁜 거 아니야?';
+            return addPrefix(`${name}이가 그렇게 행동하는 이유를 기질 쪽으로만 말씀드리면요.\n\n${name}이는 **${temperamentType.type}**에 가까운 기질이에요. ${reason}\n\n그래서 ` + reasonLabel + `가 아니라, **지금 이 나이에 이 기질이면 자연스럽게 나올 수 있는 반응**에 가깝다고 보시면 돼요. 다만 환경을 조금만 맞춰 주시면—예고, 선택, 조용한 공간 같은 것—같은 상황에서도 훨씬 덜 힘들어하는 걸 많이 봐요.\n\n더 궁금하신 점 있으면 편하게 이어서 물어봐 주세요. 💕`);
           }
           if (/다른|더|추가|또\s*있|이외/.test(q)) {
-            return addPrefix(`추가로 도움이 될 수 있는 걸 ${name}이·엄마 스타일 기준으로만 말씀드릴게요.\n\n**${name}이 (${temperamentType.type})**\n${temperamentType.type === '에너자이저' ? '감정이 올라왔을 때 "화났구나" 한 번 인정해 주신 뒤, "손은 이렇게 (쓰다듬기)"처럼 대안만 짧게 알려주시면 좋아요.' : temperamentType.type === '신중파' ? '새 장소·새 사람은 강요하지 마시고, "일단 구경만 하자" "하고 싶으면 나중에 해도 돼"라고만 해 주셔도 부담이 줄어요.' : temperamentType.type === '섬세파' ? '조용한 코너나 귀 마개 같은 **대비용**을 미리 두어 두시면, 과부하 전에 스스로 쓰게 도와줄 수 있어요.' : '에너지가 넘칠 때는 "10번 뛰어와"처럼 짧은 놀이로 한 번 빼 주시면, 그다음 대화나 규칙이 훨씬 잘 들어가요.'}\n\n**엄마 (${parentType.type})**\n${parentType.type === '계획형 엄마' ? '루틴이 깨져도 "오늘은 이렇게 갈게" 하는 플랜 B 하나만 정해 두시면 마음이 덜 흔들려요.' : parentType.type === '공감형 엄마' ? '반응하기 전 10초만 기다려 보시면, 아이가 스스로 시도할 틈이 생겨요.' : '한 가지만 정해 보시는 걸 추천해요. "오늘은 예고만 꼭 해보자"처럼요.'}\n\n궁금한 게 더 있으면 이어서 물어봐 주세요. 💕`);
+            let childTip = "에너지가 넘칠 때는 '10번 뛰어와'처럼 짧은 놀이로 한 번 빼 주시면, 그다음 대화나 규칙이 훨씬 잘 들어가요.";
+            if (temperamentType.type === '에너자이저') childTip = "감정이 올라왔을 때 '화났구나' 한 번 인정해 주신 뒤, '손은 이렇게 (쓰다듬기)'처럼 대안만 짧게 알려주시면 좋아요.";
+            else if (temperamentType.type === '신중파') childTip = "새 장소·새 사람은 강요하지 마시고, '일단 구경만 하자' '하고 싶으면 나중에 해도 돼'라고만 해 주셔도 부담이 줄어요.";
+            else if (temperamentType.type === '섬세파') childTip = '조용한 코너나 귀 마개 같은 **대비용**을 미리 두어 두시면, 과부하 전에 스스로 쓰게 도와줄 수 있어요.';
+            let parentTip = "한 가지만 정해 보시는 걸 추천해요. '오늘은 예고만 꼭 해보자'처럼요.";
+            if (parentType.type === '계획형 엄마') parentTip = "루틴이 깨져도 '오늘은 이렇게 갈게' 하는 플랜 B 하나만 정해 두시면 마음이 덜 흔들려요.";
+            else if (parentType.type === '공감형 엄마') parentTip = '반응하기 전 10초만 기다려 보시면, 아이가 스스로 시도할 틈이 생겨요.';
+            return addPrefix(`추가로 도움이 될 수 있는 걸 ${name}이·엄마 스타일 기준으로만 말씀드릴게요.\n\n**${name}이 (${temperamentType.type})**\n${childTip}\n\n**엄마 (${parentType.type})**\n${parentTip}\n\n궁금한 게 더 있으면 이어서 물어봐 주세요. 💕`);
           }
         }
 
         if (/떼|울|짱|짜증/.test(q)) {
           if (lowAdaptability) {
-            return addPrefix(`${name}이(${age})는 적응이 조금 느린 **${temperamentType.type}** 기질이라, 뜻대로 안 될 때 감정이 크게 올라오는 경우가 있어요. 이건 ${age} 시기에 더 잘 보이는 특성이에요.\n\n**${name}이한테 맞는 대응:**\n1. **미리 예고** — "손 씻고 신발 신고 나갈 거야"처럼 단계를 알려주세요.\n2. **선택권** — "이거 할래, 저거 할래?"로 스스로 고르게 해 주세요.\n3. **감정 인정** — "${name}아, 지금 속상하구나" 한 번 말해 주시면, 그다음 말이 잘 들어가요.\n\n엄마가 일관되게 이렇게 반응해 주시면, ${name}이도 점점 "예고 → 선택 → 인정" 흐름에 익숙해져요. 더 궁금하시면 이어서 물어봐 주세요. 💕`);
+            return addPrefix(`${name}이(${age})는 적응이 조금 느린 **${temperamentType.type}** 기질이라, 뜻대로 안 될 때 감정이 크게 올라오는 경우가 있어요. 이건 ${age} 시기에 더 잘 보이는 특성이에요.\n\n**${name}이한테 맞는 대응:**\n1. **미리 예고** — '손 씻고 신발 신고 나갈 거야'처럼 단계를 알려주세요.\n2. **선택권** — '이거 할래, 저거 할래?'로 스스로 고르게 해 주세요.\n3. **감정 인정** — '${name}아, 지금 속상하구나' 한 번 말해 주시면, 그다음 말이 잘 들어가요.\n\n엄마가 일관되게 이렇게 반응해 주시면, ${name}이도 점점 '예고 → 선택 → 인정' 흐름에 익숙해져요. 더 궁금하시면 이어서 물어봐 주세요. 💕`);
           }
           return addPrefix(`${name}이 기질을 보면 평소엔 적응이 잘되는 편이에요. 그럴 때는 **피곤함·배고픔·자극 과다**를 먼저 점검해 보시면 좋아요.\n\n**체크해 보실 것:**\n· 낮잠·취침 시간이 요즘 흐트러지지 않았나요?\n· 식사 시간이 너무 들쭉날쭉하지는 않나요?\n· 최근 이사, 동생, 어린이집 같은 큰 변화는 없었나요?\n\n이 중 하나만 맞아도 떼쓰기가 잦아질 수 있어요. 어떤 상황에서 가장 자주 그런지 알려주시면, 그때마다 어떻게 말해 주시면 좋을지까지 구체적으로 적어 드릴게요. 💕`);
         }
         if (/잠|수면|자기|취침|잠투정|밤|자려고|안\s*자|못\s*자|못자게|재우|잠들|잘\s*안\s*자/.test(q)) {
           const regular = childScores[1] > 7;
-          return addPrefix(`${name}이(${age}) 수면은 지금 나이에 정말 중요해요. ${name}이는 규칙성이 ${regular ? '높은 편' : '낮은 편'}이라, ${regular ? '같은 시간·같은 순서만 지키면 2~3주 안에 루틴이 잡히기 쉬워요.' : '매일 조금씩 달라도 괜찮아요. 대신 "30분 전부터 불 끄기 → 목욕 → 책 한 권"처럼 **순서**만 매일 똑같이 해 주세요. 6~8주 꾸준히 하시면 차이가 보여요.'}\n\n**추천 루틴:**\n1. 매일 비슷한 시간에 재우기\n2. 30분 전부터 조명 낮추기\n3. 목욕·책·양치 등 순서 고정\n4. "이제 자는 시간이야" 한 마디로 마무리\n\n${regular ? '지금도 루틴이 있으시다면, 시간만 조금만 당기거나 당기지 말고 유지해 보시면 됩니다.' : '처음엔 저항할 수 있어요. 그때는 "지금 자는 시간이야"만 차분히 반복해 주시고, 다음 날 다시 같은 순서로 시도해 보세요.'} 더 궁금하시면 이어서 물어봐 주세요. 💕`);
+          return addPrefix(`${name}이(${age}) 수면은 지금 나이에 정말 중요해요. ${name}이는 규칙성이 ${regular ? '높은 편' : '낮은 편'}이라, ${regular ? '같은 시간·같은 순서만 지키면 2~3주 안에 루틴이 잡히기 쉬워요.' : '매일 조금씩 달라도 괜찮아요. 대신 \'30분 전부터 불 끄기 → 목욕 → 책 한 권\'처럼 **순서**만 매일 똑같이 해 주세요. 6~8주 꾸준히 하시면 차이가 보여요.'}\n\n**추천 루틴:**\n1. 매일 비슷한 시간에 재우기\n2. 30분 전부터 조명 낮추기\n3. 목욕·책·양치 등 순서 고정\n4. \'이제 자는 시간이야\' 한 마디로 마무리\n\n${regular ? '지금도 루틴이 있으시다면, 시간만 조금만 당기거나 당기지 말고 유지해 보시면 됩니다.' : '처음엔 저항할 수 있어요. 그때는 \'지금 자는 시간이야\'만 차분히 반복해 주시고, 다음 날 다시 같은 순서로 시도해 보세요.'} 더 궁금하시면 이어서 물어봐 주세요. 💕`);
         }
         if (/밥|식사|먹|편식|밥거부|야채|채소/.test(q)) {
           const isAboutVegetables = /야채|채소|편식/.test(q);
           if (isAboutVegetables) {
             if (highSensitivity) {
-              return addPrefix(`야채는 질감이나 냄새가 강해서, ${name}이처럼 감각이 예민한 편이면 거부감이 더 크게 느껴질 수 있어요. "안 먹는 것"이 고집이 아니라 느낌이 불편한 것일 수 있어요. 한 가지만 골라서(당근이나 브로콜리처럼) 부드럽게 익혀 퓨레처럼 보여주시고, ${name}이가 손으로 만져 보거나 냄새만 맡게 해 두는 것부터 시작해 보세요. 8~15번 정도 식탁에만 올려두어도 익숙해지면서 조금씩 받아들이는 경우가 많아요. 오늘은 "이거 있어"만 말하고 먹으라고 하지 않으셔도 돼요. 💕`;
+              return addPrefix('야채는 질감이나 냄새가 강해서, ' + name + '이처럼 감각이 예민한 편이면 거부감이 더 크게 느껴질 수 있어요. 안 먹는 것이 고집이 아니라 느낌이 불편한 것일 수 있어요. 한 가지만 골라서(당근이나 브로콜리처럼) 부드럽게 익혀 퓨레처럼 보여주시고, ' + name + '이가 손으로 만져 보거나 냄새만 맡게 해 두는 것부터 시작해 보세요. 8~15번 정도 식탁에만 올려두어도 익숙해지면서 조금씩 받아들이는 경우가 많아요. 오늘은 이거 있어만 말하고 먹으라고 하지 않으셔도 돼요. 💕');
             }
             if (lowAdaptability) {
-              return addPrefix(`야채처럼 새로운 음식은 ${name}이한테 시간이 조금 더 걸리는 편이에요. 같은 야채를 15~20번 정도 식탁에만 올려두시고 먹으라고 하지 않으셔도 돼요. 좋아하는 음식 옆에 작게 놓아 두시고 "이거 있어"만 말해 주세요. 강요할수록 거부가 길어지니까, 오늘 거부해도 내일 다시 올려만 두시는 걸 2~3주 이어가 보시면 좋아요. 💕`);
+              return addPrefix(`야채처럼 새로운 음식은 ${name}이한테 시간이 조금 더 걸리는 편이에요. 같은 야채를 15~20번 정도 식탁에만 올려두시고 먹으라고 하지 않으셔도 돼요. 좋아하는 음식 옆에 작게 놓아 두시고 '이거 있어'만 말해 주세요. 강요할수록 거부가 길어지니까, 오늘 거부해도 내일 다시 올려만 두시는 걸 2~3주 이어가 보시면 좋아요. 💕`);
             }
-            return addPrefix(`${name}이(${age})는 발달상 "내가 고를래"가 강해지는 시기라 밥 거부가 잦을 수 있어요. 야채는 많은 아이들이 단계적으로 받아들이는 음식이에요. "이거 할래? 저거 할래?"로 당근이랑 오이 중에서 골라 보게 하시거나, 밥 위에 살짝 올려만 두고 먹으라고 하지 않으셔도 돼요. 같이 앉아서 엄마가 맛있게 먹는 모습을 보여주시는 것만으로도 도움이 됩니다. 한 가지만 정해서 2주 정도 꾸준히 보여주시다가 조금 나아지면 그다음 야채를 하나 더 도입해 보세요. 💕`);
+            return addPrefix(`${name}이(${age})는 발달상 '내가 고를래'가 강해지는 시기라 밥 거부가 잦을 수 있어요. 야채는 많은 아이들이 단계적으로 받아들이는 음식이에요. \'이거 할래\u003F 저거 할래\u003F\'로 당근이랑 오이 중에서 골라 보게 하시거나, 밥 위에 살짝 올려만 두고 먹으라고 하지 않으셔도 돼요. 같이 앉아서 엄마가 맛있게 먹는 모습을 보여주시는 것만으로도 도움이 됩니다. 한 가지만 정해서 2주 정도 꾸준히 보여주시다가 조금 나아지면 그다음 야채를 하나 더 도입해 보세요. 💕`);
           }
           if (highSensitivity) {
-            return addPrefix(`${name}이는 ${temperamentType.type}라 음식의 질감·냄새·온도를 더 세게 느껴요. 그래서 "안 먹는 것"이 고집이 아니라 느낌이 불편한 것일 수 있어요. 한 번에 한 가지 식감만 (부드러운 것 → 단단한 것 순) 보여주시고, ${name}이가 손으로 만져 보게 해 주세요. "이거 먹을래?"만 하고 강요하지 않으시면 돼요. 같은 음식을 8~15번 정도 보여주는 것만으로도 익숙함이 생겨요. ${age}에는 음식 거부가 흔한 시기라 ${name}이 페이스에 맞춰 천천히 노출만 해 주셔도 좋아요. 💕`);
+            return addPrefix(`${name}이는 ${temperamentType.type}라 음식의 질감·냄새·온도를 더 세게 느껴요. 그래서 안 먹는 것이 고집이 아니라 느낌이 불편한 것일 수 있어요. 한 번에 한 가지 식감만 (부드러운 것 → 단단한 것 순) 보여주시고, ${name}이가 손으로 만져 보게 해 주세요. '이거 먹을래?'만 하고 강요하지 않으시면 돼요. 같은 음식을 8~15번 정도 보여주는 것만으로도 익숙함이 생겨요. ${age}에는 음식 거부가 흔한 시기라 ${name}이 페이스에 맞춰 천천히 노출만 해 주셔도 좋아요. 💕`);
           }
           if (lowAdaptability) {
-            return addPrefix(`${name}이는 ${temperamentType.type}라 새로운 걸 받아들이는 데 시간이 조금 더 걸려요. 새 음식은 "오늘은 옆에만 둘게" 하고 먹으라고 하지 않으셔도 돼요. 15~20번 정도 보여주시면 받아들이는 경우가 많아요. 좋아하는 음식 옆에 새 걸 놓고 "이거 있어"만 말해 주세요. 강요할수록 거부가 길어질 수 있어요. 💕`);
+            return addPrefix(`${name}이는 ${temperamentType.type}라 새로운 걸 받아들이는 데 시간이 조금 더 걸려요. 새 음식은 '오늘은 옆에만 둘게' 하고 먹으라고 하지 않으셔도 돼요. 15~20번 정도 보여주시면 받아들이는 경우가 많아요. 좋아하는 음식 옆에 새 걸 놓고 '이거 있어'만 말해 주세요. 강요할수록 거부가 길어질 수 있어요. 💕`);
           }
-          return addPrefix(`${name}이(${age})는 발달상 "내가 고를래"가 강해지는 시기예요. 그래서 밥 거부가 잦을 수 있고, 이건 기질보다 단계에 가까운 경우가 많아요. "이거 할래? 저거 할래?"로 선택권을 주시고, 먹는 양보다 "같이 앉아서 식사 시간"에 초점을 두시면 좋아요. 6~12개월 지나면 많이 나아지는 경우가 많아요. 야채나 특정 음식이 힘드시면 그걸 말씀해 주시면 그다음 방법도 이어서 말씀드릴게요. 💕`);
+          return addPrefix(`${name}이(${age})는 발달상 '내가 고를래'가 강해지는 시기예요. 그래서 밥 거부가 잦을 수 있고, 이건 기질보다 단계에 가까운 경우가 많아요. '이거 할래? 저거 할래?'로 선택권을 주시고, 먹는 양보다 '같이 앉아서 식사 시간'에 초점을 두시면 좋아요. 6~12개월 지나면 많이 나아지는 경우가 많아요. 야채나 특정 음식이 힘드시면 그걸 말씀해 주시면 그다음 방법도 이어서 말씀드릴게요. 💕`);
         }
         if (/때리|공격|밀|싸움|친구.*때/.test(q)) {
           if (highActivity) {
-            return addPrefix(`${name}이는 **${temperamentType.type}**라 움직임 욕구가 커요. 때리는 행동이 "나쁜 아이"라서라기보다 **에너지가 밖으로 튀는 것**에 가까워요.\n\n**도움이 되는 것:**\n· 하루 2시간 가까이 뛰기·오르기·공 놀이 같은 대근육 놀이\n· "여기서는 안 돼. 대신 이 공 10번 던져 봐"처럼 **대체 행동** 알려주기\n· 규칙은 짧고 명확하게: "때리면 아파. 손은 이렇게 (쓰다듬기)"\n\n에너지를 놀이로 빼 주시면, 같은 상황에서 덜 튀어나오는 걸 많이 봐요. 더 궁금하시면 이어서 물어봐 주세요. 💕`);
+            return addPrefix(`${name}이는 **${temperamentType.type}**라 움직임 욕구가 커요. 때리는 행동이 '나쁜 아이'라서라기보다 **에너지가 밖으로 튀는 것**에 가까워요.\n\n**도움이 되는 것:**\n· 하루 2시간 가까이 뛰기·오르기·공 놀이 같은 대근육 놀이\n· '여기서는 안 돼. 대신 이 공 10번 던져 봐'처럼 **대체 행동** 알려주기\n· 규칙은 짧고 명확하게: '때리면 아파. 손은 이렇게 (쓰다듬기)'\n\n에너지를 놀이로 빼 주시면, 같은 상황에서 덜 튀어나오는 걸 많이 봐요. 더 궁금하시면 이어서 물어봐 주세요. 💕`);
           }
           if (childScores[4] > 7) {
-            return addPrefix(`${name}이는 감정이 크게 올라오는 기질이라, 말로 못 할 때 손이 먼저 나갈 수 있어요. "화났구나" 하고 한 번 인정해 주신 뒤, "때리면 아파. 화나면 '엄마 화나!'라고 말해"처럼 **말로 표현하는 법**을 알려 주시면 좋아요.\n\n2~4세쯤 되면 "나 화났어!"라고 말하는 걸 배우면서, 때리는 행동은 많이 줄어드는 경우가 많아요. 그때까지는 말 대신 쓰는 행동을 **바로** "이렇게 말해 보자"로 바꿔 주시면 돼요. 💕`);
+            return addPrefix(`${name}이는 감정이 크게 올라오는 기질이라, 말로 못 할 때 손이 먼저 나갈 수 있어요. '화났구나' 하고 한 번 인정해 주신 뒤, "때리면 아파. 화나면 '엄마 화나!'라고 말해"처럼 **말로 표현하는 법**을 알려 주시면 좋아요.\n\n2~4세쯤 되면 '나 화났어!'라고 말하는 걸 배우면서, 때리는 행동은 많이 줄어드는 경우가 많아요. 그때까지는 말 대신 쓰는 행동을 **바로** '이렇게 말해 보자'로 바꿔 주시면 돼요. 💕`);
           }
-          return addPrefix(`${name}이(${age})는 또래들처럼 "상대가 아프다"는 걸 아직 완전히 이해하기 어려운 나이예요. 그래서 때리는 행동이 나와도 **의도적인 공격**이라기보다, 감정이나 호기심이 행동으로 나온 경우가 많아요.\n\n**반복해서 알려 주실 것:**\n"때리면 아파. 손은 이렇게 (부드럽게 쓰다듬기)" — 말과 동작을 같이 보여 주시고, 같은 말을 일관되게 해 주시면 점차 줄어들어요. 상황이 따로 있으면 말씀해 주세요. 💕`);
+          return addPrefix(`${name}이(${age})는 또래들처럼 '상대가 아프다'는 걸 아직 완전히 이해하기 어려운 나이예요. 그래서 때리는 행동이 나와도 **의도적인 공격**이라기보다, 감정이나 호기심이 행동으로 나온 경우가 많아요.\n\n**반복해서 알려 주실 것:**\n'때리면 아파. 손은 이렇게 (부드럽게 쓰다듬기)' — 말과 동작을 같이 보여 주시고, 같은 말을 일관되게 해 주시면 점차 줄어들어요. 상황이 따로 있으면 말씀해 주세요. 💕`);
         }
         if (/옷|입기|거부|옷입|옷감|태그|입히/.test(q)) {
           if (highSensitivity) {
-            return addPrefix(`${name}이(${age})는 감각이 예민한 편이라, 옷감 촉감·태그·압박감을 불쾌하게 느낄 수 있어요. 버릇이 아니라 **감각** 때문일 수 있어요. 옷 살 때 ${name}이가 만져 보게 하시고, 태그는 미리 제거해 두세요. 2~3벌만 보여준 뒤 "어떤 게 기분 좋아?" 하고 골라 보게 하시면 거부가 줄어드는 경우가 많아요. 💕`);
+            return addPrefix(`${name}이(${age})는 감각이 예민한 편이라, 옷감 촉감·태그·압박감을 불쾌하게 느낄 수 있어요. 버릇이 아니라 **감각** 때문일 수 있어요. 옷 살 때 ${name}이가 만져 보게 하시고, 태그는 미리 제거해 두세요. 2~3벌만 보여준 뒤 '어떤 게 기분 좋아?' 하고 골라 보게 하시면 거부가 줄어드는 경우가 많아요. 💕`);
           }
           if (lowAdaptability) {
-            return addPrefix(`${name}이는 변화나 순서에 민감한 편이에요. "지금 하던 거 말고 옷부터 입자"는 식의 제안이 예상 밖이면 스트레스를 느끼고 거부할 수 있어요. "이제 옷 입을 시간이야"처럼 5분 전에 예고하고, 매일 비슷한 순서(기저귀 → 옷)를 유지해 보세요. "빨간 티 vs 노란 티"처럼 선택권을 주시면 참여가 잘 되는 편이에요. 💕`);
+            return addPrefix(`${name}이는 변화나 순서에 민감한 편이에요. '지금 하던 거 말고 옷부터 입자'는 식의 제안이 예상 밖이면 스트레스를 느끼고 거부할 수 있어요. '이제 옷 입을 시간이야'처럼 5분 전에 예고하고, 매일 비슷한 순서(기저귀 → 옷)를 유지해 보세요. '빨간 티 vs 노란 티'처럼 선택권을 주시면 참여가 잘 되는 편이에요. 💕`);
           }
-          return addPrefix(`${name}이(${age})는 "내가 고르고 싶다"는 자율성이 커지는 시기라, 옷 입히기를 거부하는 경우가 있어요. "오늘은 이거랑 이거 중에 뭐 입을까?"처럼 작은 선택을 주시거나, "엄마가 도와줄까, ${name}이가 할까?"도 시도해 보시면 좋아요. 💕`);
+          return addPrefix(`${name}이(${age})는 '내가 고르고 싶다'는 자율성이 커지는 시기라, 옷 입히기를 거부하는 경우가 있어요. '오늘은 이거랑 이거 중에 뭐 입을까?'처럼 작은 선택을 주시거나, '엄마가 도와줄까, ${name}이가 할까?'도 시도해 보시면 좋아요. 💕`);
         }
 
         const wasGenericFallback = /지금 겪고 계신 상황을 이렇게 이해하시면 좋아요|활동성이 높아 에너지 발산이 필요해요/.test(lastAssistantText);
@@ -1002,7 +1034,6 @@
 
           {step === 'profile' && (
             <div className="min-h-screen flex flex-col p-4 sm:p-6 relative">
-              <button type="button" onClick={() => setStep('childInfo')} className="fixed top-4 left-4 sm:top-6 sm:left-6 z-20 p-2.5 sm:p-3 rounded-full bg-white/95 border-2 border-gray-200 hover:bg-gray-50 hover:border-gray-300 shadow-md transition-colors flex items-center justify-center min-h-[44px] min-w-[44px]" aria-label="이전"><ChevronLeft className="w-6 h-6 text-gray-700" /></button>
               <div className="flex-1 flex items-center justify-center pt-12 sm:pt-14">
               <div className="max-w-3xl w-full">
                 <div className="mb-4 sm:mb-8">
@@ -1034,7 +1065,6 @@
 
           {step === 'parentProfile' && (
             <div className="min-h-screen flex flex-col p-4 sm:p-6 relative">
-              <button type="button" onClick={() => { setStep('profile'); setCurrentQuestion(temperamentQuestions.length - 1); }} className="fixed top-4 left-4 sm:top-6 sm:left-6 z-20 p-2.5 sm:p-3 rounded-full bg-white/95 border-2 border-gray-200 hover:bg-gray-50 hover:border-gray-300 shadow-md transition-colors flex items-center justify-center min-h-[44px] min-w-[44px]" aria-label="이전"><ChevronLeft className="w-6 h-6 text-gray-700" /></button>
               <div className="flex-1 flex items-center justify-center pt-12 sm:pt-14">
               <div className="max-w-3xl w-full">
                 <div className="mb-4 sm:mb-8">
@@ -1099,8 +1129,7 @@
                   </div>
                   <textarea value={behaviorInput} onChange={(e) => setBehaviorInput(e.target.value)} placeholder={`예: ${childInfo.name}이가 목욕하기 싫다고 매일 울어요. 억지로 하면 더 심하게 울고...`} className="w-full h-32 sm:h-40 p-4 sm:p-5 border-2 border-[var(--warm-yellow-soft)] rounded-xl sm:rounded-[20px] text-base sm:text-lg focus:outline-none focus:border-[var(--warm-yellow-dark)] transition-colors resize-none" />
                   <div className="flex gap-3 sm:gap-4 mt-4 sm:mt-6">
-                    <button onClick={() => { setStep('parentProfile'); setCurrentQuestion(parentQuestions.length - 1); }} className="px-4 sm:px-6 py-3 sm:py-4 bg-white border-2 border-gray-300 text-gray-700 text-sm sm:text-base font-bold rounded-xl sm:rounded-[20px] hover:bg-gray-50 transition-all min-h-[48px]">← 이전</button>
-                    <button onClick={() => { if (behaviorInput.trim()) { saveToStorage({ behaviorInput }); setStep('report'); } else alert('고민을 입력해주세요 🙏'); }} className="flex-1 bg-[var(--warm-yellow-button)] text-white text-base sm:text-lg md:text-xl font-bold py-3 sm:py-4 rounded-xl sm:rounded-[20px] hover:opacity-90 hover:shadow-lg active:scale-[0.98] transition-all duration-300 min-h-[48px]">분석 결과 보기 →</button>
+                    <button onClick={() => { if (behaviorInput.trim()) { saveToStorage({ behaviorInput }); setStep('report'); } else alert('고민을 입력해주세요 🙏'); }} className="w-full bg-[var(--warm-yellow-button)] text-white text-base sm:text-lg md:text-xl font-bold py-3 sm:py-4 rounded-xl sm:rounded-[20px] hover:opacity-90 hover:shadow-lg active:scale-[0.98] transition-all duration-300 min-h-[48px]">분석 결과 보기 →</button>
                   </div>
                   <p className="text-center text-xs sm:text-sm text-gray-500 mt-3 sm:mt-4">💬 나중에 채팅에서도 언제든 질문할 수 있어요</p>
                 </div>
@@ -1362,17 +1391,45 @@
       );
     };
 
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<GwaenchanaYoApp />);
+    try {
+      const rootEl = document.getElementById('root');
+      if (rootEl) {
+        const root = ReactDOM.createRoot(rootEl);
+        root.render(<GwaenchanaYoApp />);
+      }
+    } catch (err) {
+      const el = document.getElementById('root');
+      if (el) {
+        el.innerHTML = '<div style="padding:2rem;text-align:center;font-family:system-ui,sans-serif;max-width:420px;margin:0 auto;"><p style="margin-bottom:1rem;">스크립트 실행 중 오류가 발생했습니다.</p><p style="color:#666;font-size:0.9rem;">' + (err && err.message ? String(err.message) : '') + '</p><p style="margin-top:1rem;"><a href="" style="color:#ec9585;font-weight:bold;">새로고침</a></p></div>';
+      }
+      console.error(err);
+    }
   </script>
   <script>
     (function() {
-      setTimeout(function() {
+      var done = false;
+      function showFallback(reason) {
+        if (done) return;
+        done = true;
+        var el = document.getElementById('root');
+        if (!el || el.querySelector('*') && el.textContent.indexOf('로딩') === -1) return;
+        var msg = reason === 'cdn' ? 'CDN(React·Babel 등)을 불러오지 못했습니다. 네트워크·방화벽을 확인하거나 잠시 후 새로고침 해 주세요.' : '페이지가 로드되지 않았습니다. 새로고침 하거나 잠시 후 다시 시도해 주세요.';
+        el.innerHTML = '<div style="padding:2rem;text-align:center;font-family:system-ui,sans-serif;max-width:400px;margin:0 auto;"><p style="margin-bottom:1rem;">스크립트를 불러오지 못했습니다.</p><p style="color:#666;font-size:0.9rem;">' + msg + '</p><p style="margin-top:1rem;"><a href="" style="color:#ec9585;font-weight:bold;">새로고침</a></p></div>';
+      }
+      function checkReady() {
         var el = document.getElementById('root');
         if (!el || !el.querySelector('*') && el.textContent.indexOf('로딩') !== -1) {
-          el.innerHTML = '<div style="padding:2rem;text-align:center;font-family:system-ui,sans-serif;max-width:400px;margin:0 auto;"><p style="margin-bottom:1rem;">스크립트를 불러오지 못했습니다.</p><p style="color:#666;font-size:0.9rem;">Cursor 내장 브라우저에서는 외부 CDN이 막혀 빈 화면이 나올 수 있습니다.</p><p style="margin-top:1rem;"><a href="' + location.href + '" target="_blank" rel="noopener" style="color:#ec9585;font-weight:bold;">Chrome 등 외부 브라우저에서 열기</a></p></div>';
+          if (typeof window.React === 'undefined' || typeof window.ReactDOM === 'undefined') showFallback('cdn');
+          else setTimeout(function() {
+            if (!done) {
+              var r = document.getElementById('root');
+              if (r && !r.querySelector('*') && r.textContent.indexOf('로딩') !== -1) showFallback('timeout');
+            }
+          }, 12000);
         }
-      }, 8000);
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function() { setTimeout(checkReady, 4000); });
+      else setTimeout(checkReady, 4000);
     })();
   </script>
 </body>

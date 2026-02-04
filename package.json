@@ -1,6 +1,7 @@
 {
   "name": "mamang-pocket",
   "version": "1.0.0",
+  "homepage": "https://solmilee96.github.io/re-poom-platform/",
   "type": "module",
   "scripts": {
     "dev": "vite",

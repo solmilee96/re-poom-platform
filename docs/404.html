@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>이동 중...</title>
+  <script>
+    // GitHub Pages SPA fallback: 404 시 앱 진입점으로 리다이렉트
+    var base = location.pathname.replace(/\/[^/]*$/, '/') || '/';
+    var repoMatch = /\/re-poom-platform\/?/.exec(location.pathname);
+    var target = repoMatch
+      ? location.origin + '/re-poom-platform/'
+      : location.origin + base;
+    location.replace(target);
+  </script>
+</head>
+<body>
+  <p>이동 중...</p>
+</body>
+</html>
