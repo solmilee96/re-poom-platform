@@ -96,9 +96,21 @@
 
 ---
 
-## 4. 적용 위치
+## 4. 아이별 상담 데이터 누적 (맞춤화)
 
-- `docs/index.html` 내 `generateResponse` 함수
-- `web/public/gwaenchanayo.html` 내 `generateResponse` 함수  
+- **저장소**: `localStorage` 키 `gwaenchanayo_consultation_by_child`. 값은 `{ [childId]: summary }` 형태의 객체.
+- **childId**: `"${childInfo.name}_${childInfo.birthDate}"` (이름+생년월일로 아이 구분).
+- **summary 필드**: `topicCounts` (eating/sleep/tantrum/clothing/aggression/other 횟수), `lastTopics` (최근 주제 최대 10개), `messageCount`, `updatedAt`.
+- **갱신 시점**: 사용자가 메시지를 보낼 때마다, 현재 메시지에서 주제를 추출(`getTopicFromText`)해 해당 아이의 summary를 갱신·저장.
+- **답변에 반영**: `generateResponse(question, recentHistory, consultationSummary)`의 세 번째 인자로 summary를 넘기고,
+  - **같은 주제 재질문**이면 (해당 topicCounts >= 1) 문단 앞에 *"지난번에도 [주제] 이야기 나눠 주셨죠. 그때 말씀드린 방법 시도해 보셨을까요? 이어서 말씀드릴게요."* 를 붙이고,
+  - **총 메시지 3회 이상**이면 *"[이름]이에 대해 여러 번 이야기 나눠 주셔서, 조금씩 더 맞춰 드릴 수 있게 되고 있어요."* 를 붙여, 이 아이만의 대화가 쌓였다는 느낌과 맞춤 가이드가 이어지도록 함.
+
+---
+
+## 5. 적용 위치
+
+- `docs/index.html` 내 `generateResponse` 함수, `handleSendMessage`, consultation state/저장·로드
+- `web/public/gwaenchanayo.html` 내 동일 로직  
 
 두 파일은 **동일한 로직**을 유지하고, 수정 시 이 문서와 함께 갱신합니다.
