@@ -99,6 +99,11 @@
         <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
       </svg>
     );
+    const ChevronLeft = ({ className, ...props }) => (
+      <svg className={className} {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="m15 18-6-6 6-6"/>
+      </svg>
+    );
     const RotateCcw = ({ className, ...props }) => (
       <svg className={className} {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
@@ -748,12 +753,12 @@
         if (isFollowUp && lastAssistantText) {
           if (lastAboutEating && /야채|채소|편식|먹기 싫어|안 먹어|그래도 안|해도 안/.test(q)) {
             if (highSensitivity) {
-              return addPrefix('야채는 질감이나 냄새가 강해서, ' + name + '이처럼 감각이 예민한 편이면 거부감이 더 크게 느껴질 수 있어요. 무리하게 먹이기보다는 한 가지만 골라서(예: 당근만) 부드럽게 익혀서 퓨레처럼 보여주시고, ' + name + '이가 손으로 만져 보거나 냄새만 맡게 해 두는 것부터 시작해 보세요. 8~15번 정도 식탁에만 올려두어도 "익숙함"이 생기면서 조금씩 받아들이는 경우가 많아요. 오늘은 "이거 있어"만 말하고 먹으라고 하지 않으셔도 돼요. 💕');
+              return addPrefix(`야채는 질감이나 냄새가 강해서, ${name}이처럼 감각이 예민한 편이면 거부감이 더 크게 느껴질 수 있어요. 무리하게 먹이기보다는 한 가지만 골라서(예: 당근만) 부드럽게 익혀서 퓨레처럼 보여주시고, ${name}이가 손으로 만져 보거나 냄새만 맡게 해 두는 것부터 시작해 보세요. 8~15번 정도 식탁에만 올려두어도 "익숙함"이 생기면서 조금씩 받아들이는 경우가 많아요. 오늘은 "이거 있어"만 말하고 먹으라고 하지 않으셔도 돼요. 💕`;
             }
             if (lowAdaptability) {
-              return addPrefix('야채처럼 새로운 음식은 ' + name + '이한테 시간이 조금 더 걸리는 편이에요. 같은 야채를 15~20번 정도 식탁에만 올려두시고, 먹으라고 하지 않으셔도 돼요. 좋아하는 음식 옆에 작게 놓아 두시면 "이거 있어"만 말해 주세요. 강요할수록 거부가 길어지니까, 오늘은 거부해도 내일 다시 올려만 두시는 걸 2~3주 이어가 보시면 좋아요. 💕');
+              return addPrefix(`야채처럼 새로운 음식은 ${name}이한테 시간이 조금 더 걸리는 편이에요. 같은 야채를 15~20번 정도 식탁에만 올려두시고, 먹으라고 하지 않으셔도 돼요. 좋아하는 음식 옆에 작게 놓아 두시면 "이거 있어"만 말해 주세요. 강요할수록 거부가 길어지니까, 오늘은 거부해도 내일 다시 올려만 두시는 걸 2~3주 이어가 보시면 좋아요. 💕`);
             }
-            return addPrefix('야채는 많은 아이들이 단계적으로 받아들이는 음식이에요. "이거 할래? 저거 할래?"로 당근이랑 오이 중에서 골라 보게 하시거나, 밥 위에 살짝 올려만 두고 먹으라고 하지 않으셔도 돼요. 같이 앉아서 엄마가 맛있게 먹는 모습을 보여주시는 것만으로도 도움이 됩니다. 한 가지만 정해서 2주 정도 꾸준히 보여주시다가, 조금 나아지면 그다음 야채를 하나 더 도입해 보세요. 💕';
+            return addPrefix(`야채는 많은 아이들이 단계적으로 받아들이는 음식이에요. "이거 할래? 저거 할래?"로 당근이랑 오이 중에서 골라 보게 하시거나, 밥 위에 살짝 올려만 두고 먹으라고 하지 않으셔도 돼요. 같이 앉아서 엄마가 맛있게 먹는 모습을 보여주시는 것만으로도 도움이 됩니다. 한 가지만 정해서 2주 정도 꾸준히 보여주시다가, 조금 나아지면 그다음 야채를 하나 더 도입해 보세요. 💕`;
           }
           if (lastAboutSleep && /잠|수면|자기|취침|밤|자려고|안\s*자|못\s*자|못자게|재우|잠들|그래도 안|해도 안/.test(q)) {
             const regular = childScores[1] > 7;
@@ -801,12 +806,12 @@
           const isAboutVegetables = /야채|채소|편식/.test(q);
           if (isAboutVegetables) {
             if (highSensitivity) {
-              return addPrefix('야채는 질감이나 냄새가 강해서, ' + name + '이처럼 감각이 예민한 편이면 거부감이 더 크게 느껴질 수 있어요. "안 먹는 것"이 고집이 아니라 느낌이 불편한 것일 수 있어요. 한 가지만 골라서(당근이나 브로콜리처럼) 부드럽게 익혀 퓨레처럼 보여주시고, ' + name + '이가 손으로 만져 보거나 냄새만 맡게 해 두는 것부터 시작해 보세요. 8~15번 정도 식탁에만 올려두어도 익숙해지면서 조금씩 받아들이는 경우가 많아요. 오늘은 "이거 있어"만 말하고 먹으라고 하지 않으셔도 돼요. 💕');
+              return addPrefix(`야채는 질감이나 냄새가 강해서, ${name}이처럼 감각이 예민한 편이면 거부감이 더 크게 느껴질 수 있어요. "안 먹는 것"이 고집이 아니라 느낌이 불편한 것일 수 있어요. 한 가지만 골라서(당근이나 브로콜리처럼) 부드럽게 익혀 퓨레처럼 보여주시고, ${name}이가 손으로 만져 보거나 냄새만 맡게 해 두는 것부터 시작해 보세요. 8~15번 정도 식탁에만 올려두어도 익숙해지면서 조금씩 받아들이는 경우가 많아요. 오늘은 "이거 있어"만 말하고 먹으라고 하지 않으셔도 돼요. 💕`;
             }
             if (lowAdaptability) {
-              return addPrefix('야채처럼 새로운 음식은 ' + name + '이한테 시간이 조금 더 걸리는 편이에요. 같은 야채를 15~20번 정도 식탁에만 올려두시고 먹으라고 하지 않으셔도 돼요. 좋아하는 음식 옆에 작게 놓아 두시고 "이거 있어"만 말해 주세요. 강요할수록 거부가 길어지니까, 오늘 거부해도 내일 다시 올려만 두시는 걸 2~3주 이어가 보시면 좋아요. 💕');
+              return addPrefix(`야채처럼 새로운 음식은 ${name}이한테 시간이 조금 더 걸리는 편이에요. 같은 야채를 15~20번 정도 식탁에만 올려두시고 먹으라고 하지 않으셔도 돼요. 좋아하는 음식 옆에 작게 놓아 두시고 "이거 있어"만 말해 주세요. 강요할수록 거부가 길어지니까, 오늘 거부해도 내일 다시 올려만 두시는 걸 2~3주 이어가 보시면 좋아요. 💕`);
             }
-            return addPrefix(name + '이(' + age + ')는 발달상 "내가 고를래"가 강해지는 시기라 밥 거부가 잦을 수 있어요. 야채는 많은 아이들이 단계적으로 받아들이는 음식이에요. "이거 할래? 저거 할래?"로 당근이랑 오이 중에서 골라 보게 하시거나, 밥 위에 살짝 올려만 두고 먹으라고 하지 않으셔도 돼요. 같이 앉아서 엄마가 맛있게 먹는 모습을 보여주시는 것만으로도 도움이 됩니다. 한 가지만 정해서 2주 정도 꾸준히 보여주시다가 조금 나아지면 그다음 야채를 하나 더 도입해 보세요. 💕');
+            return addPrefix(`${name}이(${age})는 발달상 "내가 고를래"가 강해지는 시기라 밥 거부가 잦을 수 있어요. 야채는 많은 아이들이 단계적으로 받아들이는 음식이에요. "이거 할래? 저거 할래?"로 당근이랑 오이 중에서 골라 보게 하시거나, 밥 위에 살짝 올려만 두고 먹으라고 하지 않으셔도 돼요. 같이 앉아서 엄마가 맛있게 먹는 모습을 보여주시는 것만으로도 도움이 됩니다. 한 가지만 정해서 2주 정도 꾸준히 보여주시다가 조금 나아지면 그다음 야채를 하나 더 도입해 보세요. 💕`);
           }
           if (highSensitivity) {
             return addPrefix(`${name}이는 ${temperamentType.type}라 음식의 질감·냄새·온도를 더 세게 느껴요. 그래서 "안 먹는 것"이 고집이 아니라 느낌이 불편한 것일 수 있어요. 한 번에 한 가지 식감만 (부드러운 것 → 단단한 것 순) 보여주시고, ${name}이가 손으로 만져 보게 해 주세요. "이거 먹을래?"만 하고 강요하지 않으시면 돼요. 같은 음식을 8~15번 정도 보여주는 것만으로도 익숙함이 생겨요. ${age}에는 음식 거부가 흔한 시기라 ${name}이 페이스에 맞춰 천천히 노출만 해 주셔도 좋아요. 💕`);
@@ -996,7 +1001,8 @@
           )}
 
           {step === 'profile' && (
-            <div className="min-h-screen flex flex-col p-4 sm:p-6">
+            <div className="min-h-screen flex flex-col p-4 sm:p-6 relative">
+              <button type="button" onClick={() => setStep('childInfo')} className="fixed top-4 left-4 sm:top-6 sm:left-6 z-20 p-2.5 sm:p-3 rounded-full bg-white/95 border-2 border-gray-200 hover:bg-gray-50 hover:border-gray-300 shadow-md transition-colors flex items-center justify-center min-h-[44px] min-w-[44px]" aria-label="이전"><ChevronLeft className="w-6 h-6 text-gray-700" /></button>
               <div className="flex-1 flex items-center justify-center pt-12 sm:pt-14">
               <div className="max-w-3xl w-full">
                 <div className="mb-4 sm:mb-8">
@@ -1027,7 +1033,8 @@
           )}
 
           {step === 'parentProfile' && (
-            <div className="min-h-screen flex flex-col p-4 sm:p-6">
+            <div className="min-h-screen flex flex-col p-4 sm:p-6 relative">
+              <button type="button" onClick={() => { setStep('profile'); setCurrentQuestion(temperamentQuestions.length - 1); }} className="fixed top-4 left-4 sm:top-6 sm:left-6 z-20 p-2.5 sm:p-3 rounded-full bg-white/95 border-2 border-gray-200 hover:bg-gray-50 hover:border-gray-300 shadow-md transition-colors flex items-center justify-center min-h-[44px] min-w-[44px]" aria-label="이전"><ChevronLeft className="w-6 h-6 text-gray-700" /></button>
               <div className="flex-1 flex items-center justify-center pt-12 sm:pt-14">
               <div className="max-w-3xl w-full">
                 <div className="mb-4 sm:mb-8">
