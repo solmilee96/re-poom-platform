@@ -1,0 +1,16 @@
+{
+  "name": "notebooklm-proxy",
+  "version": "1.0.0",
+  "description": "NotebookLM 채팅 프록시 — 아이 여행 상담 API에서 NotebookLM을 무조건 사용하기 위한 서버",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": { "node": ">=18.0.0" },
+  "dependencies": {
+    "notebooklm-kit": "^2.2.0",
+    "dotenv": "^16.0.0"
+  }
+}

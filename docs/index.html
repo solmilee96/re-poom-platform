@@ -84,6 +84,7 @@
     const { useState, useEffect } = React;
     // 아쉬워요 피드백 → Slack (GitHub Pages는 CORS로 직접 웹훅 불가 → API 프록시 사용)
     const FEEDBACK_API_URL = 'https://web-obutmwll6-solmilee96s-projects.vercel.app/api/feedback';
+    const CONSULTATION_API_URL = FEEDBACK_API_URL.replace(/\/api\/feedback\/?$/, '') + '/api/consultation';
 
     // Icon components
     const Baby = ({ className, ...props }) => (
@@ -902,34 +903,46 @@
       };
 
       const handleSendMessage = () => {
-        if (!currentInput.trim()) return;
-        const newMessage = { role: 'user', content: currentInput, timestamp: new Date() };
+        const msg = (currentInput || '').trim();
+        if (!msg) return;
+        const newMessage = { role: 'user', content: msg, timestamp: new Date() };
         const updatedHistory = [...chatHistory, newMessage];
         setChatHistory(updatedHistory);
         setCurrentInput('');
         setIsAnalyzing(true);
-        setTimeout(() => {
-          let response = generateResponse(currentInput, updatedHistory, consultationSummary);
-          response = response.replace(/\*\*(.*?)\*\*/g, '$1');
-          const aiMessage = { role: 'assistant', content: response, timestamp: new Date() };
-          const finalHistory = [...updatedHistory, aiMessage];
-          setChatHistory(finalHistory);
-          saveToStorage({ chatHistory: finalHistory });
-          const cid = getChildId(childInfo);
-          if (cid) {
-            const topic = getTopicFromText(currentInput);
-            const next = {
-              ...consultationSummary,
-              topicCounts: { ...consultationSummary.topicCounts, [topic]: (consultationSummary.topicCounts[topic] || 0) + 1 },
-              lastTopics: [...(consultationSummary.lastTopics || []).slice(-9), topic],
-              messageCount: (consultationSummary.messageCount || 0) + 1,
-              updatedAt: new Date().toISOString(),
-            };
-            saveConsultationForChild(cid, next);
-            setConsultationSummary(next);
-          }
-          setIsAnalyzing(false);
-        }, 1200);
+        const totalMonths = getTotalMonths(childInfo.birthDate || '');
+        const tq = getTemperamentQuestionsByAge(totalMonths);
+        const childScores = tq.map((_, i) => childProfile['q' + i] || 5);
+        const parentScores = parentQuestions.map((_, i) => parentProfile['p' + i] || 5);
+        const temperamentType = getTemperamentType(childScores);
+        const parentType = getParentType(parentScores);
+        const context = { name: childInfo.name, age: getChildAge(), temperamentType: temperamentType.type, parentType: parentType.type, consultationSummary: consultationSummary, initialConcern: behaviorInput || '' };
+        const historyForApi = updatedHistory.slice(-20).map(function(m) { return { role: m.role, content: m.content }; });
+        fetch(CONSULTATION_API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: msg, history: historyForApi, context: context }) })
+          .then(function(r) { return r.ok ? r.json() : Promise.reject(new Error('API error')); })
+          .then(function(data) { return (data && data.reply) ? data.reply : null; })
+          .catch(function() { return null; })
+          .then(function(reply) {
+            var response = (reply && reply.trim()) ? reply : generateResponse(msg, updatedHistory, consultationSummary);
+            response = response.replace(/\*\*(.*?)\*\*/g, '$1');
+            var aiMessage = { role: 'assistant', content: response, timestamp: new Date() };
+            var finalHistory = updatedHistory.concat([aiMessage]);
+            setChatHistory(finalHistory);
+            saveToStorage({ chatHistory: finalHistory });
+            var cid = getChildId(childInfo);
+            if (cid) {
+              var topic = getTopicFromText(msg);
+              var next = Object.assign({}, consultationSummary, {
+                topicCounts: Object.assign({}, consultationSummary.topicCounts, { [topic]: (consultationSummary.topicCounts[topic] || 0) + 1 }),
+                lastTopics: (consultationSummary.lastTopics || []).slice(-9).concat([topic]),
+                messageCount: (consultationSummary.messageCount || 0) + 1,
+                updatedAt: new Date().toISOString(),
+              });
+              saveConsultationForChild(cid, next);
+              setConsultationSummary(next);
+            }
+            setIsAnalyzing(false);
+          });
       };
 
       const handleChildInfoSubmit = (e) => {
