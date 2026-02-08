@@ -7,8 +7,11 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "npm run build && vercel --prod",
-    "deploy:auto": "./auto_deploy_simple.sh"
+    "deploy": "npm run build:docs && vercel --prod",
+    "deploy:auto": "./auto_deploy_simple.sh",
+    "build:docs": "node -e \"require('fs').cpSync('docs', 'dist', {recursive: true})\"",
+    "test:docs-build": "node scripts/test-docs-build.cjs",
+    "test:docs-build:serve": "node scripts/test-docs-build.cjs --serve"
   },
   "engines": {
     "node": ">=20.0.0",

@@ -1,8 +1,5 @@
 {
-  "buildCommand": "",
-  "outputDirectory": ".",
-  "rewrites": [
-    { "source": "/", "destination": "/public/gwaenchanayo.html" },
-    { "source": "/gwaenchanayo.html", "destination": "/public/gwaenchanayo.html" }
-  ]
+  "buildCommand": "node scripts/copy-docs.cjs",
+  "outputDirectory": "public",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }

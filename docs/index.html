@@ -82,9 +82,12 @@
 
   <script type="text/babel" data-presets="react">
     const { useState, useEffect } = React;
-    // 아쉬워요 피드백 → Slack (GitHub Pages는 CORS로 직접 웹훅 불가 → API 프록시 사용)
-    const FEEDBACK_API_URL = 'https://web-obutmwll6-solmilee96s-projects.vercel.app/api/feedback';
-    const CONSULTATION_API_URL = FEEDBACK_API_URL.replace(/\/api\/feedback\/?$/, '') + '/api/consultation';
+    // 아쉬워요 피드백 → Slack. Vercel에서 열면 같은 출처, GitHub Pages에서 열면 Vercel API 주소 사용
+    var _apiBase = (typeof window !== 'undefined' && window.location && window.location.hostname && window.location.hostname.indexOf('vercel.app') !== -1)
+      ? window.location.origin
+      : 'https://web-obutmwll6-solmilee96s-projects.vercel.app';
+    const FEEDBACK_API_URL = _apiBase + '/api/feedback';
+    const CONSULTATION_API_URL = _apiBase + '/api/consultation';
 
     // Icon components
     const Baby = ({ className, ...props }) => (
