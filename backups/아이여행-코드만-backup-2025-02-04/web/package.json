@@ -1,0 +1,9 @@
+{
+  "name": "gwaenchanayo-web",
+  "version": "1.0.0",
+  "homepage": "https://solmilee96.github.io/re-poom-platform/",
+  "private": true,
+  "scripts": {
+    "vercel-build": "echo 'Static + API only, no build step'"
+  }
+}
