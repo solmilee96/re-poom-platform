@@ -922,11 +922,14 @@
         const context = { name: childInfo.name, age: getChildAge(), temperamentType: temperamentType.type, parentType: parentType.type, consultationSummary: consultationSummary, initialConcern: behaviorInput || '' };
         const historyForApi = updatedHistory.slice(-20).map(function(m) { return { role: m.role, content: m.content }; });
         fetch(CONSULTATION_API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: msg, history: historyForApi, context: context }) })
-          .then(function(r) { return r.ok ? r.json() : Promise.reject(new Error('API error')); })
-          .then(function(data) { return (data && data.reply) ? data.reply : null; })
-          .catch(function() { return null; })
+          .then(function(r) { return r.json().then(function(data) { return { ok: r.ok, status: r.status, data: data }; }); })
+          .then(function(result) {
+            if (result.ok && result.data && result.data.reply && result.data.reply.trim()) return result.data.reply;
+            var errMsg = (result.data && (result.data.detail || result.data.error)) || '상담을 일시적으로 사용할 수 없어요. 잠시 후 다시 시도해 주세요.';
+            return errMsg;
+          })
           .then(function(reply) {
-            var response = (reply && reply.trim()) ? reply : generateResponse(msg, updatedHistory, consultationSummary);
+            var response = (reply && reply.trim()) ? reply : '상담을 일시적으로 사용할 수 없어요. 잠시 후 다시 시도해 주세요.';
             response = response.replace(/\*\*(.*?)\*\*/g, '$1');
             var aiMessage = { role: 'assistant', content: response, timestamp: new Date() };
             var finalHistory = updatedHistory.concat([aiMessage]);

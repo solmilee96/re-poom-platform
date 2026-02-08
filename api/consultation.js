@@ -1,18 +1,17 @@
 /**
  * 상담 답변 — NotebookLM 우선, 실패 시 Gemini 폴백
- * Vercel 환경 변수:
- *   - NOTEBOOKLM_PROXY_URL: NotebookLM 프록시 서버 URL (설정 시 무조건 먼저 호출)
- *   - GEMINI_API_KEY: NotebookLM 실패 시 또는 프록시 미설정 시 사용
+ * Vercel 환경 변수: NOTEBOOKLM_PROXY_URL(우선) / GEMINI_API_KEY(폴백)
  */
 const https = require('https');
 
-const CONSULTATION_SYSTEM = `당신은 기질·발달을 잘 아는 전문가이면서, 따뜻하고 감성적인 심리 상담가 같은 존재입니다. 말투는 전문적이되 차갑지 않고, 공감과 위로가 느껴지도록 해 주세요.
+const CONSULTATION_SYSTEM = `당신은 기질·발달을 잘 아는 전문가이면서, 따뜻하고 감성적인 심리 상담가 같은 존재입니다.
 
-**중요: "나와 우리 아이를 기억하는 사람"처럼 느껴지게 답하세요.**
-- 이전 대화 내용을 꼭 살펴보고, 적절할 때 "아, 예전에 ○○ 이야기했었죠.", "그때는 △△가 고민이셨는데, 지금은 어떠세요?", "그때 말씀드린 방법은 조금이라도 도움이 되셨나요?"처럼 자연스럽게 꺼내 주세요.
-- 아이 이름, 나이, 기질 유형, 양육자 유형을 항상 염두에 두고, "○○이(이)라서", "○○ 엄마/아빠 답게" 같은 말을 가끔 넣어 주세요.
-- 답변은 2~4문단 정도로, 연구·이론은 간단히만 인용하고, 공감과 구체적 실천 팁을 담아 주세요.
-- 같은 긴 설명을 반복하지 말고, 사용자가 "틀려요" 등 피드백을 주면 어디가 다른지/어떤 상황인지 먼저 여쭤 보세요.
+**답변 원칙**
+- 질문의 맥락을 정확히 파악하고, 그 질문에 맞는 구체적인 답변을 하세요. 일반론이나 질문과 어긋나는 내용을 하지 마세요.
+- 한 가지 관점이 아니라, 상황에 따라 여러 가능성과 다양한 방향(원인, 감정 인정, 실천 방법, 부모 자신 돌보기 등)을 고려해 충분히 생각한 뒤 답하세요.
+- "~할 수 있어요", "~해 보세요" 수준에서 그치지 말고, 왜 그런지, 어떤 순서로 시도하면 좋은지, 막힐 때는 어떻게 할지까지 구체적으로 제시해 고민이 해소될 수 있게 도와주세요.
+- 이전 대화와 아이·양육자 정보를 기억하고, "○○이(이)라서", "그때 말씀드린 ~"처럼 자연스럽게 이어서 말하세요.
+- 답변은 2~4문단 정도로, 연구·이론은 간단히만 인용하고 공감과 구체적 실천 팁을 담아 주세요. 같은 긴 설명을 반복하지 말고, 사용자가 "틀려요" 등 피드백을 주면 어디가 다른지 먼저 여쭤 보세요.
 - 답변에 마크다운 볼드(**텍스트**)를 사용해도 됩니다.`;
 
 function corsHeaders(origin) {
@@ -67,7 +66,9 @@ function callGemini(apiKey, systemInstruction, contents) {
     contents: contents,
     generationConfig: {
       temperature: 0.7,
-      maxOutputTokens: 1024,
+      maxOutputTokens: 2048,
+      topP: 0.95,
+      topK: 40,
     },
   });
 
@@ -127,9 +128,13 @@ module.exports = async function handler(req, res) {
   }
 
   const notebooklmProxyUrl = (process.env.NOTEBOOKLM_PROXY_URL || '').trim();
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = (process.env.GEMINI_API_KEY || '').trim();
+
   if (!notebooklmProxyUrl && !apiKey) {
-    return res.status(500).json({ error: 'NOTEBOOKLM_PROXY_URL or GEMINI_API_KEY required' });
+    return res.status(503).json({
+      error: 'Consultation unavailable',
+      detail: 'NOTEBOOKLM_PROXY_URL 또는 GEMINI_API_KEY 중 하나를 설정해 주세요.',
+    });
   }
 
   try {
@@ -149,7 +154,6 @@ module.exports = async function handler(req, res) {
     }
 
     let reply = null;
-
     if (notebooklmProxyUrl) {
       try {
         reply = await callNotebookLMProxy(notebooklmProxyUrl, { message, history, context });
@@ -157,7 +161,6 @@ module.exports = async function handler(req, res) {
         console.warn('NotebookLM proxy failed, falling back to Gemini', e.message);
       }
     }
-
     if (reply == null && apiKey) {
       const systemInstruction = buildSystemInstruction(context);
       const contents = [];
@@ -170,9 +173,11 @@ module.exports = async function handler(req, res) {
       contents.push({ role: 'user', parts: [{ text: message.trim() }] });
       reply = await callGemini(apiKey, systemInstruction, contents);
     }
-
-    if (reply == null) {
-      return res.status(503).json({ error: 'Consultation unavailable', detail: 'NotebookLM proxy failed and Gemini not configured' });
+    if (reply == null || !reply.trim()) {
+      return res.status(503).json({
+        error: 'Consultation unavailable',
+        detail: '상담 서비스를 일시적으로 사용할 수 없어요. 잠시 후 다시 시도해 주세요.',
+      });
     }
     return res.status(200).json({ reply });
   } catch (e) {

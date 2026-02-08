@@ -31,6 +31,11 @@ NotebookLM Enterprise 공식 문서([Gemini Enterprise REST Reference](https://c
 즉, **채팅이 아니어도** “문서 기반으로 질문하면 답 생성” 또는 “요약/FAQ 생성”을 **REST API로** 하고 싶다면, 현재 Google이 공개한 API만으로는 불가능합니다.  
 그런 흐름을 쓰려면 **notebooklm-kit + 프록시** 방식(채팅용과 동일)이 유일한 선택지입니다.
 
+**다만, "답변을 내려주는" 용도**로는 Enterprise API를 쓸 수 있습니다.  
+- 노트북 생성 + 소스 추가 → **노트북 URL**을 사용자에게 전달(브라우저에서 채팅 가능).  
+- **AI 오디오 오버뷰** 생성 → 소스 기반 요약 음성을 노트북 스튜디오에서 로드·다운로드.  
+→ 자세한 흐름과 예시는 **`docs/NOTEBOOKLM_Enterprise_API_답변_활용.md`** 를 참고하세요.
+
 ---
 
 ## 2. 동작 방식
