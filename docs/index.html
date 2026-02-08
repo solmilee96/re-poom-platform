@@ -85,7 +85,7 @@
     // 아쉬워요 피드백 → Slack. Vercel에서 열면 같은 출처, GitHub Pages에서 열면 Vercel API 주소 사용
     var _apiBase = (typeof window !== 'undefined' && window.location && window.location.hostname && window.location.hostname.indexOf('vercel.app') !== -1)
       ? window.location.origin
-      : 'https://web-obutmwll6-solmilee96s-projects.vercel.app';
+      : 'https://web-mdrkzqom5-solmilee96s-projects.vercel.app';
     const FEEDBACK_API_URL = _apiBase + '/api/feedback';
     const CONSULTATION_API_URL = _apiBase + '/api/consultation';
 
@@ -806,8 +806,8 @@
             const sleepTipOrder = '목욕 → 파자마 → 책 한 권 → 불 끄기';
             const sleepTipNow = '지금 자는 시간이야';
             return addPrefix(regular
-              ? `지난번에 말씀드린 루틴(같은 시간, 같은 순서)을 2주 정도 해 보셨을 때도 변화가 없으시면, 취침 시간을 15분만 당겨 보시거나 낮잠이 너무 늦게 끝나지 않았는지 한 번만 점검해 보세요. ${name}이는 규칙성이 있는 편이라, 시간만 조금 맞춰 주시면 금방 잡히는 경우가 많아요. 그래도 안 되시면 그때 ` + sleepTipRegular + ` 같이 조금만 더 알려 주시면 그다음 단계 같이 짚어 드릴게요. 💕`
-              : `불규칙한 편인 ${name}이한테는 매일 같은 순서가 더 중요해요. 시간은 조금 달라도 괜찮으니까, ` + sleepTipOrder + `만 매일 똑같이 2~3주 이어가 보세요. 처음엔 저항해도 ` + sleepTipNow + `만 차분히 반복해 주시면 됩니다. 6~8주 넘기시면 차이가 보이는 경우가 많아요. 그동안 해 보시다가 막히는 순간이 있으면 그때 말씀해 주세요. 💕`);
+              ? ('지난번에 말씀드린 루틴(같은 시간, 같은 순서)을 2주 정도 해 보셨을 때도 변화가 없으시면, 취침 시간을 15분만 당겨 보시거나 낮잠이 너무 늦게 끝나지 않았는지 한 번만 점검해 보세요. ' + name + '이는 규칙성이 있는 편이라, 시간만 조금 맞춰 주시면 금방 잡히는 경우가 많아요. 그래도 안 되시면 그때 ' + sleepTipRegular + ' 같이 조금만 더 알려 주시면 그다음 단계 같이 짚어 드릴게요. 💕')
+              : ('불규칙한 편인 ' + name + '이한테는 매일 같은 순서가 더 중요해요. 시간은 조금 달라도 괜찮으니까, ' + sleepTipOrder + '만 매일 똑같이 2~3주 이어가 보세요. 처음엔 저항해도 ' + sleepTipNow + '만 차분히 반복해 주시면 됩니다. 6~8주 넘기시면 차이가 보이는 경우가 많아요. 그동안 해 보시다가 막히는 순간이 있으면 그때 말씀해 주세요. 💕'));
           }
           if (lastAboutTantrum && /떼|울|짜증|그래도|해도 안/.test(q)) {
             return addPrefix(lowAdaptability
@@ -830,7 +830,7 @@
           if (/왜|이유|원인|그런\s*행동|그렇게\s*돼/.test(q)) {
             const reason = temperamentType.type === '에너자이저' ? '뇌가 작은 자극에도 강하게 반응하는 기질이라, 원하는 대로 안 될 때 감정이 크게 올라와요.' : temperamentType.type === '신중파' ? '새로운 상황을 천천히 관찰한 뒤에야 참여하는 기질이라, 갑작스러운 변화나 압박이 있으면 불안해해요.' : temperamentType.type === '섬세파' ? '소리·빛·촉감을 주변보다 더 세게 느끼는 기질이라, 자극이 많으면 뇌가 \'너무 많아\'라고 반응해요.' : temperamentType.type === '탐험가' ? '움직이고 탐색하는 욕구가 커서, 가만히 있으라고만 하면 에너지가 밖으로 튀어나와요.' : '아이마다 기질이 달라서, 어떤 아이는 변화나 자극에 더 민감하게 반응해요.';
             const reasonLabel = '버릇이 나쁜 거 아니야?';
-            return addPrefix(`${name}이가 그렇게 행동하는 이유를 기질 쪽으로만 말씀드리면요.\n\n${name}이는 **${temperamentType.type}**에 가까운 기질이에요. ${reason}\n\n그래서 ` + reasonLabel + `가 아니라, **지금 이 나이에 이 기질이면 자연스럽게 나올 수 있는 반응**에 가깝다고 보시면 돼요. 다만 환경을 조금만 맞춰 주시면—예고, 선택, 조용한 공간 같은 것—같은 상황에서도 훨씬 덜 힘들어하는 걸 많이 봐요.\n\n더 궁금하신 점 있으면 편하게 이어서 물어봐 주세요. 💕`);
+            return addPrefix(name + '이가 그렇게 행동하는 이유를 기질 쪽으로만 말씀드리면요.\n\n' + name + '이는 **' + temperamentType.type + '**에 가까운 기질이에요. ' + reason + '\n\n그래서 ' + reasonLabel + '가 아니라, **지금 이 나이에 이 기질이면 자연스럽게 나올 수 있는 반응**에 가깝다고 보시면 돼요. 다만 환경을 조금만 맞춰 주시면—예고, 선택, 조용한 공간 같은 것—같은 상황에서도 훨씬 덜 힘들어하는 걸 많이 봐요.\n\n더 궁금하신 점 있으면 편하게 이어서 물어봐 주세요. 💕');
           }
           if (/다른|더|추가|또\s*있|이외/.test(q)) {
             let childTip = "에너지가 넘칠 때는 '10번 뛰어와'처럼 짧은 놀이로 한 번 빼 주시면, 그다음 대화나 규칙이 훨씬 잘 들어가요.";

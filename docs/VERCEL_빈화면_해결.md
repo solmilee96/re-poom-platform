@@ -1,6 +1,6 @@
 # Vercel 빈 화면 해결
 
-https://web-obutmwll6-solmilee96s-projects.vercel.app/ 에서 빈 화면이 나올 때 확인할 사항입니다.
+https://web-mdrkzqom5-solmilee96s-projects.vercel.app/ 에서 빈 화면이 나올 때 확인할 사항입니다.
 
 ## 원인
 
@@ -30,7 +30,7 @@ https://web-obutmwll6-solmilee96s-projects.vercel.app/ 에서 빈 화면이 나�
 ### 3. 재배포 후 확인
 
 - **Deployments** 탭에서 최신 배포가 **Ready**인지 확인한 뒤  
-  https://web-obutmwll6-solmilee96s-projects.vercel.app/ 에 접속해 화면이 정상인지 봅니다.
+  https://web-mdrkzqom5-solmilee96s-projects.vercel.app/ 에 접속해 화면이 정상인지 봅니다.
 - 여전히 빈 화면이면 해당 배포의 **Building** 로그에서 빌드/복사 단계가 성공했는지 확인합니다.
 
 ## 참고

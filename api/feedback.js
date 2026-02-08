@@ -32,6 +32,7 @@ function postSlack(webhookUrl, payload) {
 function corsHeaders(origin) {
   const allow = [
     'https://solmilee96.github.io',
+    'https://web-mdrkzqom5-solmilee96s-projects.vercel.app',
     'http://localhost:3000',
     'http://localhost:5173',
     'http://127.0.0.1:5173',
