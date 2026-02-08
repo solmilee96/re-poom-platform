@@ -4,6 +4,6 @@
   "homepage": "https://solmilee96.github.io/re-poom-platform/",
   "private": true,
   "scripts": {
-    "vercel-build": "echo 'Static + API only, no build step'"
+    "vercel-build": "node scripts/copy-docs.cjs"
   }
 }
