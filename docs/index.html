@@ -83,10 +83,10 @@
   <script type="text/babel" data-presets="react">
     const { useState, useEffect } = React;
     // 아쉬워요 피드백 → Slack. Vercel에서 열면 같은 출처, GitHub Pages에서 열면 Vercel API 주소 사용
-    // 상담 API: Vercel 프로젝트의 안정 도메인(Domains) 또는 현재 Deployment URL 사용
+    // 상담 API: 이 저장소가 연결된 Vercel 프로젝트의 Deployment URL (푸시할 때마다 배포되는 주소)
     var _apiBase = (typeof window !== 'undefined' && window.location && window.location.hostname && window.location.hostname.indexOf('vercel.app') !== -1)
       ? window.location.origin
-      : 'https://web-seven-iota-17.vercel.app';
+      : 'https://web-rfvl2233u-solmilee96s-projects.vercel.app';
     const FEEDBACK_API_URL = _apiBase + '/api/feedback';
     const CONSULTATION_API_URL = _apiBase + '/api/consultation';
 
@@ -296,10 +296,10 @@
         ]},
         { dimension: '규칙성', question: '수유·수면 시간이\n얼마나 일정한가요?', description: '생후에도 나타나는 생리 리듬의 예측 가능성을 봅니다', options: [
           { text: '매일 비슷한 시간에 먹고 잠들어요', score: 10, emoji: '⏰' },
-          { text: '대체로 비슷한데 30분~1시간 차이 나요', score: 7.5, emoji: '📅' },
-          { text: '패턴은 있지만 날마다 조금 달라요', score: 5, emoji: '🔄' },
-          { text: '매일 달라서 예측이 어려워요', score: 2.5, emoji: '🎲' },
-          { text: '거의 랜덤이에요', score: 1, emoji: '❓' }
+          { text: '대체로 비슷해요 (날마다 30분~1시간 정도 차이)', score: 7.5, emoji: '📅' },
+          { text: '패턴은 있지만 날마다 1시간 넘게 달라질 때가 많아요', score: 5, emoji: '🔄' },
+          { text: '날마다 1시간 이상 달라요, 예측이 어려워요', score: 2.5, emoji: '🎲' },
+          { text: '날마다 크게 달라서 패턴을 찾기 어려워요', score: 1, emoji: '📉' }
         ]},
         { dimension: '접근성', question: '낯선 사람이나 새 장소를\n만나면?', description: '새로운 자극에 대한 첫 반응을 봅니다', options: [
           { text: '금방 웃으며 반응해요', score: 10, emoji: '🤗' },
@@ -362,10 +362,10 @@
         ]},
         { dimension: '규칙성', question: '잠드는 시간, 배고파하는 시간이\n얼마나 일정한가요?', description: '생리 리듬의 예측 가능성을 봅니다', options: [
           { text: '매일 거의 같은 시간이에요', score: 10, emoji: '⏰' },
-          { text: '대체로 비슷한데 30분~1시간 차이 나요', score: 7.5, emoji: '📅' },
-          { text: '패턴은 있지만 매일 조금 달라요', score: 5, emoji: '🔄' },
-          { text: '매일 달라서 예측이 어려워요', score: 2.5, emoji: '🎲' },
-          { text: '패턴이 거의 없어요', score: 1, emoji: '❓' }
+          { text: '대체로 비슷해요 (날마다 30분~1시간 정도 차이)', score: 7.5, emoji: '📅' },
+          { text: '패턴은 있지만 날마다 1시간 넘게 달라질 때가 많아요', score: 5, emoji: '🔄' },
+          { text: '날마다 1시간 이상 달라요, 예측이 어려워요', score: 2.5, emoji: '🎲' },
+          { text: '날마다 크게 달라서 패턴을 찾기 어려워요', score: 1, emoji: '📉' }
         ]},
         { dimension: '접근성', question: '낯선 사람이나 새로운 장소를\n만나면?', description: '새 자극에 대한 첫 반응을 봅니다', options: [
           { text: '즉시 다가가서 반가워해요', score: 10, emoji: '🤗' },
@@ -428,10 +428,10 @@
         ]},
         { dimension: '규칙성', question: '잠드는 시간, 배고파하는 시간이\n얼마나 일정한가요?', description: '생리적 리듬의 예측 가능성을 측정합니다', options: [
           { text: '매일 거의 같은 시간, 시계처럼 정확해요', score: 10, emoji: '⏰' },
-          { text: '대체로 비슷하지만 30분-1시간 차이 나요', score: 7.5, emoji: '📅' },
-          { text: '기본 패턴은 있지만 매일 조금씩 달라요', score: 5, emoji: '🔄' },
-          { text: '매일 완전히 달라요, 예측이 어려워요', score: 2.5, emoji: '🎲' },
-          { text: '아예 패턴이 없고 완전 랜덤이에요', score: 1, emoji: '❓' }
+          { text: '대체로 비슷해요 (날마다 30분~1시간 정도 차이)', score: 7.5, emoji: '📅' },
+          { text: '패턴은 있지만 날마다 1시간 넘게 달라질 때가 많아요', score: 5, emoji: '🔄' },
+          { text: '날마다 1시간 이상 달라요, 예측이 어려워요', score: 2.5, emoji: '🎲' },
+          { text: '날마다 크게 달라서 패턴을 찾기 어려워요', score: 1, emoji: '📉' }
         ]},
         { dimension: '접근성', question: '낯선 사람이나 새로운 장소를\n만나면?', description: '새로운 자극에 대한 초기 반응 경향을 봅니다', options: [
           { text: '즉시 다가가서 웃으며 반가워해요', score: 10, emoji: '🤗' },
