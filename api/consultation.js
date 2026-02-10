@@ -201,7 +201,15 @@ module.exports = async function handler(req, res) {
         if (text) contents.push({ role, parts: [{ text }] });
       }
       contents.push({ role: 'user', parts: [{ text: message.trim() }] });
-      reply = await callGemini(apiKey, systemInstruction, contents);
+      try {
+        reply = await callGemini(apiKey, systemInstruction, contents);
+      } catch (geminiErr) {
+        console.error('Gemini API error', geminiErr.message);
+        return sendJson(res, 503, {
+          error: 'Consultation unavailable',
+          detail: '상담 서비스를 일시적으로 사용할 수 없어요. 잠시 후 다시 시도해 주세요.',
+        });
+      }
     }
     if (reply == null || !reply.trim()) {
       return sendJson(res, 503, {
@@ -212,12 +220,18 @@ module.exports = async function handler(req, res) {
     return sendJson(res, 200, { reply });
   } catch (e) {
     console.error('consultation api error', e);
-    return sendJson(res, 500, { error: 'Server error', detail: e.message });
+    return sendJson(res, 503, {
+      error: 'Consultation unavailable',
+      detail: '상담 서비스를 일시적으로 사용할 수 없어요. 잠시 후 다시 시도해 주세요.',
+    });
   }
   } catch (outer) {
     console.error('consultation api outer error', outer);
     setCorsOnResponse(res, req);
-    return safeSendJson(res, 500, { error: 'Server error', detail: (outer && outer.message) || 'Unknown error' });
+    return safeSendJson(res, 503, {
+      error: 'Consultation unavailable',
+      detail: '상담 서비스를 일시적으로 사용할 수 없어요. 잠시 후 다시 시도해 주세요.',
+    });
   }
 };
 
