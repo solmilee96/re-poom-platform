@@ -76,7 +76,7 @@ function callGemini(apiKey, systemInstruction, contents) {
     const req = https.request(
       {
         hostname: 'generativelanguage.googleapis.com',
-        path: '/v1beta/models/gemini-1.5-flash:generateContent?key=' + encodeURIComponent(apiKey),
+        path: '/v1beta/models/gemini-2.0-flash:generateContent?key=' + encodeURIComponent(apiKey),
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -115,27 +115,44 @@ function callGemini(apiKey, systemInstruction, contents) {
   });
 }
 
+function sendJson(res, status, obj) {
+  res.setHeader('Content-Type', 'application/json');
+  res.status(status).end(JSON.stringify(obj));
+}
+
+function safeSendJson(res, status, obj) {
+  try {
+    if (!res.headersSent) {
+      res.setHeader('Content-Type', 'application/json');
+      res.status(status).end(JSON.stringify(obj));
+    }
+  } catch (e) {
+    console.error('safeSendJson', e);
+  }
+}
+
 module.exports = async function handler(req, res) {
-  const headers = corsHeaders(req.headers && req.headers.origin);
-  Object.entries(headers).forEach(([k, v]) => res.setHeader(k, v));
+  try {
+    const headers = corsHeaders(req.headers && req.headers.origin);
+    Object.entries(headers).forEach(([k, v]) => res.setHeader(k, v));
 
-  if (req.method === 'OPTIONS') {
-    return res.status(204).end();
-  }
+    if (req.method === 'OPTIONS') {
+      return res.status(204).end();
+    }
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+    if (req.method !== 'POST') {
+      return sendJson(res, 405, { error: 'Method not allowed' });
+    }
 
-  const notebooklmProxyUrl = (process.env.NOTEBOOKLM_PROXY_URL || '').trim();
-  const apiKey = (process.env.GEMINI_API_KEY || '').trim();
+    const notebooklmProxyUrl = (process.env.NOTEBOOKLM_PROXY_URL || '').trim();
+    const apiKey = (process.env.GEMINI_API_KEY || '').trim();
 
-  if (!notebooklmProxyUrl && !apiKey) {
-    return res.status(503).json({
-      error: 'Consultation unavailable',
-      detail: 'NOTEBOOKLM_PROXY_URL 또는 GEMINI_API_KEY 중 하나를 설정해 주세요.',
-    });
-  }
+    if (!notebooklmProxyUrl && !apiKey) {
+      return sendJson(res, 503, {
+        error: 'Consultation unavailable',
+        detail: 'NOTEBOOKLM_PROXY_URL 또는 GEMINI_API_KEY 중 하나를 설정해 주세요.',
+      });
+    }
 
   try {
     let body = req.body;
@@ -150,7 +167,7 @@ module.exports = async function handler(req, res) {
     const { message, history = [], context = {} } = body;
 
     if (!message || typeof message !== 'string' || !message.trim()) {
-      return res.status(400).json({ error: 'message required' });
+      return sendJson(res, 400, { error: 'message required' });
     }
 
     let reply = null;
@@ -174,15 +191,19 @@ module.exports = async function handler(req, res) {
       reply = await callGemini(apiKey, systemInstruction, contents);
     }
     if (reply == null || !reply.trim()) {
-      return res.status(503).json({
+      return sendJson(res, 503, {
         error: 'Consultation unavailable',
         detail: '상담 서비스를 일시적으로 사용할 수 없어요. 잠시 후 다시 시도해 주세요.',
       });
     }
-    return res.status(200).json({ reply });
+    return sendJson(res, 200, { reply });
   } catch (e) {
     console.error('consultation api error', e);
-    return res.status(500).json({ error: 'Server error', detail: e.message });
+    return sendJson(res, 500, { error: 'Server error', detail: e.message });
+  }
+  } catch (outer) {
+    console.error('consultation api outer error', outer);
+    return safeSendJson(res, 500, { error: 'Server error', detail: (outer && outer.message) || 'Unknown error' });
   }
 };
 
