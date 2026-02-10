@@ -17,6 +17,9 @@ const CONSULTATION_SYSTEM = `당신은 기질·발달을 잘 아는 전문가이
 const CORS_ORIGINS = [
   'https://solmilee96.github.io',
   'https://web-mdrkzqom5-solmilee96s-projects.vercel.app',
+  'https://web-mdrkzgom5-solmilee96s-projects.vercel.app',
+  'https://web-seven-iota-17.vercel.app',
+  'https://web-rfvl2233u-solmilee96s-projects.vercel.app',
   'http://localhost:3000',
   'http://localhost:5173',
   'http://127.0.0.1:5173',
