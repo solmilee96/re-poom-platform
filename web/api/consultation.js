@@ -14,22 +14,33 @@ const CONSULTATION_SYSTEM = `당신은 기질·발달을 잘 아는 전문가이
 - 답변은 2~4문단 정도로, 연구·이론은 간단히만 인용하고 공감과 구체적 실천 팁을 담아 주세요. 같은 긴 설명을 반복하지 말고, 사용자가 "틀려요" 등 피드백을 주면 어디가 다른지 먼저 여쭤 보세요.
 - 답변에 마크다운 볼드(**텍스트**)를 사용해도 됩니다.`;
 
+const CORS_ORIGINS = [
+  'https://solmilee96.github.io',
+  'https://web-mdrkzqom5-solmilee96s-projects.vercel.app',
+  'http://localhost:3000',
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+];
+
 function corsHeaders(origin) {
-  const allow = [
-    'https://solmilee96.github.io',
-    'https://web-mdrkzqom5-solmilee96s-projects.vercel.app',
-    'http://localhost:3000',
-    'http://localhost:5173',
-    'http://127.0.0.1:5173',
-  ].some((o) => (origin || '').startsWith(o))
-    ? origin || 'https://solmilee96.github.io'
-    : 'https://solmilee96.github.io';
+  const o = (origin || '').trim();
+  const allow = CORS_ORIGINS.some((allowed) => o === allowed || o.startsWith(allowed + '/'))
+    ? (o || CORS_ORIGINS[0])
+    : CORS_ORIGINS[0];
   return {
     'Access-Control-Allow-Origin': allow,
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
     'Access-Control-Max-Age': '86400',
   };
+}
+
+function setCorsOnResponse(res, req) {
+  const origin = (req && req.headers && (req.headers.origin || req.headers.Origin)) || '';
+  const headers = corsHeaders(origin);
+  Object.entries(headers).forEach(([k, v]) => {
+    try { if (!res.headersSent) res.setHeader(k, v); } catch (_) {}
+  });
 }
 
 const TOPIC_LABELS = { eating: '식사', sleep: '수면', tantrum: '떼쓰기', clothing: '옷입기', aggression: '또래/공격', other: '기타' };
@@ -132,10 +143,9 @@ function safeSendJson(res, status, obj) {
 }
 
 module.exports = async function handler(req, res) {
-  try {
-    const headers = corsHeaders(req.headers && req.headers.origin);
-    Object.entries(headers).forEach(([k, v]) => res.setHeader(k, v));
+  setCorsOnResponse(res, req);
 
+  try {
     if (req.method === 'OPTIONS') {
       return res.status(204).end();
     }
@@ -203,6 +213,7 @@ module.exports = async function handler(req, res) {
   }
   } catch (outer) {
     console.error('consultation api outer error', outer);
+    setCorsOnResponse(res, req);
     return safeSendJson(res, 500, { error: 'Server error', detail: (outer && outer.message) || 'Unknown error' });
   }
 };
