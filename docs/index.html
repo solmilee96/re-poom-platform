@@ -1276,7 +1276,7 @@
                       const illustSrc = getChildIllustration(result.temperamentType.type, getTotalMonths(childInfo.birthDate));
                       return illustSrc ? (
                         <div className="mb-3 sm:mb-4">
-                          <img src={illustSrc} alt={`${result.temperamentType.type} 아이 일러스트`} className="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 object-contain mx-auto" />
+                          <img src={illustSrc} alt={`${result.temperamentType.type} 아이 일러스트`} className="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 object-contain mx-auto" style={{ transform: 'scale(0.96)' }} />
                         </div>
                       ) : null;
                     })()}
