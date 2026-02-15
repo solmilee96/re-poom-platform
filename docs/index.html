@@ -216,6 +216,20 @@
         }
       }, []);
 
+      // 테스트 모드: ?test=report 로 접근하면 Mock 데이터로 결과지 바로 표시
+      useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('test') === 'report') {
+          setChildInfo({ name: '하은', birthDate: '2024-06-15' });
+          // 섬세파 아이: sensitivity(q8)=9
+          setChildProfile({ q0: 5, q1: 6, q2: 5, q3: 4, q4: 6, q5: 5, q6: 5, q7: 5, q8: 9 });
+          // 여유형 엄마: stressTolerance(p0)>=7, perfectionism(p3)<=4
+          setParentProfile({ p0: 8, p1: 5, p2: 5, p3: 3, p4: 7 });
+          setBehaviorInput('아이가 시끄러운 곳에 가면 울고 옷 입는 걸 많이 거부해요');
+          setStep('report');
+        }
+      }, []);
+
       useEffect(() => {
         if (typeof window.gtag === 'function') {
           window.gtag('event', 'screen_view', { screen_name: step, page_title: 'step_' + step });
@@ -492,6 +506,66 @@
 
       const totalMonths = getTotalMonths(childInfo.birthDate || '');
       const temperamentQuestions = getTemperamentQuestionsByAge(totalMonths);
+
+      // 아이 유형별 연령 일러스트 이미지 경로 반환 (현재 섬세파만 준비)
+      const getChildIllustration = (typeName, months) => {
+        const illustMap = {
+          '섬세파': {
+            '0-11': 'images/child_섬세파_0-11mo.png',
+            '12-23': 'images/child_섬세파_12-23mo.png',
+            '24+': 'images/child_섬세파_24plus.png',
+          },
+          '에너자이저': {
+            '0-11': 'images/child_에너자이저_0-11mo.png',
+            '12-23': 'images/child_에너자이저_12-23mo.png',
+            '24+': 'images/child_에너자이저_24plus.png',
+          },
+          '신중파': {
+            '0-11': 'images/child_신중파_0-11mo.png',
+            '12-23': 'images/child_신중파_12-23mo.png',
+            '24+': 'images/child_신중파_24plus.png',
+          },
+          '탐험가': {
+            '0-11': 'images/child_탐험가_0-11mo.png',
+            '12-23': 'images/child_탐험가_12-23mo.png',
+            '24+': 'images/child_탐험가_24plus.png',
+          },
+          '순둥이': {
+            '0-11': 'images/child_순둥이_0-11mo.png',
+            '12-23': 'images/child_순둥이_12-23mo.png',
+            '24+': 'images/child_순둥이_24plus.png',
+          },
+          '밸런서': {
+            '0-11': 'images/child_밸런서_0-11mo.png',
+            '12-23': 'images/child_밸런서_12-23mo.png',
+            '24+': 'images/child_밸런서_24plus.png',
+          },
+          '혼합형': {
+            '0-11': 'images/child_혼합형_0-11mo.png',
+            '12-23': 'images/child_혼합형_12-23mo.png',
+            '24+': 'images/child_혼합형_24plus.png',
+          },
+        };
+        const typeImages = illustMap[typeName];
+        if (!typeImages) return null;
+        if (months < 12) return typeImages['0-11'];
+        if (months < 24) return typeImages['12-23'];
+        return typeImages['24+'];
+      };
+
+      // 엄마 유형별 일러스트 이미지 경로 반환
+      const getParentIllustration = (parentTypeName) => {
+        const parentIllustMap = {
+          '계획형 엄마': 'images/parent_계획형.png',
+          '공감형 엄마': 'images/parent_공감형.png',
+          '여유형 엄마': 'images/parent_여유형.png',
+          '페이스형 엄마': 'images/parent_페이스형.png',
+          '혼합형 엄마': 'images/parent_혼합형.png',
+          '균형형 엄마': 'images/parent_균형형.png',
+          '회복이 필요한 엄마': 'images/parent_회복이필요한.png',
+        };
+        return parentIllustMap[parentTypeName] || null;
+      };
 
       const parentQuestions = [
         { dimension: '스트레스 내성', question: '아이가 30분 넘게 떼쓰고 울 때,\n나의 반응은?', description: '고강도 육아 상황에서의 정서 조절 능력을 봅니다', options: [
@@ -1198,6 +1272,14 @@
                 </div>
                 <div className="bg-white rounded-2xl sm:rounded-[32px] p-5 sm:p-8 md:p-10 shadow-xl border-2 sm:border-4 border-[var(--coral-light)] mb-6 sm:mb-8">
                   <div className="text-center mb-6 sm:mb-10">
+                    {(() => {
+                      const illustSrc = getChildIllustration(result.temperamentType.type, getTotalMonths(childInfo.birthDate));
+                      return illustSrc ? (
+                        <div className="mb-3 sm:mb-4">
+                          <img src={illustSrc} alt={`${result.temperamentType.type} 아이 일러스트`} className="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 object-contain mx-auto" />
+                        </div>
+                      ) : null;
+                    })()}
                     <div className="inline-block px-5 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-[24px] mb-3 sm:mb-4 bg-[var(--coral-muted)] border-2 border-[var(--coral-light)] text-center">
                       <div className="flex items-center justify-center gap-2 sm:gap-3">
                         <div><h3 className="text-xl sm:text-2xl font-bold text-gray-800">{result.temperamentType.type}</h3><p className="text-xs sm:text-sm text-gray-600">{result.temperamentType.english}</p></div>
@@ -1239,6 +1321,14 @@
                       <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800">엄마는 어떤 육아 스타일인가요?</h2>
                     </div>
                     <div className="text-center mb-4 sm:mb-6">
+                      {(() => {
+                        const parentIllustSrc = getParentIllustration(result.parentType.type);
+                        return parentIllustSrc ? (
+                          <div className="mb-3 sm:mb-4">
+                            <img src={parentIllustSrc} alt={`${result.parentType.type} 일러스트`} className="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 object-contain mx-auto" style={result.parentType.type === '공감형 엄마' ? { transform: 'scale(1.125)' } : result.parentType.type === '계획형 엄마' ? { transform: 'scale(1.07)' } : {}} />
+                          </div>
+                        ) : null;
+                      })()}
                       <div className="inline-block px-5 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-[24px]" style={{ backgroundColor: pc[0], border: '2px solid', borderColor: pc[1] }}>
                         <div className="flex items-center gap-2 sm:gap-3">
                           <div className="text-left"><h3 className="text-lg sm:text-xl font-bold text-gray-800">{result.parentType.type}</h3><p className="text-xs sm:text-sm text-gray-600">{result.parentType.english}</p></div>

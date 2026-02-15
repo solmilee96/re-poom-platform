@@ -216,6 +216,20 @@
         }
       }, []);
 
+      // 테스트 모드: ?test=report 로 접근하면 Mock 데이터로 결과지 바로 표시
+      useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('test') === 'report') {
+          setChildInfo({ name: '하은', birthDate: '2024-06-15' });
+          // 섬세파 아이: sensitivity(q8)=9
+          setChildProfile({ q0: 5, q1: 6, q2: 5, q3: 4, q4: 6, q5: 5, q6: 5, q7: 5, q8: 9 });
+          // 여유형 엄마: stressTolerance(p0)>=7, perfectionism(p3)<=4
+          setParentProfile({ p0: 8, p1: 5, p2: 5, p3: 3, p4: 7 });
+          setBehaviorInput('아이가 시끄러운 곳에 가면 울고 옷 입는 걸 많이 거부해요');
+          setStep('report');
+        }
+      }, []);
+
       useEffect(() => {
         if (typeof window.gtag === 'function') {
           window.gtag('event', 'screen_view', { screen_name: step, page_title: 'step_' + step });
@@ -492,6 +506,66 @@
 
       const totalMonths = getTotalMonths(childInfo.birthDate || '');
       const temperamentQuestions = getTemperamentQuestionsByAge(totalMonths);
+
+      // 아이 유형별 연령 일러스트 이미지 경로 반환 (현재 섬세파만 준비)
+      const getChildIllustration = (typeName, months) => {
+        const illustMap = {
+          '섬세파': {
+            '0-11': 'images/child_섬세파_0-11mo.png',
+            '12-23': 'images/child_섬세파_12-23mo.png',
+            '24+': 'images/child_섬세파_24plus.png',
+          },
+          '에너자이저': {
+            '0-11': 'images/child_에너자이저_0-11mo.png',
+            '12-23': 'images/child_에너자이저_12-23mo.png',
+            '24+': 'images/child_에너자이저_24plus.png',
+          },
+          '신중파': {
+            '0-11': 'images/child_신중파_0-11mo.png',
+            '12-23': 'images/child_신중파_12-23mo.png',
+            '24+': 'images/child_신중파_24plus.png',
+          },
+          '탐험가': {
+            '0-11': 'images/child_탐험가_0-11mo.png',
+            '12-23': 'images/child_탐험가_12-23mo.png',
+            '24+': 'images/child_탐험가_24plus.png',
+          },
+          '순둥이': {
+            '0-11': 'images/child_순둥이_0-11mo.png',
+            '12-23': 'images/child_순둥이_12-23mo.png',
+            '24+': 'images/child_순둥이_24plus.png',
+          },
+          '밸런서': {
+            '0-11': 'images/child_밸런서_0-11mo.png',
+            '12-23': 'images/child_밸런서_12-23mo.png',
+            '24+': 'images/child_밸런서_24plus.png',
+          },
+          '혼합형': {
+            '0-11': 'images/child_혼합형_0-11mo.png',
+            '12-23': 'images/child_혼합형_12-23mo.png',
+            '24+': 'images/child_혼합형_24plus.png',
+          },
+        };
+        const typeImages = illustMap[typeName];
+        if (!typeImages) return null;
+        if (months < 12) return typeImages['0-11'];
+        if (months < 24) return typeImages['12-23'];
+        return typeImages['24+'];
+      };
+
+      // 엄마 유형별 일러스트 이미지 경로 반환
+      const getParentIllustration = (parentTypeName) => {
+        const parentIllustMap = {
+          '계획형 엄마': 'images/parent_계획형.png',
+          '공감형 엄마': 'images/parent_공감형.png',
+          '여유형 엄마': 'images/parent_여유형.png',
+          '페이스형 엄마': 'images/parent_페이스형.png',
+          '혼합형 엄마': 'images/parent_혼합형.png',
+          '균형형 엄마': 'images/parent_균형형.png',
+          '회복이 필요한 엄마': 'images/parent_회복이필요한.png',
+        };
+        return parentIllustMap[parentTypeName] || null;
+      };
 
       const parentQuestions = [
         { dimension: '스트레스 내성', question: '아이가 30분 넘게 떼쓰고 울 때,\n나의 반응은?', description: '고강도 육아 상황에서의 정서 조절 능력을 봅니다', options: [
@@ -807,8 +881,8 @@
             const sleepTipOrder = '목욕 → 파자마 → 책 한 권 → 불 끄기';
             const sleepTipNow = '지금 자는 시간이야';
             return addPrefix(regular
-              ? `지난번에 말씀드린 루틴(같은 시간, 같은 순서)을 2주 정도 해 보셨을 때도 변화가 없으시면, 취침 시간을 15분만 당겨 보시거나 낮잠이 너무 늦게 끝나지 않았는지 한 번만 점검해 보세요. ${name}이는 규칙성이 있는 편이라, 시간만 조금 맞춰 주시면 금방 잡히는 경우가 많아요. 그래도 안 되시면 그때 ` + sleepTipRegular + ` 같이 조금만 더 알려 주시면 그다음 단계 같이 짚어 드릴게요. 💕`
-              : `불규칙한 편인 ${name}이한테는 매일 같은 순서가 더 중요해요. 시간은 조금 달라도 괜찮으니까, ` + sleepTipOrder + `만 매일 똑같이 2~3주 이어가 보세요. 처음엔 저항해도 ` + sleepTipNow + `만 차분히 반복해 주시면 됩니다. 6~8주 넘기시면 차이가 보이는 경우가 많아요. 그동안 해 보시다가 막히는 순간이 있으면 그때 말씀해 주세요. 💕`);
+              ? ('지난번에 말씀드린 루틴(같은 시간, 같은 순서)을 2주 정도 해 보셨을 때도 변화가 없으시면, 취침 시간을 15분만 당겨 보시거나 낮잠이 너무 늦게 끝나지 않았는지 한 번만 점검해 보세요. ' + name + '이는 규칙성이 있는 편이라, 시간만 조금 맞춰 주시면 금방 잡히는 경우가 많아요. 그래도 안 되시면 그때 ' + sleepTipRegular + ' 같이 조금만 더 알려 주시면 그다음 단계 같이 짚어 드릴게요. 💕')
+              : ('불규칙한 편인 ' + name + '이한테는 매일 같은 순서가 더 중요해요. 시간은 조금 달라도 괜찮으니까, ' + sleepTipOrder + '만 매일 똑같이 2~3주 이어가 보세요. 처음엔 저항해도 ' + sleepTipNow + '만 차분히 반복해 주시면 됩니다. 6~8주 넘기시면 차이가 보이는 경우가 많아요. 그동안 해 보시다가 막히는 순간이 있으면 그때 말씀해 주세요. 💕'));
           }
           if (lastAboutTantrum && /떼|울|짜증|그래도|해도 안/.test(q)) {
             return addPrefix(lowAdaptability
@@ -831,7 +905,7 @@
           if (/왜|이유|원인|그런\s*행동|그렇게\s*돼/.test(q)) {
             const reason = temperamentType.type === '에너자이저' ? '뇌가 작은 자극에도 강하게 반응하는 기질이라, 원하는 대로 안 될 때 감정이 크게 올라와요.' : temperamentType.type === '신중파' ? '새로운 상황을 천천히 관찰한 뒤에야 참여하는 기질이라, 갑작스러운 변화나 압박이 있으면 불안해해요.' : temperamentType.type === '섬세파' ? '소리·빛·촉감을 주변보다 더 세게 느끼는 기질이라, 자극이 많으면 뇌가 \'너무 많아\'라고 반응해요.' : temperamentType.type === '탐험가' ? '움직이고 탐색하는 욕구가 커서, 가만히 있으라고만 하면 에너지가 밖으로 튀어나와요.' : '아이마다 기질이 달라서, 어떤 아이는 변화나 자극에 더 민감하게 반응해요.';
             const reasonLabel = '버릇이 나쁜 거 아니야?';
-            return addPrefix(`${name}이가 그렇게 행동하는 이유를 기질 쪽으로만 말씀드리면요.\n\n${name}이는 **${temperamentType.type}**에 가까운 기질이에요. ${reason}\n\n그래서 ` + reasonLabel + `가 아니라, **지금 이 나이에 이 기질이면 자연스럽게 나올 수 있는 반응**에 가깝다고 보시면 돼요. 다만 환경을 조금만 맞춰 주시면—예고, 선택, 조용한 공간 같은 것—같은 상황에서도 훨씬 덜 힘들어하는 걸 많이 봐요.\n\n더 궁금하신 점 있으면 편하게 이어서 물어봐 주세요. 💕`);
+            return addPrefix(name + '이가 그렇게 행동하는 이유를 기질 쪽으로만 말씀드리면요.\n\n' + name + '이는 **' + temperamentType.type + '**에 가까운 기질이에요. ' + reason + '\n\n그래서 ' + reasonLabel + '가 아니라, **지금 이 나이에 이 기질이면 자연스럽게 나올 수 있는 반응**에 가깝다고 보시면 돼요. 다만 환경을 조금만 맞춰 주시면—예고, 선택, 조용한 공간 같은 것—같은 상황에서도 훨씬 덜 힘들어하는 걸 많이 봐요.\n\n더 궁금하신 점 있으면 편하게 이어서 물어봐 주세요. 💕');
           }
           if (/다른|더|추가|또\s*있|이외/.test(q)) {
             let childTip = "에너지가 넘칠 때는 '10번 뛰어와'처럼 짧은 놀이로 한 번 빼 주시면, 그다음 대화나 규칙이 훨씬 잘 들어가요.";
@@ -925,12 +999,16 @@
         var abort = new AbortController();
         var timeoutId = setTimeout(function() { abort.abort(); }, 30000);
         fetch(CONSULTATION_API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: msg, history: historyForApi, context: context }), signal: abort.signal })
-          .then(function(r) { clearTimeout(timeoutId); return r.text().then(function(text) { var data = null; try { data = text ? JSON.parse(text) : null; } catch (_) { } if (!r.ok) return { reply: null, error: (data && (data.detail || data.error)) || 'API error' }; return (data && data.reply) ? data : { reply: null }; }); })
-          .then(function(data) { return (data && data.reply && data.reply.trim()) ? data.reply : null; })
-          .catch(function(err) { clearTimeout(timeoutId); if (err && err.name === 'AbortError') return '연결이 지연되고 있어요. 잠시 후 다시 시도해 주세요.'; return null; })
+          .then(function(r) { clearTimeout(timeoutId); return r.text().then(function(text) { var data = null; try { data = text ? JSON.parse(text) : null; } catch (_) { } return { ok: r.ok, status: r.status, data: data, raw: text }; }); })
+          .then(function(result) {
+            if (result.ok && result.data && result.data.reply && result.data.reply.trim()) return result.data.reply;
+            var errMsg = (result.data && (result.data.detail || result.data.error)) || '상담을 일시적으로 사용할 수 없어요. 잠시 후 다시 시도해 주세요.';
+            return errMsg;
+          })
+          .catch(function(err) { clearTimeout(timeoutId); if (err && err.name === 'AbortError') return '연결이 지연되고 있어요. 잠시 후 다시 시도해 주세요.'; return '상담을 일시적으로 사용할 수 없어요. 잠시 후 다시 시도해 주세요.'; })
           .then(function(reply) {
             try {
-              var response = (reply && reply.trim()) ? reply : generateResponse(msg, updatedHistory, consultationSummary);
+              var response = (reply && reply.trim()) ? reply : '상담을 일시적으로 사용할 수 없어요. 잠시 후 다시 시도해 주세요.';
               response = response.replace(/\*\*(.*?)\*\*/g, '$1');
               var aiMessage = { role: 'assistant', content: response, timestamp: new Date() };
               var finalHistory = updatedHistory.concat([aiMessage]);
@@ -1194,6 +1272,14 @@
                 </div>
                 <div className="bg-white rounded-2xl sm:rounded-[32px] p-5 sm:p-8 md:p-10 shadow-xl border-2 sm:border-4 border-[var(--coral-light)] mb-6 sm:mb-8">
                   <div className="text-center mb-6 sm:mb-10">
+                    {(() => {
+                      const illustSrc = getChildIllustration(result.temperamentType.type, getTotalMonths(childInfo.birthDate));
+                      return illustSrc ? (
+                        <div className="mb-3 sm:mb-4">
+                          <img src={illustSrc} alt={`${result.temperamentType.type} 아이 일러스트`} className="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 object-contain mx-auto" />
+                        </div>
+                      ) : null;
+                    })()}
                     <div className="inline-block px-5 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-[24px] mb-3 sm:mb-4 bg-[var(--coral-muted)] border-2 border-[var(--coral-light)] text-center">
                       <div className="flex items-center justify-center gap-2 sm:gap-3">
                         <div><h3 className="text-xl sm:text-2xl font-bold text-gray-800">{result.temperamentType.type}</h3><p className="text-xs sm:text-sm text-gray-600">{result.temperamentType.english}</p></div>
@@ -1235,6 +1321,14 @@
                       <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800">엄마는 어떤 육아 스타일인가요?</h2>
                     </div>
                     <div className="text-center mb-4 sm:mb-6">
+                      {(() => {
+                        const parentIllustSrc = getParentIllustration(result.parentType.type);
+                        return parentIllustSrc ? (
+                          <div className="mb-3 sm:mb-4">
+                            <img src={parentIllustSrc} alt={`${result.parentType.type} 일러스트`} className="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 object-contain mx-auto" style={result.parentType.type === '공감형 엄마' ? { transform: 'scale(1.125)' } : result.parentType.type === '계획형 엄마' ? { transform: 'scale(1.07)' } : {}} />
+                          </div>
+                        ) : null;
+                      })()}
                       <div className="inline-block px-5 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-[24px]" style={{ backgroundColor: pc[0], border: '2px solid', borderColor: pc[1] }}>
                         <div className="flex items-center gap-2 sm:gap-3">
                           <div className="text-left"><h3 className="text-lg sm:text-xl font-bold text-gray-800">{result.parentType.type}</h3><p className="text-xs sm:text-sm text-gray-600">{result.parentType.english}</p></div>
