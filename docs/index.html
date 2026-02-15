@@ -223,8 +223,8 @@
           setChildInfo({ name: '하은', birthDate: '2024-06-15' });
           // 섬세파 아이: sensitivity(q8)=9
           setChildProfile({ q0: 5, q1: 6, q2: 5, q3: 4, q4: 6, q5: 5, q6: 5, q7: 5, q8: 9 });
-          // 여유형 엄마: stressTolerance(p0)>=7, perfectionism(p3)<=4
-          setParentProfile({ p0: 8, p1: 5, p2: 5, p3: 3, p4: 7 });
+          // 혼합형 엄마: 극단 있음 (responseSpeed<=2 or >=8, energyLevel<=2 or >=8)
+          setParentProfile({ p0: 5, p1: 9, p2: 5, p3: 5, p4: 2 });
           setBehaviorInput('아이가 시끄러운 곳에 가면 울고 옷 입는 걸 많이 거부해요');
           setStep('report');
         }
