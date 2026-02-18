@@ -98,9 +98,10 @@ function callGemini(apiKey, systemInstruction, contents) {
         },
       },
       (res) => {
-        let data = '';
-        res.on('data', (chunk) => (data += chunk));
+        const chunks = [];
+        res.on('data', (chunk) => chunks.push(chunk));
         res.on('end', () => {
+          const data = Buffer.concat(chunks).toString('utf8');
           if (res.statusCode !== 200) {
             try {
               const err = JSON.parse(data);
@@ -250,9 +251,10 @@ function callNotebookLMProxy(proxyUrl, payload) {
         headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
       },
       (res) => {
-        let data = '';
-        res.on('data', (chunk) => (data += chunk));
+        const chunks = [];
+        res.on('data', (chunk) => chunks.push(chunk));
         res.on('end', () => {
+          const data = Buffer.concat(chunks).toString('utf8');
           if (res.statusCode !== 200) {
             reject(new Error('Proxy returned ' + res.statusCode + ': ' + data));
             return;
