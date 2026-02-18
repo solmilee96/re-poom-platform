@@ -158,7 +158,7 @@
 
     const GwaenchanaYoApp = () => {
       const [step, setStep] = useState('welcome');
-      const [childInfo, setChildInfo] = useState({ name: '', birthDate: '' });
+      const [childInfo, setChildInfo] = useState({ name: '', birthDate: '', gender: '' });
       const [childProfile, setChildProfile] = useState({});
       const [parentProfile, setParentProfile] = useState({});
       const [behaviorInput, setBehaviorInput] = useState('');
@@ -205,7 +205,7 @@
         const saved = localStorage.getItem('gwaenchanayo_data');
         if (saved) {
           const data = JSON.parse(saved);
-          setChildInfo(data.childInfo || { name: '', birthDate: '' });
+          setChildInfo(data.childInfo || { name: '', birthDate: '', gender: '' });
           setChildProfile(data.childProfile || {});
           setParentProfile(data.parentProfile || {});
           setBehaviorInput(data.behaviorInput || '');
@@ -220,7 +220,7 @@
       useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         if (params.get('test') === 'report') {
-          setChildInfo({ name: '하은', birthDate: '2024-06-15' });
+          setChildInfo({ name: '하은', birthDate: '2024-06-15', gender: 'boy' });
           // 섬세파 아이: sensitivity(q8)=9
           setChildProfile({ q0: 5, q1: 6, q2: 5, q3: 4, q4: 6, q5: 5, q6: 5, q7: 5, q8: 9 });
           // 혼합형 엄마: 극단 있음 (responseSpeed<=2 or >=8, energyLevel<=2 or >=8)
@@ -507,45 +507,16 @@
       const totalMonths = getTotalMonths(childInfo.birthDate || '');
       const temperamentQuestions = getTemperamentQuestionsByAge(totalMonths);
 
-      // 아이 유형별 연령 일러스트 이미지 경로 반환 (현재 섬세파만 준비)
-      const getChildIllustration = (typeName, months) => {
-        const illustMap = {
-          '섬세파': {
-            '0-11': 'images/child_섬세파_0-11mo.png',
-            '12-23': 'images/child_섬세파_12-23mo.png',
-            '24+': 'images/child_섬세파_24plus.png',
-          },
-          '에너자이저': {
-            '0-11': 'images/child_에너자이저_0-11mo.png',
-            '12-23': 'images/child_에너자이저_12-23mo.png',
-            '24+': 'images/child_에너자이저_24plus.png',
-          },
-          '신중파': {
-            '0-11': 'images/child_신중파_0-11mo.png',
-            '12-23': 'images/child_신중파_12-23mo.png',
-            '24+': 'images/child_신중파_24plus.png',
-          },
-          '탐험가': {
-            '0-11': 'images/child_탐험가_0-11mo.png',
-            '12-23': 'images/child_탐험가_12-23mo.png',
-            '24+': 'images/child_탐험가_24plus.png',
-          },
-          '순둥이': {
-            '0-11': 'images/child_순둥이_0-11mo.png',
-            '12-23': 'images/child_순둥이_12-23mo.png',
-            '24+': 'images/child_순둥이_24plus.png',
-          },
-          '밸런서': {
-            '0-11': 'images/child_밸런서_0-11mo.png',
-            '12-23': 'images/child_밸런서_12-23mo.png',
-            '24+': 'images/child_밸런서_24plus.png',
-          },
-          '혼합형': {
-            '0-11': 'images/child_혼합형_0-11mo.png',
-            '12-23': 'images/child_혼합형_12-23mo.png',
-            '24+': 'images/child_혼합형_24plus.png',
-          },
-        };
+      const getChildIllustration = (typeName, months, gender) => {
+        const suffix = gender === 'boy' ? '_boy' : '';
+        const types = ['섬세파', '에너자이저', '신중파', '탐험가', '순둥이', '밸런서', '혼합형'];
+        const ages = ['0-11', '12-23', '24+'];
+        const ageSuffixes = { '0-11': '0-11mo', '12-23': '12-23mo', '24+': '24plus' };
+        const illustMap = {};
+        types.forEach(t => {
+          illustMap[t] = {};
+          ages.forEach(a => { illustMap[t][a] = `images/child_${t}_${ageSuffixes[a]}${suffix}.png`; });
+        });
         const typeImages = illustMap[typeName];
         if (!typeImages) return null;
         if (months < 12) return typeImages['0-11'];
@@ -1035,7 +1006,7 @@
 
       const handleChildInfoSubmit = (e) => {
         e.preventDefault();
-        if (childInfo.name && childInfo.birthDate) {
+        if (childInfo.name && childInfo.birthDate && childInfo.gender) {
           saveToStorage({ childInfo });
           setStep('profile');
         }
@@ -1140,7 +1111,14 @@
                       <input type="date" value={childInfo.birthDate} onChange={(e) => setChildInfo({ ...childInfo, birthDate: e.target.value })} max={new Date().toISOString().split('T')[0]} className="w-full p-3 sm:p-4 border-2 border-[var(--coral-light)] rounded-xl sm:rounded-[20px] text-base sm:text-lg focus:outline-none focus:border-[var(--coral)] transition-colors min-h-[48px]" required />
                       <p className="text-xs sm:text-sm text-gray-500 mt-2">💡 정확한 월령 계산을 위해 생년월일을 입력해주세요</p>
                     </div>
-                    <button type="submit" className="w-full bg-[var(--coral-button)] text-white text-base sm:text-lg md:text-xl font-bold py-4 sm:py-5 rounded-xl sm:rounded-[24px] hover:opacity-90 hover:shadow-lg active:scale-[0.98] transition-all duration-300 min-h-[48px]">다음으로</button>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">아이 성별</label>
+                      <div className="flex gap-3">
+                        <button type="button" onClick={() => setChildInfo({ ...childInfo, gender: 'girl' })} className={`flex-1 p-3 sm:p-4 rounded-xl sm:rounded-[20px] text-base sm:text-lg font-medium border-2 transition-all duration-300 min-h-[48px] ${childInfo.gender === 'girl' ? 'bg-[var(--coral-muted)] border-[var(--coral)] text-[var(--coral-dark)]' : 'bg-white border-[var(--coral-light)] text-gray-500 hover:border-[var(--coral)]'}`}>👧 여아</button>
+                        <button type="button" onClick={() => setChildInfo({ ...childInfo, gender: 'boy' })} className={`flex-1 p-3 sm:p-4 rounded-xl sm:rounded-[20px] text-base sm:text-lg font-medium border-2 transition-all duration-300 min-h-[48px] ${childInfo.gender === 'boy' ? 'bg-[var(--coral-muted)] border-[var(--coral)] text-[var(--coral-dark)]' : 'bg-white border-[var(--coral-light)] text-gray-500 hover:border-[var(--coral)]'}`}>👦 남아</button>
+                      </div>
+                    </div>
+                    <button type="submit" disabled={!childInfo.gender} className={`w-full text-white text-base sm:text-lg md:text-xl font-bold py-4 sm:py-5 rounded-xl sm:rounded-[24px] hover:shadow-lg active:scale-[0.98] transition-all duration-300 min-h-[48px] ${childInfo.gender ? 'bg-[var(--coral-button)] hover:opacity-90' : 'bg-gray-300 cursor-not-allowed'}`}>다음으로</button>
                   </form>
                 </div>
               </div>
@@ -1272,7 +1250,7 @@
                 <div className="bg-white rounded-2xl sm:rounded-[32px] p-5 sm:p-8 md:p-10 shadow-xl border-2 sm:border-4 border-[var(--coral-light)] mb-6 sm:mb-8">
                   <div className="text-center mb-6 sm:mb-10">
                     {(() => {
-                      const illustSrc = getChildIllustration(result.temperamentType.type, getTotalMonths(childInfo.birthDate));
+                      const illustSrc = getChildIllustration(result.temperamentType.type, getTotalMonths(childInfo.birthDate), childInfo.gender);
                       return illustSrc ? (
                         <div className="mb-3 sm:mb-4">
                           <img src={illustSrc} alt={`${result.temperamentType.type} 아이 일러스트`} className="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 object-contain mx-auto" style={{ transform: 'scale(0.96)' }} />
