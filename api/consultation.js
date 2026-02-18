@@ -90,7 +90,7 @@ function callGemini(apiKey, systemInstruction, contents) {
     const req = https.request(
       {
         hostname: 'generativelanguage.googleapis.com',
-        path: '/v1beta/models/gemini-2.0-flash:generateContent?key=' + encodeURIComponent(apiKey),
+        path: '/v1beta/models/gemini-2.5-flash:generateContent?key=' + encodeURIComponent(apiKey),
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
