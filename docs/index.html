@@ -41,6 +41,12 @@
   <script crossorigin src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.0/babel.min.js"></script>
+  <script src="data/기질연령-가이드-공통.js"></script>
+  <script src="data/기질가이드-섬세파.js"></script>
+  <script src="data/기질가이드-에너자이저.js"></script>
+  <script src="data/기질가이드-신중파.js"></script>
+  <script src="data/기질가이드-탐험가.js"></script>
+  <script src="data/기질가이드-순둥이-밸런서-혼합형.js"></script>
   <script>
     window.__cdnReady = function() {
       return typeof window.React !== 'undefined' && typeof window.ReactDOM !== 'undefined' && (typeof window.Babel !== 'undefined' || (window.babel && window.babel.register));
@@ -167,6 +173,7 @@
       const [childProfile, setChildProfile] = useState({});
       const [parentProfile, setParentProfile] = useState({});
       const [behaviorInput, setBehaviorInput] = useState('');
+      const [selectedBehaviorCategory, setSelectedBehaviorCategory] = useState(null);
       const [currentQuestion, setCurrentQuestion] = useState(0);
       const [chatHistory, setChatHistory] = useState([]);
       const [currentInput, setCurrentInput] = useState('');
@@ -947,6 +954,24 @@
         if (wasGenericFallback) {
           return addPrefix(`지금 가장 힘드신 게 어떤 상황인가요? 예: **떼쓰기, 잠, 밥, 옷 입기, 또래 관계**처럼 한 가지만 구체적으로 적어 주시면, 그걸 기준으로 맞춰서 말씀드릴게요. 💕`);
         }
+        if (typeof getGuideForChild === 'function') {
+          var _fMonths = getTotalMonths(childInfo.birthDate || '');
+          var _fGuide = getGuideForChild(temperamentType.type, _fMonths);
+          if (_fGuide && _fGuide.dailyConcerns) {
+            var _matched = null;
+            var _concernMap = { eating: /밥|식사|먹|편식/, sleep: /잠|수면|재우|자려/, tantrum: /떼|울|짜증|화/, separation: /분리|어린이집|등원|낯선/, routine: /루틴|일과|적응|습관/ };
+            Object.entries(_concernMap).forEach(function(entry) {
+              if (!_matched && entry[1].test(q) && _fGuide.dailyConcerns[entry[0]]) {
+                _matched = { key: entry[0], data: _fGuide.dailyConcerns[entry[0]] };
+              }
+            });
+            if (_matched && _matched.data.reframe) {
+              var _reframeText = (_matched.data.reframe || '').replace(/\{name\}/g, name);
+              var _tipText = _matched.data.tip || '';
+              return addPrefix(`${name}이(${age})는 **${temperamentType.type}** 기질이에요. ${_reframeText}\n\n${_tipText ? '**이렇게 해보세요:** ' + _tipText + '\n\n' : ''}더 구체적인 상황을 말씀해 주시면, ${name}이에게 딱 맞는 방법을 이어서 드릴게요. 💕`);
+            }
+          }
+        }
         const t = temperamentType.type;
         const shortByType = t === '에너자이저' ? `에너지가 많은 ${name}이에겐 예고와 선택권이 특히 도움이 돼요.`
           : t === '신중파' ? `새로운 걸 천천히 받아들이는 ${name}이에겐 미리 예고하고 순서를 맞춰 주시면 좋아요.`
@@ -970,7 +995,21 @@
         const parentScores = parentQuestions.map((_, i) => parentProfile['p' + i] || 5);
         const temperamentType = getTemperamentType(childScores);
         const parentType = getParentType(parentScores);
-        const context = { name: childInfo.name, age: getChildAge(), temperamentType: temperamentType.type, parentType: parentType.type, consultationSummary: consultationSummary, initialConcern: behaviorInput || '' };
+        var _guideCtx = null;
+        if (typeof getGuideForChild === 'function') {
+          var _gMonths = getTotalMonths(childInfo.birthDate || '');
+          var _gData = getGuideForChild(temperamentType.type, _gMonths);
+          if (_gData) {
+            _guideCtx = { summary: (_gData.summary || '').replace(/\{name\}/g, childInfo.name || '아이'), domains: {}, dailyConcerns: {} };
+            Object.entries(_gData.domains || {}).forEach(function(e) {
+              _guideCtx.domains[e[0]] = { withThisTemperament: (e[1].withThisTemperament || '').replace(/\{name\}/g, childInfo.name || '아이'), parentTip: e[1].parentTip || '', reframe: (e[1].reframe || '').replace(/\{name\}/g, childInfo.name || '아이') };
+            });
+            Object.entries(_gData.dailyConcerns || {}).forEach(function(e) {
+              _guideCtx.dailyConcerns[e[0]] = { tip: e[1].tip || '', reframe: (e[1].reframe || '').replace(/\{name\}/g, childInfo.name || '아이') };
+            });
+          }
+        }
+        const context = { name: childInfo.name, age: getChildAge(), temperamentType: temperamentType.type, parentType: parentType.type, consultationSummary: consultationSummary, initialConcern: behaviorInput || '', temperamentGuide: _guideCtx };
         const historyForApi = updatedHistory.slice(-20).map(function(m) { return { role: m.role, content: m.content }; });
         var abort = new AbortController();
         var timeoutId = setTimeout(function() { abort.abort(); }, 30000);
@@ -1224,7 +1263,20 @@
             </div>
           )}
 
-          {step === 'behavior' && (
+          {step === 'behavior' && (() => {
+            const _bMonths = getTotalMonths(childInfo.birthDate || '');
+            const _bAge = getChildAge();
+            const _bWorries = (typeof getAgeCommonWorries === 'function') ? getAgeCommonWorries(_bMonths) : [];
+            const _bFallback = [
+              { text: '떼쓰고 울어요', category: 'tantrum' },
+              { text: '잠을 안 자요', category: 'sleep' },
+              { text: '밥을 안 먹어요', category: 'eating' },
+              { text: '친구를 때려요', category: 'social' },
+              { text: '낯선 사람만 보면 울어요', category: 'separation' },
+              { text: '말이 느린 것 같아요', category: 'language' }
+            ];
+            const _bItems = _bWorries.length > 0 ? _bWorries : _bFallback;
+            return (
             <div className="min-h-screen flex flex-col p-4 sm:p-6">
               <div className="flex-1 flex items-center justify-center pt-12 sm:pt-14">
               <div className="max-w-3xl w-full">
@@ -1236,34 +1288,29 @@
                 <div className="bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-[32px] p-5 sm:p-8 md:p-10 shadow-xl border-2 sm:border-4 border-[var(--warm-yellow-soft)]">
                   <div className="text-center mb-5 sm:mb-8">
                     <MessageCircle className="w-14 h-14 sm:w-16 sm:h-16 text-[var(--warm-yellow-dark)] mx-auto mb-3 sm:mb-4" />
-                    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-2 sm:mb-3 leading-snug px-1">요즘 {childInfo.name}이,<br />어떤 행동이 제일 힘드신가요?</h2>
-                    <p className="text-sm sm:text-base text-gray-600">구체적으로 적어주시면 더 정확한 조언을 드릴 수 있어요.</p>
+                    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-2 sm:mb-3 leading-snug px-1">{_bAge} {childInfo.name}이,<br />요즘 어떤 게 제일 힘드세요?</h2>
+                    <p className="text-sm sm:text-base text-gray-600">해당하는 고민을 선택하거나, 아래에 직접 적어주세요.</p>
                   </div>
                   <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
-                    <div className="bg-[var(--warm-yellow-light)] rounded-xl sm:rounded-[20px] p-4 sm:p-5 border-2 border-[var(--warm-yellow-soft)]">
-                      <p className="text-xs sm:text-sm text-[var(--warm-yellow-dark)] font-medium mb-2 sm:mb-3">💡 이렇게 적어보세요:</p>
-                      <ul className="text-xs sm:text-sm text-gray-700 space-y-1.5 sm:space-y-2 leading-relaxed">
-                        <li>• "마트에서 과자 사달라고 바닥에 드러누워 울어요"</li>
-                        <li>• "밤마다 잠투정이 심해서 2시간씩 안 자요"</li>
-                        <li>• "어린이집 등원할 때마다 울면서 떼를 써요"</li>
-                        <li>• "동생을 때리고 밀쳐요"</li>
-                      </ul>
-                    </div>
-                    <p className="text-xs sm:text-sm font-medium text-gray-700 mb-2">자주 있는 고민을 빠르게 선택해보세요</p>
-                    <div className="grid grid-cols-2 gap-2 sm:gap-3">
-                      {['떼쓰고 울어요', '잠을 안 자요', '밥을 안 먹어요', '친구를 때려요', '낯선 사람만 보면 울어요', '옷 입기를 거부해요'].map((example, idx) => (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                      {_bItems.map((item, idx) => {
+                        const isSelected = behaviorInput === item.text;
+                        return (
                         <button
                           key={idx}
                           type="button"
-                          onClick={() => setBehaviorInput(example)}
-                          className="p-3 sm:p-4 bg-[var(--warm-yellow-light)] border-2 border-[var(--warm-yellow-soft)] rounded-xl sm:rounded-[16px] text-xs sm:text-sm text-gray-700 font-medium hover:bg-[var(--warm-yellow-soft)] hover:border-[var(--warm-yellow-dark)] transition-all text-center min-h-[44px]"
+                          onClick={() => { setBehaviorInput(item.text); setSelectedBehaviorCategory(item.category || null); }}
+                          className={`p-3 sm:p-4 border-2 rounded-xl sm:rounded-[16px] text-xs sm:text-sm text-left font-medium transition-all min-h-[44px] ${isSelected ? 'bg-[var(--warm-yellow-soft)] border-[var(--warm-yellow-dark)] ring-2 ring-[var(--warm-yellow-dark)]/30' : 'bg-[var(--warm-yellow-light)] border-[var(--warm-yellow-soft)] hover:bg-[var(--warm-yellow-soft)] hover:border-[var(--warm-yellow-dark)]'}`}
                         >
-                          {example}
+                          {item.text}
                         </button>
-                      ))}
+                      );})}
                     </div>
                   </div>
-                  <textarea value={behaviorInput} onChange={(e) => setBehaviorInput(e.target.value)} placeholder={`예: ${childInfo.name}이가 목욕하기 싫다고 매일 울어요. 억지로 하면 더 심하게 울고...`} className="w-full h-32 sm:h-40 p-4 sm:p-5 border-2 border-[var(--warm-yellow-soft)] rounded-xl sm:rounded-[20px] text-base sm:text-lg focus:outline-none focus:border-[var(--warm-yellow-dark)] transition-colors resize-none" />
+                  <div className="bg-[var(--warm-yellow-light)] rounded-xl sm:rounded-[20px] p-4 sm:p-5 border-2 border-[var(--warm-yellow-soft)] mb-4">
+                    <p className="text-xs sm:text-sm text-[var(--warm-yellow-dark)] font-medium mb-2">✏️ 위에 없는 고민이면 직접 적어주세요</p>
+                  </div>
+                  <textarea value={behaviorInput} onChange={(e) => { setBehaviorInput(e.target.value); setSelectedBehaviorCategory(null); }} placeholder={`예: ${childInfo.name}이가 목욕하기 싫다고 매일 울어요. 억지로 하면 더 심하게 울고...`} className="w-full h-28 sm:h-36 p-4 sm:p-5 border-2 border-[var(--warm-yellow-soft)] rounded-xl sm:rounded-[20px] text-base sm:text-lg focus:outline-none focus:border-[var(--warm-yellow-dark)] transition-colors resize-none" />
                   <div className="flex gap-3 sm:gap-4 mt-4 sm:mt-6">
                     <button onClick={() => { if (behaviorInput.trim()) { saveToStorage({ behaviorInput }); setStep('report'); } else alert('고민을 입력해주세요 🙏'); }} className="w-full bg-[var(--warm-yellow-button)] text-white text-base sm:text-lg md:text-xl font-bold py-3 sm:py-4 rounded-xl sm:rounded-[20px] hover:opacity-90 hover:shadow-lg active:scale-[0.98] transition-all duration-300 min-h-[48px]">분석 결과 보기 →</button>
                   </div>
@@ -1272,7 +1319,7 @@
               </div>
               </div>
             </div>
-          )}
+          );})()}
 
           {step === 'report' && (() => {
             const result = analyzeTemperament();
@@ -1390,6 +1437,44 @@
                       </div>
                     </div>
                   )}
+                  {(() => {
+                    if (typeof getReportGrowthStory !== 'function') return null;
+                    const _rMonths = getTotalMonths(childInfo.birthDate || '');
+                    const _rStory = getReportGrowthStory(result.temperamentType.type, _rMonths, childInfo.name);
+                    if (!_rStory || !_rStory.domains || _rStory.domains.length === 0) return null;
+                    const domainEmojis = { '대근육': '🏃', '소근육': '✋', '언어': '🗣️', '사회성·정서': '👫', '인지': '🧠' };
+                    return (
+                    <div className="mb-6 sm:mb-10 pb-6 sm:pb-10 border-b-2 border-dashed border-[var(--coral-light)]">
+                      <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[var(--coral)] flex items-center justify-center flex-shrink-0"><Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-white" /></div>
+                        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800">{result.temperamentType.type} {childInfo.name}의 {getChildAge()} 성장 이야기</h2>
+                      </div>
+                      {_rStory.summary && (
+                        <p className="text-sm sm:text-base md:text-lg leading-relaxed text-gray-700 mb-4 sm:mb-6 px-1">{_rStory.summary}</p>
+                      )}
+                      <div className="space-y-4 sm:space-y-6">
+                        {_rStory.domains.map(function(d, idx) {
+                          const isRelated = selectedBehaviorCategory && (d.key === selectedBehaviorCategory);
+                          return (
+                          <div key={idx} className={`rounded-xl sm:rounded-[20px] p-4 sm:p-6 border-2 ${isRelated ? 'bg-[var(--coral-muted)] border-[var(--coral)]' : 'bg-white border-[var(--coral-light)]'}`}>
+                            <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-2 sm:mb-3">
+                              {domainEmojis[d.label] || '📋'} {d.label}
+                              {isRelated && <span className="ml-2 text-xs bg-[var(--coral)] text-white px-2 py-0.5 rounded-full">선택한 고민 관련</span>}
+                            </h3>
+                            <p className="text-sm sm:text-base text-gray-600 leading-relaxed mb-2">{d.general}</p>
+                            <p className="text-sm sm:text-base text-gray-800 leading-relaxed font-medium">{d.withThisTemperament}</p>
+                            {d.parentTip && (
+                              <div className="mt-3 bg-[var(--warm-yellow-light)] rounded-lg p-3 border border-[var(--warm-yellow-soft)]">
+                                <p className="text-xs sm:text-sm text-gray-700"><span className="font-bold text-[var(--warm-yellow-dark)]">💡 팁:</span> {d.parentTip}</p>
+                              </div>
+                            )}
+                          </div>
+                        );})}
+                      </div>
+                      <p className="text-xs text-gray-400 mt-4 sm:mt-6 leading-relaxed">{typeof GUIDE_DISCLAIMER !== 'undefined' ? GUIDE_DISCLAIMER : ''}</p>
+                    </div>
+                    );
+                  })()}
                   <div className="mb-6 sm:mb-10 pb-6 sm:pb-10 border-b-2 border-dashed border-[var(--mint-light)]">
                     <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
                       <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[var(--mint)] flex items-center justify-center flex-shrink-0"><Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-white" /></div>

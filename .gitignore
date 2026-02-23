@@ -25,5 +25,7 @@ dist-ssr
 .github/workflows/
 .vercel
 .env*.local
+# 프록시 등 로컬 환경 변수 (토큰·쿠키 포함)
+notebooklm-proxy/.env
 .next
 **/.next

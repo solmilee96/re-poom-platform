@@ -57,6 +57,36 @@ function buildSystemInstruction(context) {
     const parentType = context.parentType || '';
     system += `\n\n[이 아이·양육자 정보 (항상 기억하고 자연스럽게 언급하세요)]\n- 아이 이름: ${name}\n- 나이: ${age}\n- 아이 기질 유형: ${childType}\n- 양육자 유형: ${parentType}`;
   }
+  if (context && context.temperamentGuide && typeof context.temperamentGuide === 'object') {
+    const g = context.temperamentGuide;
+    const name = context.name || '아이';
+    const childType = context.temperamentType || '이 아이';
+    let guideText = `\n\n[기질 통역사 역할 — ${childType} ${name}의 연령별 가이드]\n`;
+    guideText += `당신은 "기질 통역사"입니다. 부모가 걱정하는 행동을 이 아이의 기질로 해석해주세요.\n`;
+    guideText += `- 부모의 걱정에 먼저 공감한 뒤, "${childType}인 ${name}에게는 이 행동이 ~일 수 있어요"처럼 기질 맥락을 자연스럽게 전달하세요.\n`;
+    guideText += `- 발달 정보는 보조적으로만 언급하세요. "이 시기에 ~하는 건 자연스러운 일이에요"처럼 한두 문장이면 충분합니다.\n`;
+    guideText += `- 아래 가이드는 참고 자료입니다. 대화 흐름에 필요한 부분만 자연스럽게 녹여 주세요.\n`;
+    if (g.summary) guideText += `\n[아이 성장 요약] ${g.summary}\n`;
+    if (g.domains && Object.keys(g.domains).length > 0) {
+      guideText += `\n[발달 영역별 기질 특성]\n`;
+      const domLabels = { grossMotor: '대근육', fineMotor: '소근육', language: '언어', social: '사회성·정서', cognitive: '인지' };
+      Object.entries(g.domains).forEach(([key, d]) => {
+        guideText += `• ${domLabels[key] || key}: ${d.withThisTemperament || ''}`;
+        if (d.parentTip) guideText += ` (팁: ${d.parentTip})`;
+        guideText += `\n`;
+      });
+    }
+    if (g.dailyConcerns && Object.keys(g.dailyConcerns).length > 0) {
+      guideText += `\n[일상 고민 리프레이밍]\n`;
+      const conLabels = { eating: '식사', sleep: '수면', tantrum: '떼/분노', separation: '분리불안', routine: '일과/적응' };
+      Object.entries(g.dailyConcerns).forEach(([key, c]) => {
+        guideText += `• ${conLabels[key] || key}: ${c.reframe || ''}`;
+        if (c.tip) guideText += ` → ${c.tip}`;
+        guideText += `\n`;
+      });
+    }
+    system += guideText;
+  }
   if (context && context.initialConcern && typeof context.initialConcern === 'string' && context.initialConcern.trim()) {
     system += `\n\n[처음에 양육자가 적어 주신 고민]\n"${context.initialConcern.trim()}"\n→ 적절한 타이밍에 "처음에 ○○ 고민이라고 하셨는데, 그때는 어떠셨나요?", "그 고민은 조금 나아지셨나요?"처럼 따뜻하게 물어보세요.`;
   }
