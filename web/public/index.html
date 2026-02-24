@@ -175,6 +175,7 @@
       const [feedbackGiven, setFeedbackGiven] = useState(false);
       const [showFeedbackPopup, setShowFeedbackPopup] = useState(false);
       const [feedbackText, setFeedbackText] = useState('');
+      const [reportTab, setReportTab] = useState('analysis');
       const [consultationSummary, setConsultationSummary] = useState({ topicCounts: { eating: 0, sleep: 0, tantrum: 0, clothing: 0, aggression: 0, other: 0 }, lastTopics: [], messageCount: 0, updatedAt: '' });
 
       const CONSULTATION_KEY = 'gwaenchanayo_consultation_by_child';
@@ -1302,7 +1303,22 @@
                   <p className="text-lg sm:text-xl md:text-2xl text-gray-700 font-medium mb-2 leading-snug">데이터로 분석한 {childInfo.name}이의 마음 지도, 지금 &#39;쏙&#39; 공개합니다.</p>
                   <p className="text-base sm:text-lg md:text-xl text-gray-500">{childInfo.name}이, {getChildAge()}</p>
                 </div>
+                <div className="sticky top-0 z-10 bg-[var(--warm-yellow)] pb-3 sm:pb-4">
+                  <div className="flex rounded-xl sm:rounded-2xl overflow-hidden border-2 border-[var(--coral-light)] bg-white shadow-md">
+                    {[
+                      { key: 'analysis', label: '기질 분석' },
+                      { key: 'solution', label: '맞춤 솔루션' },
+                      { key: 'growth', label: '성장 가이드' }
+                    ].map((tab) => (
+                      <button key={tab.key} onClick={() => setReportTab(tab.key)}
+                        className={`flex-1 py-3 sm:py-4 text-sm sm:text-base font-bold transition-all duration-200 ${reportTab === tab.key ? 'bg-[var(--coral)] text-white shadow-inner' : 'bg-white text-gray-500 hover:bg-[var(--coral-muted)] hover:text-gray-700'}`}>
+                        {tab.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
                 <div className="bg-white rounded-2xl sm:rounded-[32px] p-5 sm:p-8 md:p-10 shadow-xl border-2 sm:border-4 border-[var(--coral-light)] mb-6 sm:mb-8">
+                  {reportTab === 'analysis' && (<>
                   <div className="text-center mb-6 sm:mb-10">
                     {(() => {
                       const illustSrc = getChildIllustration(result.temperamentType.type, getTotalMonths(childInfo.birthDate), childInfo.gender);
@@ -1391,6 +1407,8 @@
                       </div>
                     </div>
                   </div>
+                  </>)}
+                  {reportTab === 'solution' && (<>
                   {behaviorInput && result.concernAnalysis && (
                     <div className="mb-6 sm:mb-10 pb-6 sm:pb-10 border-b-2 border-dashed border-[var(--mint-light)]">
                       <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
@@ -1429,7 +1447,7 @@
                       )}
                       {result.realExamples && result.realExamples.length > 0 && (
                         <div>
-                          <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-3 flex items-center gap-2"><span>💡</span> 이런 상황에서 이렇게 해볼 수 있어요</h3>
+                          <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-3 flex items-center gap-2"><span>💡</span> 같은 기질 아이 엄마들은 이렇게 해봤어요</h3>
                           <div className="space-y-3 sm:space-y-4">
                             {result.realExamples.map((example, idx) => (
                               <div key={idx} className="bg-[var(--warm-yellow-light)] rounded-xl sm:rounded-[20px] p-4 sm:p-6 border-2 border-[var(--warm-yellow-soft)]">
@@ -1483,7 +1501,7 @@
                     <div className="mb-6 sm:mb-8 pb-6 sm:pb-10 border-b-2 border-dashed border-[var(--warm-yellow-soft)]">
                       <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
                         <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[var(--warm-yellow-dark)] flex items-center justify-center flex-shrink-0"><MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 text-white" /></div>
-                        <h2 className="text-base sm:text-xl md:text-2xl font-bold text-gray-800 leading-snug">이런 상황에서 이렇게 해볼 수 있어요</h2>
+                        <h2 className="text-base sm:text-xl md:text-2xl font-bold text-gray-800 leading-snug">같은 기질 아이 엄마들은 이렇게 해봤어요</h2>
                       </div>
                       <div className="space-y-3 sm:space-y-4">
                         {result.realExamples.map((example, idx) => (
@@ -1506,6 +1524,13 @@
                       </div>
                     </div>
                   )}
+                  </>)}
+                  {reportTab === 'growth' && (<>
+                  <div className="text-center py-12 sm:py-16">
+                    <p className="text-lg sm:text-xl text-gray-500 mb-2">성장 가이드를 준비 중이에요</p>
+                    <p className="text-sm text-gray-400">곧 {childInfo.name}이의 발달 영역별 가이드가 추가됩니다.</p>
+                  </div>
+                  </>)}
                   <div className="flex justify-center flex-wrap gap-3 sm:gap-4">
                     <button onClick={() => { setStep('chat'); saveToStorage(); }} className="w-full sm:w-auto px-5 sm:px-8 py-3 sm:py-4 text-sm sm:text-base bg-[var(--coral-button)] text-white font-bold rounded-xl sm:rounded-[24px] hover:opacity-90 hover:shadow-lg active:scale-[0.98] transition-all duration-300 flex items-center justify-center space-x-2 sm:space-x-3 min-h-[48px]"><MessageCircle className="w-5 h-5 flex-shrink-0" /><span>계속 상담하기</span></button>
                     <button onClick={() => setStep('welcome')} className="w-full sm:w-auto px-5 sm:px-8 py-3 sm:py-4 text-sm sm:text-base bg-white border-2 sm:border-3 border-[var(--mint)] text-[var(--mint-dark)] font-bold rounded-xl sm:rounded-[24px] hover:bg-[var(--mint-muted)] hover:shadow-lg active:scale-[0.98] transition-all duration-300 flex items-center justify-center space-x-2 min-h-[48px]"><Home className="w-5 h-5 flex-shrink-0" /><span>홈으로</span></button>
