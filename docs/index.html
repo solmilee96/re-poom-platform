@@ -1186,7 +1186,7 @@
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">생년월일</label>
-                      <input type="date" value={childInfo.birthDate} onChange={(e) => setChildInfo({ ...childInfo, birthDate: e.target.value })} max={new Date().toISOString().split('T')[0]} className="w-full p-3 sm:p-4 border-2 border-[var(--coral-light)] rounded-xl sm:rounded-[20px] text-base sm:text-lg focus:outline-none focus:border-[var(--coral)] transition-colors min-h-[48px]" required />
+                      <input type="date" value={childInfo.birthDate} onChange={(e) => setChildInfo({ ...childInfo, birthDate: e.target.value })} max={new Date().toISOString().split('T')[0]} className="w-full p-3 sm:p-4 border-2 border-[var(--coral-light)] rounded-xl sm:rounded-[20px] text-base sm:text-lg focus:outline-none focus:border-[var(--coral)] transition-colors min-h-[48px] appearance-none bg-white" style={{WebkitAppearance: 'none', MozAppearance: 'none'}} required />
                       <p className="text-xs sm:text-sm text-gray-500 mt-2">💡 정확한 월령 계산을 위해 생년월일을 입력해주세요</p>
                     </div>
                     <div>
