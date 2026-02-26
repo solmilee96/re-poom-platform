@@ -1540,11 +1540,36 @@
                     <p className="text-sm text-gray-400">곧 {childInfo.name}이의 발달 영역별 가이드가 추가됩니다.</p>
                   </div>
                   </>)}
-                  <div className="flex justify-center flex-wrap gap-3 sm:gap-4">
-                    <button onClick={() => { setStep('chat'); saveToStorage(); }} className="w-full sm:w-auto px-5 sm:px-8 py-3 sm:py-4 text-sm sm:text-base bg-[var(--coral-button)] text-white font-bold rounded-xl sm:rounded-[24px] hover:opacity-90 hover:shadow-lg active:scale-[0.98] transition-all duration-300 flex items-center justify-center space-x-2 sm:space-x-3 min-h-[48px]"><MessageCircle className="w-5 h-5 flex-shrink-0" /><span>계속 상담하기</span></button>
-                    <button onClick={() => setStep('welcome')} className="w-full sm:w-auto px-5 sm:px-8 py-3 sm:py-4 text-sm sm:text-base bg-white border-2 sm:border-3 border-[var(--mint)] text-[var(--mint-dark)] font-bold rounded-xl sm:rounded-[24px] hover:bg-[var(--mint-muted)] hover:shadow-lg active:scale-[0.98] transition-all duration-300 flex items-center justify-center space-x-2 min-h-[48px]"><Home className="w-5 h-5 flex-shrink-0" /><span>홈으로</span></button>
-                    <button onClick={handleReset} className="w-full sm:w-auto px-5 sm:px-8 py-3 sm:py-4 text-sm sm:text-base bg-white border-2 sm:border-3 border-[var(--coral)] text-[var(--coral-dark)] font-bold rounded-xl sm:rounded-[24px] hover:bg-[var(--coral-muted)] hover:shadow-lg active:scale-[0.98] transition-all duration-300 flex items-center justify-center space-x-2 min-h-[48px]"><RotateCcw className="w-5 h-5 flex-shrink-0" /><span>초기화</span></button>
+                  {(() => {
+                    const tq = getTemperamentQuestionsByAge(getTotalMonths(childInfo.birthDate || ''));
+                    const cs = tq.map((_, i) => childProfile['q' + i] || 5);
+                    const tt = getTemperamentType(cs);
+                    const recQuestions = ['요즘 자꾸 떼를 써요', '밤에 잘 안 자려고 해요', '밥을 잘 안 먹어요'];
+                    return (
+                  <div className="mt-8 sm:mt-10 pt-6 sm:pt-8 border-t-2 border-dashed border-[var(--coral-light)]">
+                    <div className="mb-6 sm:mb-8">
+                      <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-3 flex items-center gap-2"><MessageCircle className="w-5 h-5 text-[var(--coral-dark)]" />{tt.type}인 {childInfo.name}이, 이런 것도 물어보면 좋아요</h3>
+                      <div className="flex flex-wrap gap-2 sm:gap-3">
+                        {recQuestions.map((q, i) => (
+                          <button key={i} onClick={() => { setCurrentInput(q); setStep('chat'); saveToStorage(); }} className="px-4 py-2.5 bg-white border-2 border-[var(--coral-light)] rounded-xl text-sm font-medium text-gray-700 hover:bg-[var(--coral-muted)] hover:border-[var(--coral)] transition-all">{q}</button>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="mb-6 sm:mb-8">
+                      <button onClick={() => { setStep('chat'); saveToStorage(); }} className="w-full px-6 sm:px-8 py-4 sm:py-5 text-base sm:text-lg bg-[var(--coral-button)] text-white font-bold rounded-xl sm:rounded-[24px] hover:opacity-90 hover:shadow-lg active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 sm:gap-3 min-h-[52px]">
+                        <MessageCircle className="w-6 h-6 flex-shrink-0" />
+                        <span>{childInfo.name}이 상담 계속하기</span>
+                        {consultationSummary.messageCount > 0 && <span className="text-sm font-medium opacity-90">({childInfo.name}이와 {consultationSummary.messageCount + 1}번째 상담)</span>}
+                      </button>
+                      <p className="text-center text-sm text-gray-500 mt-2">상담할수록 {childInfo.name}이만의 전담 상담사가 돼요</p>
+                    </div>
+                    <div className="flex justify-center gap-4 sm:gap-6 text-sm">
+                      <button onClick={() => setStep('welcome')} className="text-[var(--mint-dark)] hover:underline font-medium">홈으로</button>
+                      <button onClick={handleReset} className="text-[var(--coral-dark)] hover:underline font-medium">초기화</button>
+                    </div>
                   </div>
+                    );
+                  })()}
                 </div>
                 {showFeedbackPopup && (
                   <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" onClick={() => setShowFeedbackPopup(false)}>
