@@ -1138,17 +1138,6 @@
                 </div>
                 {childInfo.name && Object.keys(childProfile).length > 0 ? (
                   <div className="space-y-3 sm:space-y-4">
-                    {consultationSummary.messageCount > 0 && (() => {
-                      const counts = consultationSummary.topicCounts || {};
-                      const topTopics = Object.entries(counts).filter(([, n]) => n > 0).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([k]) => (TOPIC_DISPLAY[k] || { label: k }).label);
-                      const updatedAt = consultationSummary.updatedAt ? (() => { const d = new Date(consultationSummary.updatedAt); const now = new Date(); const diff = Math.floor((now - d) / 864e5); return diff === 0 ? '오늘' : diff === 1 ? '어제' : diff < 7 ? `${diff}일 전` : `${Math.floor(diff / 7)}주 전`; })() : '';
-                      return (
-                      <div className="mb-4 p-4 bg-[var(--coral-muted)] rounded-xl border-2 border-[var(--coral-light)]">
-                        <p className="text-sm text-gray-700 font-medium">지금까지 {topTopics.length > 0 ? topTopics.join(', ') + ' 주제로 ' : ''}{consultationSummary.messageCount}회 상담했어요</p>
-                        {updatedAt && <p className="text-xs text-gray-500 mt-1">마지막 상담: {updatedAt}</p>}
-                      </div>
-                      );
-                    })()}
                     <button onClick={() => { setStep('chat'); saveToStorage(); }} className="w-full bg-[var(--coral-button)] text-white text-lg sm:text-xl md:text-2xl font-bold py-4 sm:py-5 md:py-6 rounded-2xl sm:rounded-[28px] hover:opacity-90 hover:shadow-lg active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 sm:gap-3 min-h-[48px]">
                       <MessageCircle className="w-6 h-6 sm:w-7 sm:h-7" /><span>{childInfo.name}이 상담 계속하기</span>
                     </button>
@@ -1585,7 +1574,6 @@
                       <button onClick={() => { setStep('chat'); saveToStorage(); }} className="w-full px-6 sm:px-8 py-4 sm:py-5 text-base sm:text-lg bg-[var(--coral-button)] text-white font-bold rounded-xl sm:rounded-[24px] hover:opacity-90 hover:shadow-lg active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 sm:gap-3 min-h-[52px]">
                         <MessageCircle className="w-6 h-6 flex-shrink-0" />
                         <span>{childInfo.name}이 상담 계속하기</span>
-                        {consultationSummary.messageCount > 0 && <span className="text-sm font-medium opacity-90">({childInfo.name}이와 {consultationSummary.messageCount + 1}번째 상담)</span>}
                       </button>
                       <p className="text-center text-sm text-gray-500 mt-2">상담할수록 {childInfo.name}이만의 전담 상담사가 돼요</p>
                     </div>
@@ -1651,7 +1639,7 @@
                 <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
                   {chatTab === 'saved' ? (
                     (() => {
-                      const saved = chatHistory.map((m, i) => ({ msg: m, idx: i })).filter(({ msg }) => msg.role === 'assistant' && msg.bookmarked === true);
+                      const saved = chatHistory.map((m, i) => ({ msg: m, idx: i })).filter(({ msg }) => msg.role === 'assistant' && msg.bookmarked === true).sort((a, b) => new Date(b.msg.timestamp || 0) - new Date(a.msg.timestamp || 0));
                       const topics = ['all', ...Object.keys(TOPIC_DISPLAY)];
                       const filtered = savedFilter === 'all' ? saved : saved.filter(({ msg, idx }) => getTopicForMessage(msg, idx, chatHistory) === savedFilter);
                       return (
@@ -1691,22 +1679,6 @@
                       );
                     })()
                   ) : <>
-                  {chatHistory.length > 0 && (() => {
-                    const counts = consultationSummary.topicCounts || {};
-                    const topTopics = Object.entries(counts).filter(([, n]) => n > 0).sort((a, b) => b[1] - a[1]).slice(0, 3);
-                    const lastTopic = consultationSummary.lastTopics && consultationSummary.lastTopics.length > 0 ? consultationSummary.lastTopics[consultationSummary.lastTopics.length - 1] : null;
-                    const followUpByTopic = { sleep: '요즘 자는 건 어떻게 되나요?', eating: '밥 먹는 건 요즘 어떠세요?', tantrum: '떼쓰기는 어때요?', clothing: '옷 입히는 건 수월해졌어요?', aggression: '또래랑 어울리는 건 어떻게 돼요?', other: '다른 궁금한 점이 있으신가요?' };
-                    const updatedAt = consultationSummary.updatedAt ? (() => { const d = new Date(consultationSummary.updatedAt); const now = new Date(); const diff = Math.floor((now - d) / 864e5); return diff === 0 ? '오늘' : diff === 1 ? '어제' : diff < 7 ? `${diff}일 전` : `${Math.floor(diff / 7)}주 전`; })() : '';
-                    return (
-                    <div className="mb-6 p-4 sm:p-5 bg-[var(--coral-muted)] rounded-xl sm:rounded-[20px] border-2 border-[var(--coral-light)]">
-                      <p className="text-base font-bold text-gray-800 mb-2">{childInfo.name}이와 {consultationSummary.messageCount + 1}번째 대화 중</p>
-                      {topTopics.length > 0 && <div className="flex flex-wrap gap-1.5 mb-2">{topTopics.map(([k]) => { const d = TOPIC_DISPLAY[k] || { emoji: '', label: k }; return <span key={k} className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-white/80 text-gray-700">{d.emoji} {d.label}</span>; })}</div>}
-                      {updatedAt && <p className="text-xs text-gray-500 mb-3">마지막 상담: {updatedAt}</p>}
-                      <p className="text-sm text-gray-600 mb-2">이어서 이야기해볼까요?</p>
-                      <button onClick={() => setCurrentInput(lastTopic ? (followUpByTopic[lastTopic] || followUpByTopic.other) : followUpByTopic.other)} className="text-sm font-medium text-[var(--coral-dark)] hover:underline">{lastTopic ? (followUpByTopic[lastTopic] || followUpByTopic.other) : followUpByTopic.other}</button>
-                    </div>
-                    );
-                  })()}
                   {chatHistory.length === 0 ? (
                     <div className="text-center py-8 sm:py-12">
                       <Sparkles className="w-14 h-14 sm:w-16 sm:h-16 text-[var(--warm-yellow-dark)] mx-auto mb-3 sm:mb-4" />
