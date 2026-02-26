@@ -189,6 +189,13 @@
         if (/때리|공격|밀|싸움|친구.*때/.test(t)) return 'aggression';
         return 'other';
       };
+      const TOPIC_DISPLAY = { eating: { emoji: '🍼', label: '식사' }, sleep: { emoji: '😴', label: '수면' }, tantrum: { emoji: '😤', label: '떼쓰기' }, clothing: { emoji: '👕', label: '옷입기' }, aggression: { emoji: '👊', label: '또래' }, other: { emoji: '💬', label: '기타' } };
+      const getTopicForMessage = (msg, idx, history) => {
+        if (msg.topic) return msg.topic;
+        if (msg.role === 'user') return getTopicFromText(msg.content);
+        if (msg.role === 'assistant' && idx > 0 && history[idx - 1]?.role === 'user') return getTopicFromText(history[idx - 1].content);
+        return 'other';
+      };
       const getDefaultConsultationSummary = () => ({ topicCounts: { eating: 0, sleep: 0, tantrum: 0, clothing: 0, aggression: 0, other: 0 }, lastTopics: [], messageCount: 0, updatedAt: '' });
       const loadConsultationForChild = (childId) => {
         if (!childId) return getDefaultConsultationSummary();
@@ -973,7 +980,8 @@
       const handleSendMessage = () => {
         const msg = (currentInput || '').trim();
         if (!msg) return;
-        const newMessage = { role: 'user', content: msg, timestamp: new Date() };
+        const topic = getTopicFromText(msg);
+        const newMessage = { role: 'user', content: msg, timestamp: new Date(), topic };
         const updatedHistory = [...chatHistory, newMessage];
         setChatHistory(updatedHistory);
         setCurrentInput('');
@@ -1000,7 +1008,7 @@
             try {
               var response = (reply && reply.trim()) ? reply : '상담을 일시적으로 사용할 수 없어요. 잠시 후 다시 시도해 주세요.';
               response = response.replace(/\*\*(.*?)\*\*/g, '$1');
-              var aiMessage = { role: 'assistant', content: response, timestamp: new Date() };
+              var aiMessage = { role: 'assistant', content: response, timestamp: new Date(), topic: topic, bookmarked: false };
               var finalHistory = updatedHistory.concat([aiMessage]);
               setChatHistory(finalHistory);
               saveToStorage({ chatHistory: finalHistory });
