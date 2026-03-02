@@ -59,7 +59,28 @@ function getConcernContent(concernKey, temperamentType, name, age) {
   if (!data) return null;
   var n = name || '아이';
   var a = age || '';
-  function r(s) { return s.replace(/\{name\}/g, n).replace(/\{age\}/g, a); }
+  function hasJong(str) {
+    if (!str || str.length === 0) return false;
+    var code = str.charCodeAt(str.length - 1);
+    if (code < 0xAC00 || code > 0xD7A3) return false;
+    return (code - 0xAC00) % 28 !== 0;
+  }
+  var jong = hasJong(n);
+  function r(s) {
+    return s
+      .replace(/\{name\}이만의/g, n + (jong ? '이만의' : '만의'))
+      .replace(/\{name\}이에게/g, n + (jong ? '이에게' : '에게'))
+      .replace(/\{name\}이가/g, n + (jong ? '이가' : '가'))
+      .replace(/\{name\}이의/g, n + (jong ? '이의' : '의'))
+      .replace(/\{name\}이는/g, n + (jong ? '이는' : '는'))
+      .replace(/\{name\}이도/g, n + (jong ? '이도' : '도'))
+      .replace(/\{name\}이를/g, n + (jong ? '이를' : '를'))
+      .replace(/\{name\}이와/g, n + (jong ? '이와' : '와'))
+      .replace(/\{name\}이(?=[^가-힣]|$)/g, n + (jong ? '이' : ''))
+      .replace(/\{name\}아/g, n + (jong ? '아' : '야'))
+      .replace(/\{name\}/g, n)
+      .replace(/\{age\}/g, a);
+  }
   function rArr(arr) {
     return arr.map(function(item) {
       var out = {};
