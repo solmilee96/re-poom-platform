@@ -1445,7 +1445,7 @@
                       <button key={tab.key} onClick={() => { setReportTab(tab.key); setHintTab(null); setTimeout(function(){ var anchor = document.getElementById('report-tab-anchor'); if (anchor) anchor.scrollIntoView({ behavior: 'smooth' }); }, 50); }}
                         className={`flex-1 py-3 sm:py-4 text-sm sm:text-base font-bold transition-all duration-200 relative ${reportTab === tab.key ? 'bg-[var(--coral)] text-white shadow-inner' : hintTab === tab.key ? 'tab-hint' : 'bg-white text-gray-500 hover:bg-[var(--coral-muted)] hover:text-gray-700'}`}>
                         {tab.label}
-                        {hintTab === tab.key && <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-[var(--coral)] animate-ping" />}
+                        {hintTab === tab.key && <span className="absolute w-2 h-2 rounded-full bg-[var(--coral)] animate-ping" style={{top:'7px',right:'7px'}} />}
                       </button>
                     ))}
                   </div>
