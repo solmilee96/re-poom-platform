@@ -1,0 +1,29 @@
+---
+description: web/public과 docs 동기화 규칙 (GitHub Pages ↔ Vercel 일치)
+alwaysApply: true
+---
+
+# web/public ↔ docs 동기화 규칙
+
+`web/public/`(Vercel)과 `docs/`(GitHub Pages)는 **항상 동일한 상태**를 유지해야 한다.
+
+## 동기화 대상 파일
+
+| web/public 경로 | docs 경로 |
+|---|---|
+| `web/public/index.html` | `docs/index.html` |
+| `web/public/data/*.js` | `docs/data/*.js` |
+
+## 규칙
+
+- `web/public/` 파일을 수정한 후 커밋할 때는 **반드시 대응하는 `docs/` 파일도 함께 업데이트**한다.
+- pre-commit hook(`scripts/hooks/pre-commit`)이 자동으로 처리하지만, 수동 작업 시에도 누락 없이 동기화한다.
+- `docs/`를 직접 수정하지 말고, 항상 `web/public/`을 수정 후 `docs/`로 복사한다.
+
+## 수동 동기화 명령어
+
+```bash
+cp web/public/index.html docs/index.html
+cp web/public/data/*.js docs/data/
+git add docs/
+```

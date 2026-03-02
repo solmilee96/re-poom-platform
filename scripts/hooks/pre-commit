@@ -1,0 +1,37 @@
+#!/bin/sh
+# web/public → docs 자동 동기화
+# web/public의 변경사항이 항상 docs(GitHub Pages)에도 반영되도록 합니다.
+
+SYNC_FILES=(
+  "web/public/index.html:docs/index.html"
+  "web/public/data/고민별-맞춤콘텐츠.js:docs/data/고민별-맞춤콘텐츠.js"
+  "web/public/data/기질가이드-섬세파.js:docs/data/기질가이드-섬세파.js"
+  "web/public/data/기질가이드-순둥이-밸런서-혼합형.js:docs/data/기질가이드-순둥이-밸런서-혼합형.js"
+  "web/public/data/기질가이드-신중파.js:docs/data/기질가이드-신중파.js"
+  "web/public/data/기질가이드-에너자이저.js:docs/data/기질가이드-에너자이저.js"
+  "web/public/data/기질가이드-탐험가.js:docs/data/기질가이드-탐험가.js"
+  "web/public/data/기질연령-가이드-공통.js:docs/data/기질연령-가이드-공통.js"
+)
+
+SYNCED=0
+
+for pair in "${SYNC_FILES[@]}"; do
+  SRC="${pair%%:*}"
+  DST="${pair##*:}"
+
+  # 스테이징된 파일 중 web/public 쪽이 변경된 경우에만 동기화
+  if git diff --cached --name-only | grep -q "^${SRC}$"; then
+    if [ -f "$SRC" ]; then
+      cp "$SRC" "$DST"
+      git add "$DST"
+      SYNCED=1
+      echo "[sync] $SRC → $DST"
+    fi
+  fi
+done
+
+if [ "$SYNCED" -eq 1 ]; then
+  echo "[sync] docs/ 동기화 완료 ✓"
+fi
+
+exit 0
