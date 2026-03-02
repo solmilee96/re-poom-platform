@@ -262,20 +262,22 @@
       }, []);
 
       useEffect(() => {
+        if (step !== 'report') return;
         if (reportTab !== 'analysis' && reportTab !== 'solution') { setHintTab(null); return; }
         setHintTab(null);
         const sentinelId = reportTab === 'analysis' ? 'analysis-bottom-sentinel' : 'solution-bottom-sentinel';
         const nextTab = reportTab === 'analysis' ? 'solution' : 'growth';
+        let observer = null;
         const t = setTimeout(() => {
           const el = document.getElementById(sentinelId);
           if (!el) return;
-          const observer = new IntersectionObserver(([entry]) => {
+          observer = new IntersectionObserver(([entry]) => {
             if (entry.isIntersecting) setHintTab(nextTab);
-          }, { rootMargin: '0px 0px -15% 0px', threshold: 0 });
+          }, { rootMargin: '0px 0px -10% 0px', threshold: 0 });
           observer.observe(el);
-        }, 100);
-        return () => clearTimeout(t);
-      }, [reportTab]);
+        }, 150);
+        return () => { clearTimeout(t); if (observer) observer.disconnect(); };
+      }, [reportTab, step]);
 
       // 테스트 모드: ?test=report 로 접근하면 Mock 데이터로 결과지 바로 표시
       useEffect(() => {
