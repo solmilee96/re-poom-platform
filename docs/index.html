@@ -92,7 +92,7 @@
   <noscript>이 페이지는 JavaScript가 필요합니다. Chrome 등 브라우저에서 이 주소를 열어보세요.</noscript>
 
   <script type="text/babel" data-presets="react">
-    const { useState, useEffect } = React;
+    const { useState, useEffect, useRef } = React;
     // 아쉬워요 피드백 → Slack. Vercel에서 열면 같은 출처, GitHub Pages에서 열면 Vercel API 주소 사용
     // 상담 API: 이 저장소가 연결된 Vercel 프로젝트의 Deployment URL (푸시할 때마다 배포되는 주소)
     var _apiBase = (typeof window !== 'undefined' && window.location && window.location.hostname && window.location.hostname.indexOf('vercel.app') !== -1)
@@ -201,6 +201,9 @@
       const [chatHistory, setChatHistory] = useState([]);
       const [currentInput, setCurrentInput] = useState('');
       const [isAnalyzing, setIsAnalyzing] = useState(false);
+      const [typingContent, setTypingContent] = useState('');
+      const [isTyping, setIsTyping] = useState(false);
+      const typingRef = useRef({ text: '', idx: 0, timer: null, history: null, timestamp: null });
       const [feedbackGiven, setFeedbackGiven] = useState(false);
       const [showFeedbackPopup, setShowFeedbackPopup] = useState(false);
       const [feedbackText, setFeedbackText] = useState('');
@@ -1117,30 +1120,45 @@
           })
           .catch(function(err) { clearTimeout(timeoutId); if (err && err.name === 'AbortError') return '연결이 지연되고 있어요. 잠시 후 다시 시도해 주세요.'; return '상담을 일시적으로 사용할 수 없어요. 잠시 후 다시 시도해 주세요.'; })
           .then(function(reply) {
-            try {
-              var response = (reply && reply.trim()) ? reply : '상담을 일시적으로 사용할 수 없어요. 잠시 후 다시 시도해 주세요.';
-              response = response.replace(/\*\*(.*?)\*\*/g, '$1');
-              var aiMessage = { role: 'assistant', content: response, timestamp: new Date() };
-              var finalHistory = updatedHistory.concat([aiMessage]);
-              setChatHistory(finalHistory);
-              saveToStorage({ chatHistory: finalHistory });
-              var cid = getChildId(childInfo);
-              if (cid) {
-                var topic = getTopicFromText(msg);
-                var next = Object.assign({}, consultationSummary, {
-                  topicCounts: Object.assign({}, consultationSummary.topicCounts, { [topic]: (consultationSummary.topicCounts[topic] || 0) + 1 }),
-                  lastTopics: (consultationSummary.lastTopics || []).slice(-9).concat([topic]),
-                  messageCount: (consultationSummary.messageCount || 0) + 1,
-                  updatedAt: new Date().toISOString(),
-                });
-                saveConsultationForChild(cid, next);
-                setConsultationSummary(next);
+            var response = (reply && reply.trim()) ? reply : '상담을 일시적으로 사용할 수 없어요. 잠시 후 다시 시도해 주세요.';
+            response = response.replace(/\*\*(.*?)\*\*/g, '$1');
+            setIsAnalyzing(false);
+            // 타자 효과 시작
+            if (typingRef.current.timer) clearInterval(typingRef.current.timer);
+            typingRef.current = { text: response, idx: 0, history: updatedHistory, timestamp: new Date(), timer: null };
+            setTypingContent('');
+            setIsTyping(true);
+            var CHUNK = 6;
+            var INTERVAL = 22;
+            typingRef.current.timer = setInterval(function() {
+              var ref = typingRef.current;
+              var newIdx = Math.min(ref.idx + CHUNK, ref.text.length);
+              ref.idx = newIdx;
+              setTypingContent(ref.text.slice(0, newIdx));
+              if (newIdx >= ref.text.length) {
+                clearInterval(ref.timer);
+                var aiMessage = { role: 'assistant', content: ref.text, timestamp: ref.timestamp };
+                var finalHistory = ref.history.concat([aiMessage]);
+                setChatHistory(finalHistory);
+                saveToStorage({ chatHistory: finalHistory });
+                setIsTyping(false);
+                setTypingContent('');
+                var cid = getChildId(childInfo);
+                if (cid) {
+                  var topic = getTopicFromText(msg);
+                  var next = Object.assign({}, consultationSummary, {
+                    topicCounts: Object.assign({}, consultationSummary.topicCounts, { [topic]: (consultationSummary.topicCounts[topic] || 0) + 1 }),
+                    lastTopics: (consultationSummary.lastTopics || []).slice(-9).concat([topic]),
+                    messageCount: (consultationSummary.messageCount || 0) + 1,
+                    updatedAt: new Date().toISOString(),
+                  });
+                  saveConsultationForChild(cid, next);
+                  setConsultationSummary(next);
+                }
               }
-            } finally {
-              setIsAnalyzing(false);
-            }
+            }, INTERVAL);
           })
-          .catch(function() { setIsAnalyzing(false); });
+          .catch(function() { setIsAnalyzing(false); setIsTyping(false); });
       };
 
       const handleChildInfoSubmit = (e) => {
@@ -1843,14 +1861,23 @@
                           </div>
                         </div>
                       )}
+                      {isTyping && (
+                        <div className="flex justify-start">
+                          <div className="max-w-[85%] sm:max-w-2xl bg-white border-2 border-[var(--coral-light)] rounded-2xl sm:rounded-[20px] p-4 sm:p-5 shadow-lg">
+                            <p className="text-sm sm:text-base text-gray-800 whitespace-pre-line leading-relaxed">
+                              {typingContent}<span className="inline-block w-[2px] h-[1em] bg-gray-500 ml-[1px] align-middle animate-pulse" />
+                            </p>
+                          </div>
+                        </div>
+                      )}
                     </>
                   )}
                 </div>
               </div>
               {chatTab === 'chat' && <div className="bg-white border-t-2 sm:border-t-4 border-[var(--coral-light)] p-4 sm:p-6 shadow-lg">
                 <div className="max-w-4xl mx-auto flex gap-3 sm:gap-4">
-                  <input type="text" value={currentInput} onChange={(e) => setCurrentInput(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()} placeholder={`${childInfo.name}${getNameI(childInfo.name)}에 대해 궁금한 점을...`} className="flex-1 min-w-0 p-3 sm:p-4 border-2 border-[var(--coral-light)] rounded-xl sm:rounded-[20px] text-base sm:text-lg focus:outline-none focus:border-[var(--coral)] transition-colors disabled:opacity-60" disabled={isAnalyzing} />
-                  <button onClick={handleSendMessage} disabled={!currentInput.trim() || isAnalyzing} className="px-4 sm:px-6 py-3 sm:py-4 bg-[var(--coral-button)] text-white rounded-xl sm:rounded-[20px] hover:opacity-90 hover:shadow-lg active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0 min-h-[48px] flex items-center justify-center"><Send className="w-5 h-5 sm:w-6 sm:h-6" /></button>
+                  <input type="text" value={currentInput} onChange={(e) => setCurrentInput(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()} placeholder={`${childInfo.name}${getNameI(childInfo.name)}에 대해 궁금한 점을...`} className="flex-1 min-w-0 p-3 sm:p-4 border-2 border-[var(--coral-light)] rounded-xl sm:rounded-[20px] text-base sm:text-lg focus:outline-none focus:border-[var(--coral)] transition-colors disabled:opacity-60" disabled={isAnalyzing || isTyping} />
+                  <button onClick={handleSendMessage} disabled={!currentInput.trim() || isAnalyzing || isTyping} className="px-4 sm:px-6 py-3 sm:py-4 bg-[var(--coral-button)] text-white rounded-xl sm:rounded-[20px] hover:opacity-90 hover:shadow-lg active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0 min-h-[48px] flex items-center justify-center"><Send className="w-5 h-5 sm:w-6 sm:h-6" /></button>
                 </div>
               </div>}
             </div>
