@@ -1123,20 +1123,14 @@
             var response = (reply && reply.trim()) ? reply : '상담을 일시적으로 사용할 수 없어요. 잠시 후 다시 시도해 주세요.';
             response = response.replace(/\*\*(.*?)\*\*/g, '$1');
             setIsAnalyzing(false);
-            // 타자 효과 시작
-            if (typingRef.current.timer) clearInterval(typingRef.current.timer);
+            // 타자 효과 시작 (자연스러운 가변 속도)
+            if (typingRef.current.timer) clearTimeout(typingRef.current.timer);
             typingRef.current = { text: response, idx: 0, history: updatedHistory, timestamp: new Date(), timer: null };
             setTypingContent('');
             setIsTyping(true);
-            var CHUNK = 6;
-            var INTERVAL = 22;
-            typingRef.current.timer = setInterval(function() {
+            function typeNext() {
               var ref = typingRef.current;
-              var newIdx = Math.min(ref.idx + CHUNK, ref.text.length);
-              ref.idx = newIdx;
-              setTypingContent(ref.text.slice(0, newIdx));
-              if (newIdx >= ref.text.length) {
-                clearInterval(ref.timer);
+              if (ref.idx >= ref.text.length) {
                 var aiMessage = { role: 'assistant', content: ref.text, timestamp: ref.timestamp };
                 var finalHistory = ref.history.concat([aiMessage]);
                 setChatHistory(finalHistory);
@@ -1155,8 +1149,23 @@
                   saveConsultationForChild(cid, next);
                   setConsultationSummary(next);
                 }
+                return;
               }
-            }, INTERVAL);
+              // 가변 청크: 10~18자 랜덤
+              var chunk = 10 + Math.floor(Math.random() * 9);
+              var newIdx = Math.min(ref.idx + chunk, ref.text.length);
+              ref.idx = newIdx;
+              setTypingContent(ref.text.slice(0, newIdx));
+              // 구두점·줄바꿈에서 자연스러운 미세 정지
+              var lastChar = ref.text[newIdx - 1];
+              var delay;
+              if (lastChar === '\n') delay = 55 + Math.random() * 30;
+              else if (lastChar === '.' || lastChar === '!' || lastChar === '?') delay = 40 + Math.random() * 25;
+              else if (lastChar === ',' || lastChar === ':') delay = 22 + Math.random() * 12;
+              else delay = 13 + Math.random() * 7;
+              ref.timer = setTimeout(typeNext, delay);
+            }
+            typeNext();
           })
           .catch(function() { setIsAnalyzing(false); setIsTyping(false); });
       };
