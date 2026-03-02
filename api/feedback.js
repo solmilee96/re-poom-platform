@@ -74,11 +74,15 @@ module.exports = async function handler(req, res) {
       }
     }
     body = body || {};
-    const { choice, text, childName } = body;
+    const { choice, text, tags, childName, ageDisplay } = body;
+    const label = choice === '아쉬워요' ? '아쉬워요' : (choice === '좋았어요' ? '좋았어요' : choice || '피드백');
+    const tagList = Array.isArray(tags) && tags.length > 0 ? tags : null;
     const message = [
-      '아이 여행 피드백 (아쉬워요)',
-      childName ? '아이 이름: ' + childName : '',
-      text ? '내용: ' + text : '(내용 없음)',
+      '📝 아이맘쏙 피드백 (' + label + ')',
+      childName ? '👶 아이 이름: ' + childName : '',
+      ageDisplay ? '📅 나이: ' + ageDisplay : '',
+      tagList ? '✅ 선택: ' + tagList.join(' / ') : '',
+      text ? '💬 기타: ' + text : '',
     ]
       .filter(Boolean)
       .join('\n');
