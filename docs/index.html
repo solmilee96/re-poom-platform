@@ -83,6 +83,8 @@
     @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     @keyframes pulse-soft { 0%, 100% { box-shadow: 0 4px 16px rgba(236, 149, 133, 0.45); } 60% { box-shadow: 0 4px 28px rgba(236, 149, 133, 0.15); } }
     .btn-cta-pulse { animation: pulse-soft 2.4s ease-in-out infinite; }
+    @keyframes tab-hint { 0%, 100% { box-shadow: 0 0 0 0 rgba(236, 113, 90, 0); transform: scale(1); } 40% { box-shadow: 0 0 0 5px rgba(236, 113, 90, 0.25); transform: scale(1.04); } 70% { box-shadow: 0 0 0 3px rgba(236, 113, 90, 0.1); transform: scale(1.01); } }
+    .tab-hint { animation: tab-hint 1.8s ease-in-out 3; background: linear-gradient(135deg, #fff5f3, #ffe8e3) !important; color: var(--coral-dark) !important; border-bottom: 3px solid var(--coral) !important; }
   </style>
 </head>
 <body>
@@ -183,6 +185,11 @@
       return (code - 0xAC00) % 28 !== 0 ? '이' : '';
     };
 
+    const mdToHtml = (text) => {
+      if (!text) return '';
+      return text.replace(/\*\*(.*?)\*\*/g, '<strong style="color:var(--coral-dark);font-weight:700">$1</strong>');
+    };
+
     const GwaenchanaYoApp = () => {
       const [step, setStep] = useState('welcome');
       const [childInfo, setChildInfo] = useState({ name: '', birthDate: '', gender: '' });
@@ -197,7 +204,15 @@
       const [feedbackGiven, setFeedbackGiven] = useState(false);
       const [showFeedbackPopup, setShowFeedbackPopup] = useState(false);
       const [feedbackText, setFeedbackText] = useState('');
+      const [feedbackType, setFeedbackType] = useState(null);
+      const [feedbackSelected, setFeedbackSelected] = useState([]);
+
+      const FEEDBACK_OPTIONS = {
+        good: ['기질 설명이 우리 아이랑 딱 맞아요', '육아법이 실제로 도움이 됐어요', '아이를 이해하는 데 도움이 됐어요', '앞으로도 계속 쓸 것 같아요'],
+        bad: ['결과가 너무 일반적으로 느껴져요', '대화법이 우리 아이 상황이랑 달라요', '원하는 고민에 대한 답이 없었어요', '글이 너무 길어요'],
+      };
       const [reportTab, setReportTab] = useState('analysis');
+      const [hintTab, setHintTab] = useState(null);
       const [consultationSummary, setConsultationSummary] = useState({ topicCounts: { eating: 0, sleep: 0, tantrum: 0, clothing: 0, aggression: 0, other: 0 }, lastTopics: [], messageCount: 0, updatedAt: '' });
       const [chatTab, setChatTab] = useState('chat');
 
@@ -245,6 +260,24 @@
           }
         }
       }, []);
+
+      useEffect(() => {
+        if (step !== 'report') return;
+        if (reportTab !== 'analysis' && reportTab !== 'solution') { setHintTab(null); return; }
+        setHintTab(null);
+        const sentinelId = reportTab === 'analysis' ? 'analysis-bottom-sentinel' : 'solution-bottom-sentinel';
+        const nextTab = reportTab === 'analysis' ? 'solution' : 'growth';
+        let observer = null;
+        const t = setTimeout(() => {
+          const el = document.getElementById(sentinelId);
+          if (!el) return;
+          observer = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) setHintTab(nextTab);
+          }, { rootMargin: '0px 0px -10% 0px', threshold: 0 });
+          observer.observe(el);
+        }, 150);
+        return () => { clearTimeout(t); if (observer) observer.disconnect(); };
+      }, [reportTab, step]);
 
       // 테스트 모드: ?test=report 로 접근하면 Mock 데이터로 결과지 바로 표시
       useEffect(() => {
@@ -298,7 +331,7 @@
         localStorage.setItem('gwaenchanayo_feedback', JSON.stringify(list));
       };
 
-      const sendFeedbackToSlack = (choice, text, childName, birthDate, ageDisplay) => {
+      const sendFeedbackToSlack = (choice, text, childName, birthDate, ageDisplay, tags) => {
         const apiUrl = FEEDBACK_API_URL;
         if (!apiUrl) return;
         fetch(apiUrl, {
@@ -310,11 +343,34 @@
             childName: childName || '',
             birthDate: birthDate || '',
             ageDisplay: ageDisplay || '',
+            tags: tags || [],
           }),
         })
           .then((r) => (r.ok ? r.json() : r.json().then((d) => Promise.reject(new Error(d.error || r.status)))))
           .then(() => {})
           .catch((e) => console.warn('피드백 전송 실패:', e.message));
+      };
+
+      const toggleFeedbackTag = (tag) => {
+        setFeedbackSelected(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]);
+      };
+
+      const openFeedbackPopup = (type) => {
+        setFeedbackType(type);
+        setFeedbackSelected([]);
+        setFeedbackText('');
+        setShowFeedbackPopup(true);
+      };
+
+      const submitFeedback = () => {
+        const label = feedbackType === 'good' ? '좋았어요' : '아쉬워요';
+        const fullText = [feedbackSelected.join(', '), feedbackText].filter(Boolean).join('\n');
+        saveFeedback(label, fullText);
+        sendFeedbackToSlack(label, feedbackText, childInfo.name, childInfo.birthDate, getChildAge(), feedbackSelected);
+        setFeedbackGiven(true);
+        setShowFeedbackPopup(false);
+        setFeedbackText('');
+        setFeedbackSelected([]);
       };
 
       const getTotalMonths = (birthDate) => {
@@ -1386,9 +1442,10 @@
                       { key: 'solution', label: '맞춤 솔루션' },
                       { key: 'growth', label: '성장 가이드' }
                     ].map((tab) => (
-                      <button key={tab.key} onClick={() => { setReportTab(tab.key); setTimeout(function(){ var anchor = document.getElementById('report-tab-anchor'); if (anchor) anchor.scrollIntoView({ behavior: 'smooth' }); }, 50); }}
-                        className={`flex-1 py-3 sm:py-4 text-sm sm:text-base font-bold transition-all duration-200 ${reportTab === tab.key ? 'bg-[var(--coral)] text-white shadow-inner' : 'bg-white text-gray-500 hover:bg-[var(--coral-muted)] hover:text-gray-700'}`}>
+                      <button key={tab.key} onClick={() => { setReportTab(tab.key); setHintTab(null); setTimeout(function(){ var anchor = document.getElementById('report-tab-anchor'); if (anchor) anchor.scrollIntoView({ behavior: 'smooth' }); }, 50); }}
+                        className={`flex-1 py-3 sm:py-4 text-sm sm:text-base font-bold transition-all duration-200 relative ${reportTab === tab.key ? 'bg-[var(--coral)] text-white shadow-inner' : hintTab === tab.key ? 'tab-hint' : 'bg-white text-gray-500 hover:bg-[var(--coral-muted)] hover:text-gray-700'}`}>
                         {tab.label}
+                        {hintTab === tab.key && <span className="absolute w-2 h-2 rounded-full bg-[var(--coral)] animate-ping" style={{top:'7px',right:'9px'}} />}
                       </button>
                     ))}
                   </div>
@@ -1483,6 +1540,7 @@
                       </div>
                     </div>
                   </div>
+                  <div id="analysis-bottom-sentinel" style={{height:1}} />
                   </>)}
                   {reportTab === 'solution' && (<>
                   {behaviorInput && result.concernAnalysis && (
@@ -1514,7 +1572,7 @@
                             {result.practicalTips.map((tip, idx) => (
                               <div key={idx} className="bg-[var(--mint-muted)] rounded-xl sm:rounded-[20px] p-4 sm:p-6 border-2 border-[var(--mint-light)]">
                                 <h4 className="text-sm sm:text-base font-bold text-gray-800 mb-2 flex items-center"><span className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[var(--mint)] text-white flex items-center justify-center text-xs sm:text-sm mr-2 flex-shrink-0">{idx + 1}</span>{tip.title}</h4>
-                                <p className="text-sm sm:text-base text-gray-700 mb-2 leading-relaxed">{tip.content}</p>
+                                <p className="text-sm sm:text-base text-gray-700 mb-2 leading-relaxed" dangerouslySetInnerHTML={{ __html: mdToHtml(tip.content) }} />
                                 <p className="text-xs text-[var(--mint-dark)] italic">출처: {tip.source}</p>
                               </div>
                             ))}
@@ -1531,7 +1589,7 @@
                                   <h4 className="text-sm sm:text-base font-bold text-gray-800 mb-1">상황: {example.situation}</h4>
                                   <div className="bg-white rounded-xl sm:rounded-[12px] p-3 sm:p-4 mb-2 sm:mb-3">
                                     <p className="text-xs sm:text-sm text-gray-600 mb-1">해결 방법</p>
-                                    <p className="text-sm sm:text-base text-gray-700 leading-relaxed">{example.solution}</p>
+                                    <p className="text-sm sm:text-base text-gray-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: mdToHtml(example.solution) }} />
                                   </div>
                                   <div className="flex flex-wrap items-center justify-between gap-1 text-xs sm:text-sm">
                                     <span className="text-[var(--warm-yellow-dark)] font-medium">예시: {example.mom}</span>
@@ -1566,7 +1624,7 @@
                         {result.practicalTips.map((tip, idx) => (
                           <div key={idx} className="bg-[var(--mint-muted)] rounded-xl sm:rounded-[20px] p-4 sm:p-6 border-2 border-[var(--mint-light)]">
                             <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-2 flex items-center"><span className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[var(--mint)] text-white flex items-center justify-center text-xs sm:text-sm mr-2 flex-shrink-0">{idx + 1}</span>{tip.title}</h3>
-                            <p className="text-sm sm:text-base text-gray-700 mb-2 leading-relaxed">{tip.content}</p>
+                            <p className="text-sm sm:text-base text-gray-700 mb-2 leading-relaxed" dangerouslySetInnerHTML={{ __html: mdToHtml(tip.content) }} />
                             <p className="text-xs text-[var(--mint-dark)] italic">출처: {tip.source}</p>
                           </div>
                         ))}
@@ -1587,7 +1645,7 @@
                                 <h4 className="text-sm sm:text-base font-bold text-gray-800 mb-1">상황: {example.situation}</h4>
                                 <div className="bg-white rounded-xl sm:rounded-[12px] p-3 sm:p-4 mb-2 sm:mb-3">
                                   <p className="text-xs sm:text-sm text-gray-600 mb-1">해결 방법</p>
-                                  <p className="text-sm sm:text-base text-gray-700 leading-relaxed">{example.solution}</p>
+                                  <p className="text-sm sm:text-base text-gray-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: mdToHtml(example.solution) }} />
                                 </div>
                                 <div className="flex flex-wrap items-center justify-between gap-1 text-xs sm:text-sm">
                                   <span className="text-[var(--warm-yellow-dark)] font-medium">예시: {example.mom}</span>
@@ -1600,6 +1658,7 @@
                       </div>
                     </div>
                   )}
+                  <div id="solution-bottom-sentinel" style={{height:1}} />
                   </>)}
                   {reportTab === 'growth' && (<>
                   {(() => {
@@ -1655,12 +1714,17 @@
                 {showFeedbackPopup && (
                   <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" onClick={() => setShowFeedbackPopup(false)}>
                     <div className="bg-white rounded-2xl sm:rounded-[24px] p-5 sm:p-8 max-w-md w-full shadow-xl border-2 border-[var(--coral-light)]" onClick={(e) => e.stopPropagation()}>
-                      <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">어떤 점이 아쉬우셨나요?</h3>
-                      <p className="text-xs sm:text-sm text-gray-500 mb-4">간략히 적어주시면 서비스 개선에 참고할게요.</p>
-                      <textarea value={feedbackText} onChange={(e) => setFeedbackText(e.target.value)} placeholder="예: 결과가 조금 일반적으로 느껴져요, 더 구체적인 팁이 있으면 좋겠어요" className="w-full h-24 sm:h-28 p-3 sm:p-4 border-2 border-[var(--coral-light)] rounded-xl resize-none text-sm sm:text-base focus:outline-none focus:border-[var(--coral)]" maxLength={500} />
+                      <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">{feedbackType === 'good' ? '어떤 점이 좋으셨나요?' : '어떤 점이 아쉬우셨나요?'}</h3>
+                      <p className="text-xs sm:text-sm text-gray-500 mb-4">해당하는 것을 모두 선택해 주세요.</p>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {(FEEDBACK_OPTIONS[feedbackType] || []).map(tag => (
+                          <button key={tag} type="button" onClick={() => toggleFeedbackTag(tag)} className={`px-3 py-1.5 rounded-full text-xs sm:text-sm border-2 transition-all ${feedbackSelected.includes(tag) ? 'bg-[var(--coral)] text-white border-[var(--coral)]' : 'bg-white text-gray-700 border-gray-300 hover:border-[var(--coral)]'}`}>{tag}</button>
+                        ))}
+                      </div>
+                      <textarea value={feedbackText} onChange={(e) => setFeedbackText(e.target.value)} placeholder={feedbackType === 'bad' ? '예: 이런 기능이 들어가면 좋을 것 같아요' : '자유롭게 적어주세요'} className="w-full h-24 sm:h-28 p-3 sm:p-4 border-2 border-[var(--coral-light)] rounded-xl resize-none text-sm sm:text-base focus:outline-none focus:border-[var(--coral)]" maxLength={500} />
                       <div className="flex gap-3 mt-4">
-                        <button type="button" onClick={() => { saveFeedback('아쉬워요', feedbackText); sendFeedbackToSlack('아쉬워요', feedbackText, childInfo.name, childInfo.birthDate, getChildAge()); setFeedbackGiven(true); setShowFeedbackPopup(false); setFeedbackText(''); }} className="flex-1 py-3 bg-[var(--coral-button)] text-white font-bold rounded-xl hover:opacity-90 min-h-[48px]">보내기</button>
-                        <button type="button" onClick={() => { setShowFeedbackPopup(false); setFeedbackText(''); }} className="px-5 py-3 bg-white border-2 border-gray-300 text-gray-700 font-bold rounded-xl hover:bg-gray-50 min-h-[48px]">취소</button>
+                        <button type="button" onClick={submitFeedback} className="flex-1 py-3 bg-[var(--coral-button)] text-white font-bold rounded-xl hover:opacity-90 min-h-[48px]">보내기</button>
+                        <button type="button" onClick={() => { setShowFeedbackPopup(false); setFeedbackText(''); setFeedbackSelected([]); }} className="px-5 py-3 bg-white border-2 border-gray-300 text-gray-700 font-bold rounded-xl hover:bg-gray-50 min-h-[48px]">취소</button>
                       </div>
                     </div>
                   </div>
@@ -1670,8 +1734,8 @@
                   <div className="mt-8 sm:mt-10 pt-6 sm:pt-8 border-t-2 border-dashed border-[var(--coral-light)]">
                     <p className="text-center text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4">아이맘쏙 어떠셨나요?</p>
                     <div className="flex justify-center gap-3 sm:gap-4 flex-wrap">
-                      <button type="button" onClick={() => { saveFeedback('좋았어요', ''); sendFeedbackToSlack('좋았어요', '', childInfo?.name || '', childInfo?.birthDate || '', getChildAge()); setFeedbackGiven(true); }} className="px-6 sm:px-8 py-3 sm:py-4 bg-[var(--coral)] text-white text-sm sm:text-base font-bold rounded-xl sm:rounded-[20px] hover:opacity-90 transition-all min-h-[48px]">좋았어요</button>
-                      <button type="button" onClick={() => setShowFeedbackPopup(true)} className="px-6 sm:px-8 py-3 sm:py-4 bg-white border-2 border-gray-300 text-gray-700 text-sm sm:text-base font-bold rounded-xl sm:rounded-[20px] hover:bg-gray-50 transition-all min-h-[48px]">아쉬워요</button>
+                      <button type="button" onClick={() => openFeedbackPopup('good')} className="px-6 sm:px-8 py-3 sm:py-4 bg-[var(--coral)] text-white text-sm sm:text-base font-bold rounded-xl sm:rounded-[20px] hover:opacity-90 transition-all min-h-[48px]">좋았어요</button>
+                      <button type="button" onClick={() => openFeedbackPopup('bad')} className="px-6 sm:px-8 py-3 sm:py-4 bg-white border-2 border-gray-300 text-gray-700 text-sm sm:text-base font-bold rounded-xl sm:rounded-[20px] hover:bg-gray-50 transition-all min-h-[48px]">아쉬워요</button>
                     </div>
                   </div>
                 )}
@@ -1728,7 +1792,7 @@
                                 <span className="text-xs text-gray-500">{new Date(msg.timestamp).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' })} {new Date(msg.timestamp).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</span>
                                 <button onClick={() => toggleBookmark(idx)} className="text-xs font-medium text-[var(--coral-dark)] hover:underline flex items-center gap-1"><Bookmark className="w-3.5 h-3.5" filled={true} /> 저장 해제</button>
                               </div>
-                              <p className="text-sm sm:text-base text-gray-800 whitespace-pre-line leading-relaxed">{msg.content}</p>
+                              <p className="text-sm sm:text-base text-gray-800 whitespace-pre-line leading-relaxed" dangerouslySetInnerHTML={{ __html: mdToHtml(msg.content) }} />
                             </div>
                           ))}
                         </div>
@@ -1751,7 +1815,10 @@
                         chatHistory.map((msg, idx) => (
                           <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                             <div className={`max-w-[85%] sm:max-w-2xl ${msg.role === 'user' ? 'bg-[var(--coral)] text-white' : msg.bookmarked ? 'bg-[var(--coral-muted)] border-2 border-[var(--coral)]' : 'bg-white border-2 border-[var(--coral-light)]'} rounded-2xl sm:rounded-[20px] p-4 sm:p-5 shadow-lg`}>
-                              <p className={`text-sm sm:text-base ${msg.role === 'user' ? 'text-white' : 'text-gray-800'} whitespace-pre-line leading-relaxed`}>{msg.content}</p>
+                              {msg.role === 'user'
+                                ? <p className="text-sm sm:text-base text-white whitespace-pre-line leading-relaxed">{msg.content}</p>
+                                : <p className="text-sm sm:text-base text-gray-800 whitespace-pre-line leading-relaxed" dangerouslySetInnerHTML={{ __html: mdToHtml(msg.content) }} />
+                              }
                               <div className="flex items-center justify-between mt-2 gap-2">
                                 <p className={`text-xs ${msg.role === 'user' ? 'text-white/80' : 'text-gray-400'}`}>{new Date(msg.timestamp).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</p>
                                 {msg.role === 'assistant' && (
