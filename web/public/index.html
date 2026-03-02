@@ -1151,18 +1151,18 @@
                 }
                 return;
               }
-              // 가변 청크: 10~18자 랜덤
-              var chunk = 10 + Math.floor(Math.random() * 9);
+              // 가변 청크: 3~7자 랜덤
+              var chunk = 3 + Math.floor(Math.random() * 5);
               var newIdx = Math.min(ref.idx + chunk, ref.text.length);
               ref.idx = newIdx;
               setTypingContent(ref.text.slice(0, newIdx));
               // 구두점·줄바꿈에서 자연스러운 미세 정지
               var lastChar = ref.text[newIdx - 1];
               var delay;
-              if (lastChar === '\n') delay = 55 + Math.random() * 30;
-              else if (lastChar === '.' || lastChar === '!' || lastChar === '?') delay = 40 + Math.random() * 25;
-              else if (lastChar === ',' || lastChar === ':') delay = 22 + Math.random() * 12;
-              else delay = 13 + Math.random() * 7;
+              if (lastChar === '\n') delay = 120 + Math.random() * 60;
+              else if (lastChar === '.' || lastChar === '!' || lastChar === '?') delay = 90 + Math.random() * 50;
+              else if (lastChar === ',' || lastChar === ':') delay = 50 + Math.random() * 25;
+              else delay = 28 + Math.random() * 14;
               ref.timer = setTimeout(typeNext, delay);
             }
             typeNext();
