@@ -202,7 +202,7 @@
       const FEEDBACK_OPTIONS = {
         good: [
           '기질 설명이 우리 아이랑 딱 맞아요',
-          '대화법이 실제로 도움이 됐어요',
+          '육아법이 실제로 도움이 됐어요',
           '아이를 이해하는 데 도움이 됐어요',
           '앞으로도 계속 쓸 것 같아요',
         ],
@@ -1672,7 +1672,7 @@
                       <textarea
                         value={feedbackText}
                         onChange={(e) => setFeedbackText(e.target.value)}
-                        placeholder={feedbackType === 'good' ? '더 좋아진 점이 있다면 알려주세요' : '개선했으면 하는 점을 자유롭게 적어주세요'}
+                        placeholder={feedbackType === 'good' ? '더 좋았던 점이 있다면 알려주세요' : '예: 이런 기능이 들어가면 좋을 것 같아요'}
                         className="w-full h-20 sm:h-24 p-3 sm:p-4 border-2 border-gray-200 rounded-xl resize-none text-sm sm:text-base focus:outline-none focus:border-[var(--coral)]"
                         maxLength={500}
                       />
