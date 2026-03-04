@@ -1379,15 +1379,21 @@
                     <p className="text-xs sm:text-sm text-gray-500 italic">{temperamentQuestions[currentQuestion].description}</p>
                   </div>
                   <div className="space-y-2 sm:space-y-3">
-                    {temperamentQuestions[currentQuestion].options.map((option, idx) => (
-                      <button key={`child-q${currentQuestion}-${idx}`} onClick={(e) => { e.currentTarget.blur(); handleChildAnswer(option.score); }} style={{ WebkitTapHighlightColor: 'transparent' }} className="option-btn-coral w-full p-4 sm:p-5 bg-[var(--coral-muted)] hover:bg-[var(--coral-light)] border-2 border-[var(--coral-light)] rounded-xl sm:rounded-[20px] text-left transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] hover:shadow-xl group min-h-[52px]">
+                    {temperamentQuestions[currentQuestion].options.map((option, idx) => {
+                      const isSelected = childProfile[`q${currentQuestion}`] === option.score;
+                      return (
+                      <button key={`child-q${currentQuestion}-${idx}`} onClick={(e) => { e.currentTarget.blur(); handleChildAnswer(option.score); }} style={{ WebkitTapHighlightColor: 'transparent' }} className={`option-btn-coral w-full p-4 sm:p-5 border-2 rounded-xl sm:rounded-[20px] text-left transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] hover:shadow-xl group min-h-[52px] ${isSelected ? 'bg-[var(--coral-light)] border-[var(--coral)] shadow-md' : 'bg-[var(--coral-muted)] hover:bg-[var(--coral-light)] border-[var(--coral-light)]'}`}>
                         <div className="flex items-center gap-2 sm:gap-3">
                           <span className="text-2xl sm:text-3xl flex-shrink-0">{option.emoji}</span>
-                          <span className="text-sm sm:text-base text-gray-700 group-hover:text-gray-900 font-medium flex-1 leading-relaxed text-left">{option.text}</span>
-                          <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--coral-dark)] opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                          <span className={`text-sm sm:text-base font-medium flex-1 leading-relaxed text-left ${isSelected ? 'text-[var(--coral-dark)]' : 'text-gray-700 group-hover:text-gray-900'}`}>{option.text}</span>
+                          {isSelected
+                            ? <span className="text-[var(--coral-dark)] flex-shrink-0 text-base">✓</span>
+                            : <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--coral-dark)] opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                          }
                         </div>
                       </button>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -1416,14 +1422,20 @@
                     <p className="text-xs sm:text-sm text-gray-500 italic">{parentQuestions[currentQuestion].description}</p>
                   </div>
                   <div className="space-y-2 sm:space-y-3">
-                    {parentQuestions[currentQuestion].options.map((option, idx) => (
-                      <button key={`parent-q${currentQuestion}-${idx}`} onClick={(e) => { e.currentTarget.blur(); handleParentAnswer(option.score); }} style={{ WebkitTapHighlightColor: 'transparent' }} className="option-btn-mint w-full p-4 sm:p-5 bg-[var(--mint-muted)] hover:bg-[var(--mint-light)] border-2 border-[var(--mint-light)] rounded-xl sm:rounded-[20px] text-left transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] hover:shadow-xl group min-h-[52px]">
+                    {parentQuestions[currentQuestion].options.map((option, idx) => {
+                      const isSelected = parentProfile[`p${currentQuestion}`] === option.score;
+                      return (
+                      <button key={`parent-q${currentQuestion}-${idx}`} onClick={(e) => { e.currentTarget.blur(); handleParentAnswer(option.score); }} style={{ WebkitTapHighlightColor: 'transparent' }} className={`option-btn-mint w-full p-4 sm:p-5 border-2 rounded-xl sm:rounded-[20px] text-left transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] hover:shadow-xl group min-h-[52px] ${isSelected ? 'bg-[var(--mint-light)] border-[var(--mint)] shadow-md' : 'bg-[var(--mint-muted)] hover:bg-[var(--mint-light)] border-[var(--mint-light)]'}`}>
                         <div className="flex items-center justify-between gap-3">
-                          <span className="text-sm sm:text-base text-gray-700 group-hover:text-gray-900 font-medium leading-relaxed flex-1">{option.text}</span>
-                          <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--mint-dark)] opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                          <span className={`text-sm sm:text-base font-medium leading-relaxed flex-1 ${isSelected ? 'text-[var(--mint-dark)]' : 'text-gray-700 group-hover:text-gray-900'}`}>{option.text}</span>
+                          {isSelected
+                            ? <span className="text-[var(--mint-dark)] flex-shrink-0 text-base">✓</span>
+                            : <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--mint-dark)] opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                          }
                         </div>
                       </button>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               </div>
