@@ -119,6 +119,11 @@
         box-shadow: inset 0 2px 6px rgba(77, 181, 162, 0.25) !important;
       }
     }
+    /* :active 시 화살표 → 체크 전환 (PC/모바일 공통) */
+    .option-btn-coral:active .btn-arrow,
+    .option-btn-mint:active .btn-arrow { opacity: 0 !important; }
+    .option-btn-coral:active .btn-check,
+    .option-btn-mint:active .btn-check { opacity: 1 !important; }
   </style>
 </head>
 <body>
@@ -1386,10 +1391,8 @@
                         <div className="flex items-center gap-2 sm:gap-3">
                           <span className="text-2xl sm:text-3xl flex-shrink-0">{option.emoji}</span>
                           <span className={`text-sm sm:text-base font-medium flex-1 leading-relaxed text-left ${isSelected ? 'text-[var(--coral-dark)]' : 'text-gray-700 group-hover:text-gray-900'}`}>{option.text}</span>
-                          {isSelected
-                            ? <span className="text-[var(--coral-dark)] flex-shrink-0 text-base">✓</span>
-                            : <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--coral-dark)] opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
-                          }
+                          <span className={`btn-check flex-shrink-0 text-base text-[var(--coral-dark)] transition-opacity ${isSelected ? 'opacity-100' : 'opacity-0'}`}>✓</span>
+                          <ArrowRight className={`btn-arrow w-4 h-4 sm:w-5 sm:h-5 text-[var(--coral-dark)] transition-opacity flex-shrink-0 ${isSelected ? 'opacity-0' : 'opacity-0 group-hover:opacity-100'}`} />
                         </div>
                       </button>
                       );
@@ -1428,10 +1431,8 @@
                       <button key={`parent-q${currentQuestion}-${idx}`} onClick={(e) => { e.currentTarget.blur(); handleParentAnswer(option.score); }} style={{ WebkitTapHighlightColor: 'transparent' }} className={`option-btn-mint w-full p-4 sm:p-5 border-2 rounded-xl sm:rounded-[20px] text-left transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] hover:shadow-xl group min-h-[52px] ${isSelected ? 'bg-[var(--mint-light)] border-[var(--mint)] shadow-md' : 'bg-[var(--mint-muted)] hover:bg-[var(--mint-light)] border-[var(--mint-light)]'}`}>
                         <div className="flex items-center justify-between gap-3">
                           <span className={`text-sm sm:text-base font-medium leading-relaxed flex-1 ${isSelected ? 'text-[var(--mint-dark)]' : 'text-gray-700 group-hover:text-gray-900'}`}>{option.text}</span>
-                          {isSelected
-                            ? <span className="text-[var(--mint-dark)] flex-shrink-0 text-base">✓</span>
-                            : <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--mint-dark)] opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
-                          }
+                          <span className={`btn-check flex-shrink-0 text-base text-[var(--mint-dark)] transition-opacity ${isSelected ? 'opacity-100' : 'opacity-0'}`}>✓</span>
+                          <ArrowRight className={`btn-arrow w-4 h-4 sm:w-5 sm:h-5 text-[var(--mint-dark)] transition-opacity flex-shrink-0 ${isSelected ? 'opacity-0' : 'opacity-0 group-hover:opacity-100'}`} />
                         </div>
                       </button>
                       );
