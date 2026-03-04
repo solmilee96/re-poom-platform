@@ -85,8 +85,9 @@
     .btn-cta-pulse { animation: pulse-soft 2.4s ease-in-out infinite; }
     @keyframes tab-hint { 0%, 100% { box-shadow: 0 0 0 0 rgba(236, 113, 90, 0); transform: scale(1); } 40% { box-shadow: 0 0 0 5px rgba(236, 113, 90, 0.25); transform: scale(1.04); } 70% { box-shadow: 0 0 0 3px rgba(236, 113, 90, 0.1); transform: scale(1.01); } }
     .tab-hint { animation: tab-hint 1.8s ease-in-out 3; background: linear-gradient(135deg, #fff5f3, #ffe8e3) !important; color: var(--coral-dark) !important; border-bottom: 3px solid var(--coral) !important; }
-    /* 터치 기기에서 :hover 상태 고착 방지 — 마우스가 있는 기기에서만 hover 효과 적용 */
+    /* 터치 기기: hover 고착 방지 + 누를 때 피드백 유지 */
     @media (hover: none) {
+      /* ① hover 상태 고착 차단 (손가락 뗀 후에도 남는 문제) */
       .option-btn-coral:hover {
         background-color: var(--coral-muted) !important;
         transform: none !important;
@@ -98,21 +99,24 @@
         box-shadow: none !important;
       }
       .option-btn-coral:hover svg,
-      .option-btn-mint:hover svg {
-        opacity: 0 !important;
-      }
+      .option-btn-mint:hover svg { opacity: 0 !important; }
       .option-btn-coral:hover span,
-      .option-btn-mint:hover span {
-        color: inherit !important;
-      }
-      /* group-hover: Tailwind 유틸리티 무력화 */
+      .option-btn-mint:hover span { color: inherit !important; }
       .option-btn-coral .group-hover\:opacity-100,
-      .option-btn-mint .group-hover\:opacity-100 {
-        opacity: 0 !important;
-      }
+      .option-btn-mint .group-hover\:opacity-100 { opacity: 0 !important; }
       .option-btn-coral .group-hover\:text-gray-900,
-      .option-btn-mint .group-hover\:text-gray-900 {
-        color: inherit !important;
+      .option-btn-mint .group-hover\:text-gray-900 { color: inherit !important; }
+
+      /* ② 실제 누르는 순간(:active)엔 눌림 피드백 명확히 표시 */
+      .option-btn-coral:active {
+        background-color: var(--coral-light) !important;
+        transform: scale(0.97) !important;
+        box-shadow: inset 0 2px 6px rgba(232, 122, 110, 0.25) !important;
+      }
+      .option-btn-mint:active {
+        background-color: var(--mint-light) !important;
+        transform: scale(0.97) !important;
+        box-shadow: inset 0 2px 6px rgba(77, 181, 162, 0.25) !important;
       }
     }
   </style>
