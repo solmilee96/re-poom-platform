@@ -87,22 +87,31 @@
     .tab-hint { animation: tab-hint 1.8s ease-in-out 3; background: linear-gradient(135deg, #fff5f3, #ffe8e3) !important; color: var(--coral-dark) !important; border-bottom: 3px solid var(--coral) !important; }
     /* 터치 기기에서 :hover 상태 고착 방지 — 마우스가 있는 기기에서만 hover 효과 적용 */
     @media (hover: none) {
-      .option-btn:hover {
-        background-color: inherit !important;
+      .option-btn-coral:hover {
+        background-color: var(--coral-muted) !important;
         transform: none !important;
         box-shadow: none !important;
       }
-      .option-btn:hover svg {
+      .option-btn-mint:hover {
+        background-color: var(--mint-muted) !important;
+        transform: none !important;
+        box-shadow: none !important;
+      }
+      .option-btn-coral:hover svg,
+      .option-btn-mint:hover svg {
         opacity: 0 !important;
       }
-      .option-btn:hover span {
+      .option-btn-coral:hover span,
+      .option-btn-mint:hover span {
         color: inherit !important;
       }
       /* group-hover: Tailwind 유틸리티 무력화 */
-      .option-btn .group-hover\:opacity-100 {
+      .option-btn-coral .group-hover\:opacity-100,
+      .option-btn-mint .group-hover\:opacity-100 {
         opacity: 0 !important;
       }
-      .option-btn .group-hover\:text-gray-900 {
+      .option-btn-coral .group-hover\:text-gray-900,
+      .option-btn-mint .group-hover\:text-gray-900 {
         color: inherit !important;
       }
     }
@@ -1367,7 +1376,7 @@
                   </div>
                   <div className="space-y-2 sm:space-y-3">
                     {temperamentQuestions[currentQuestion].options.map((option, idx) => (
-                      <button key={`child-q${currentQuestion}-${idx}`} onClick={(e) => { e.currentTarget.blur(); handleChildAnswer(option.score); }} style={{ WebkitTapHighlightColor: 'transparent' }} className="option-btn w-full p-4 sm:p-5 bg-[var(--coral-muted)] hover:bg-[var(--coral-light)] border-2 border-[var(--coral-light)] rounded-xl sm:rounded-[20px] text-left transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] hover:shadow-xl group min-h-[52px]">
+                      <button key={`child-q${currentQuestion}-${idx}`} onClick={(e) => { e.currentTarget.blur(); handleChildAnswer(option.score); }} style={{ WebkitTapHighlightColor: 'transparent' }} className="option-btn-coral w-full p-4 sm:p-5 bg-[var(--coral-muted)] hover:bg-[var(--coral-light)] border-2 border-[var(--coral-light)] rounded-xl sm:rounded-[20px] text-left transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] hover:shadow-xl group min-h-[52px]">
                         <div className="flex items-center gap-2 sm:gap-3">
                           <span className="text-2xl sm:text-3xl flex-shrink-0">{option.emoji}</span>
                           <span className="text-sm sm:text-base text-gray-700 group-hover:text-gray-900 font-medium flex-1 leading-relaxed text-left">{option.text}</span>
@@ -1404,7 +1413,7 @@
                   </div>
                   <div className="space-y-2 sm:space-y-3">
                     {parentQuestions[currentQuestion].options.map((option, idx) => (
-                      <button key={`parent-q${currentQuestion}-${idx}`} onClick={(e) => { e.currentTarget.blur(); handleParentAnswer(option.score); }} style={{ WebkitTapHighlightColor: 'transparent' }} className="option-btn w-full p-4 sm:p-5 bg-[var(--mint-muted)] hover:bg-[var(--mint-light)] border-2 border-[var(--mint-light)] rounded-xl sm:rounded-[20px] text-left transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] hover:shadow-xl group min-h-[52px]">
+                      <button key={`parent-q${currentQuestion}-${idx}`} onClick={(e) => { e.currentTarget.blur(); handleParentAnswer(option.score); }} style={{ WebkitTapHighlightColor: 'transparent' }} className="option-btn-mint w-full p-4 sm:p-5 bg-[var(--mint-muted)] hover:bg-[var(--mint-light)] border-2 border-[var(--mint-light)] rounded-xl sm:rounded-[20px] text-left transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] hover:shadow-xl group min-h-[52px]">
                         <div className="flex items-center justify-between gap-3">
                           <span className="text-sm sm:text-base text-gray-700 group-hover:text-gray-900 font-medium leading-relaxed flex-1">{option.text}</span>
                           <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--mint-dark)] opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
